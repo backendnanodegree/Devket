@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 
     # custom apps
     'rest_framework',
+    'pocket',
 ]
 
 MIDDLEWARE = [
