@@ -109,3 +109,50 @@ class Tag(models.Model):
     class Meta:
         verbose_name = '태그'
         verbose_name_plural = '태그 목록'
+
+
+class Payment(models.Model):
+    """ 노경민 : 결제 모델 추가 """
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='유저')
+    phone_number = models.IntegerField(verbose_name='휴대폰번호')
+    zip_code = models.IntegerField(verbose_name='우편번호')
+
+    """ 노경민 : 향후 payment_method의 choice에 결제방식 추가 수정 작업이 필요함  """
+    # payment_method choices
+    CARD = '0'
+
+
+    PAYMENT_METHOD_CHOICES = [
+        {CARD, '신용카드'}
+    ]
+
+    payment_method = models.CharField(max_length=1, choices=PAYMENT_METHOD_CHOICES, verbose_name='결제방식')
+    payment_code = models.CharField(verbose_name='결제코드', max_length=30, primary_key=True)
+    merchandise = models.CharField(verbose_name='상품명', max_length=15)
+    payment_amount = models.DecimalField(verbose_name='결제총금액', max_digits=4, decimal_place=0)
+    price = models.DecimalField(verbose_name='상품가격', max_digits=4, decimal_place=0)
+
+    # status choices
+    IS_DONE ='2'
+    IS_AWAITING ='1'
+    IS_CANCELLED ='0'
+
+    STATUS_CHOICES =[
+        {IS_DONE, '결제완료'},
+        {IS_AWAITING, '결제대기'},
+        {IS_CANCELLED, '결제취소'}
+    ]
+
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=IS_AWAITING)
+    payment_date = models.IntegerField(verbose_name='결제갱신일')
+
+
+    """ 노경민 : self_status_display()가 제대로 작동하는 함수인지 확인이 필요함 """
+    def __str__(self):
+        return f"{self.payment_code} {self.get_status_display()}"
+
+    class Meta:
+        verbose_name = '결제'
+        verbose_name_plural = '결제 목록'
+
