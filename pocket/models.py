@@ -82,3 +82,17 @@ class List(models.Model):
     class Meta:
         verbose_name = '항목'
         verbose_name_plural = '항목 목록'
+
+
+class Highlight(models.Model):
+    """ 노경민 : 하이라이트 모델 추가 """
+
+    list = models.ForeignKey(List, on_delete=models.CASCADE, verbose_name='리스트')
+    content = models.TextField(verbose_name='컨텐츠')
+
+    def __str__(self):
+        return f"{self.content}"
+
+    class Meta:
+        verbose_name = '하이라이트'
+        verbose_name_plural = '하이라이트 목록'
