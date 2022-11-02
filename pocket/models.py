@@ -8,15 +8,15 @@ class User(models.Model):
     blog_url = models.CharField(verbose_name='블로그url', max_length = 250)
 
     # Payment_status choices
-    PAYMENT_ON = '1'
-    PAYMENT_OFF = '0'
+    PAYMENT_ON = 1
+    PAYMENT_OFF = 0
 
     PAYMENT_CHOICES = [
         {PAYMENT_ON, '결제'},
         {PAYMENT_OFF, '미결제'}
     ]
     
-    payment_status = models.CharField(max_length=1, choices=PAYMENT_CHOICES, default=PAYMENT_OFF)
+    payment_status = models.IntegerField(choices=PAYMENT_CHOICES, default=PAYMENT_OFF, verbose_name='결제상태')
     card_number = models.IntegerField(verbose_name='카드번호')
     cvc = models.IntegerField(verbose_name='cvc')
     expiration_date = models.IntegerField(verbose_name='카드유효기간')
@@ -38,15 +38,15 @@ class Email(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='유저')
 
     # authentication_check choices
-    CHECK = '1'
-    NOT_CHECK = '0'
+    CHECK = 1
+    NOT_CHECK = 0
 
     AUTHENTICATION_CHOICES = [
         {CHECK, '인증'},
         {NOT_CHECK, '미인증'}
     ]
 
-    authentication_check = models.CharField(max_length=1, choices=AUTHENTICATION_CHOICES, default=NOT_CHECK)
+    authentication_check = models.IntegerField(choices=AUTHENTICATION_CHOICES, default=NOT_CHECK, verbose_name='이메일 인증 여부')
     signup_email = models.BooleanField(verbose_name='기본이메일', default=True)
     created_at = models.DateTimeField(verbose_name='생성일', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='갱신일', auto_now=True)
@@ -64,7 +64,7 @@ class List(models.Model):
 
     title = models.CharField(verbose_name='타이틀', max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='유저')
-    thumbnail_url = models.CharField(verbose_name='썸네일주소', max_length='500')
+    thumbnail_url = models.CharField(verbose_name='썸네일주소', max_length=500)
     content = models.TextField(verbose_name='컨텐츠')
 
     # category choices
@@ -120,23 +120,23 @@ class Payment(models.Model):
 
     """ 노경민 : 향후 payment_method의 choice에 결제방식 추가 수정 작업이 필요함  """
     # payment_method choices
-    CARD = '0'
+    CARD = 1
 
 
     PAYMENT_METHOD_CHOICES = [
         {CARD, '신용카드'}
     ]
 
-    payment_method = models.CharField(max_length=1, choices=PAYMENT_METHOD_CHOICES, verbose_name='결제방식')
+    payment_method = models.IntegerField(choices=PAYMENT_METHOD_CHOICES, verbose_name='결제방식')
     payment_code = models.CharField(verbose_name='결제코드', max_length=30, primary_key=True)
     merchandise = models.CharField(verbose_name='상품명', max_length=15)
-    payment_amount = models.DecimalField(verbose_name='결제총금액', max_digits=4, decimal_place=0)
-    price = models.DecimalField(verbose_name='상품가격', max_digits=4, decimal_place=0)
+    payment_amount = models.DecimalField(verbose_name='결제총금액', max_digits=4, decimal_places=0)
+    price = models.DecimalField(verbose_name='상품가격', max_digits=4, decimal_places=0)
 
     # status choices
-    IS_DONE ='2'
-    IS_AWAITING ='1'
-    IS_CANCELLED ='0'
+    IS_DONE = 2
+    IS_AWAITING = 1
+    IS_CANCELLED = 0
 
     STATUS_CHOICES =[
         {IS_DONE, '결제완료'},
@@ -144,7 +144,7 @@ class Payment(models.Model):
         {IS_CANCELLED, '결제취소'}
     ]
 
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=IS_AWAITING)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=IS_AWAITING, verbose_name='결제상태')
     payment_date = models.IntegerField(verbose_name='결제갱신일')
 
 
