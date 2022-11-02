@@ -30,6 +30,7 @@ class User(models.Model):
         verbose_name = '유저'
         verbose_name_plural = '유저 목록'
 
+
 class Email(models.Model):
     """ 노경민 : 이메일 모델 추가 """
 
@@ -56,3 +57,28 @@ class Email(models.Model):
     class Meta:
         verbose_name = '이메일'
         verbose_name_plural = '이메일 목록'
+
+
+class List(models.Model):
+    """ 노경민 : 리스트 모델 추가 """
+
+    title = models.CharField(verbose_name='타이틀', max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='유저')
+    thumbnail_url = models.CharField(verbose_name='썸네일주소', max_length='500')
+    content = models.TextField(verbose_name='컨텐츠')
+
+    # category choices
+    CATEGORY_CHOICES = [(1, 'python'), (2, 'django'), (3, 'javascript'), (4, 'orm'), (5, 'mysql'), (6, 'drf'), (7, 'docker'), (8, 'os'), (9, 'aws'), (10, 'html'), (11, 'css'), (12, 'git'), (13, 'linux')]
+
+    category = models.IntegerField(verbose_name='카테고리', choices=CATEGORY_CHOICES)
+    favorite = models.TextField(verbose_name='즐겨찾기')
+    video = models.BooleanField(verbose_name='비디오', default=False)
+    created_at = models.DateTimeField(verbose_name='생성일', auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name='갱신일', auto_now=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.get_category_display()})"
+
+    class Meta:
+        verbose_name = '항목'
+        verbose_name_plural = '항목 목록'
