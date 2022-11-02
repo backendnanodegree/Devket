@@ -96,3 +96,16 @@ class Highlight(models.Model):
     class Meta:
         verbose_name = '하이라이트'
         verbose_name_plural = '하이라이트 목록'
+
+
+class Tag(models.Model):
+    """ 노경민 : 태그 모델 추가 """
+    name = models.CharField(verbose_name='이름', max_length=20)
+    list = models.ManyToManyField(List, verbose_name='리스트')
+
+    def __str__(self):
+        return f"{self.name}"
+
+    class Meta:
+        verbose_name = '태그'
+        verbose_name_plural = '태그 목록'
