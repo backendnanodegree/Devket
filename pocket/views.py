@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-class BaseView(TemplateView):
-    template_name = "base.html"
+class HomeView(TemplateView):
+    template_name = "common/home.html"
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
