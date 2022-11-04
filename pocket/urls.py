@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.urls import path
 
-from pocket.views import FooterView
+from pocket.views import BaseView
 
 urlpatterns = [
-    path('', FooterView.as_view()),
+    path('', BaseView.as_view()),
 ]
