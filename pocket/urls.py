@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.urls import path
 
-from pocket.views import BaseView
+from pocket.views import HomeView
 
 urlpatterns = [
-    path('', BaseView.as_view()),
+    path('', HomeView.as_view()),
 ]
