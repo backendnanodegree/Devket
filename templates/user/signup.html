@@ -1,0 +1,73 @@
+
+{% extends "user/base.html" %}
+{% load static%}
+{% block content %}
+<!-- MAIN -->
+<body class="page-signup page-signup-ko-kr page-ko-kr">
+  <div class="signup-content signup-content-fxa">
+    <div class="row">
+      <div class="small-12 large-6 columns wide-show signup-valueprop">
+        <div class="desktop">
+          <h1>Pocket 사용 시작하기</h1>
+            <p class="pocket-illus">개인용 라이브러리에 웹의 모든 것을 저장하십시오.</p>
+            <p class="device-illus">여유가 있을 때 언제든, 저장한 자료를 읽어볼 수 있습니다.</p>
+            <p class="paper-airplane-illus">매일 발행되는 뉴스레터에서 시사하는 바가 많은 스토리를 확인해 보십시오.</p>
+            <p class="fxa-illus">웹의 개방성을 보호하십시오. <a href="#">Firefox 가족</a>의 일부인 Pocket은 신뢰와 개인 정보 보호, 품질을 중요하게 생각합니다.</p>
+        </div>
+        <div class="mobile">
+          <h3>Pocket에 스토리 저장을 시작하세요</h3>
+          <p>또한, 일일 뉴스레터에서 흥미로운 아티클도 확인해 보십시오.</p>
+        </div>
+      </div>
+      <div class="small-12 large-6 columns column-signupform">
+        <div class="coreform-container signupform-container fxa-signup-container">
+          <h2 class="ffsignup-header">Firefox 계정 생성</h2>
+          <p>Pocket은 Firefox 계정을 사용하여 데이터의 기밀과 보안성을 유지합니다. <a href="#">자세히 알아보기</a></p>
+          <form class="signupform-formemail">
+            <div class="form-field">
+              <span class="error-bubble"><span class="error-msg"></span><span class="error-arrow"></span></span>
+              <label for="signup_email">이메일</label>
+              <input type="text" id="signup_email" name="email" autocomplete="on" tabindex="3" placeholder="이메일">
+            </div>
+            <div class="form-field-important" id="form-field-homephone">
+              <label for="signup_homephone">Home phone</label>
+              <input type="text" id="signup_homephone" name="homephone" autocomplete="off" tabindex="-1" />
+            </div>
+            <div class="signup-processing"></div>
+            <div class="form-field submit-field">
+              <button type="submit" tabindex="5" class="signup-btn-email signup-btn-formstate">등록</button>
+            </div>
+            <input type="hidden" class="field-form-check" name="form_check" value="3c82258a8949c867cfaf03a28317dcf026d61215fa9c1f3b564a666d5417d468">
+            <input type="hidden" name="from_source" value="">
+            <input type="hidden" name="request_token" value="">
+            <input type="hidden" name="source" value="">
+            <input type="hidden" class="field-form-route" name="route" value="">
+            <input type="hidden" class="field-form-src" name="src" value="">
+          </form>
+          <a href="#" class="signup-btn-firefox" id="signup-page-firefox-button">
+            <span class="logo"></span>
+            <span class="text">기존 Firefox 계정 사용</span>
+          </a>
+          <div class="signupform-start">
+            <div class="signup-ordivider">또는</div>
+            <div id="signup-page-apple-button">Apple로 계속</div>
+            <div id="signup-page-google-button">Google로 계속</div>
+          </div>
+          <div class="signup-footer">
+            <a href="#">
+              계정이 이미 있으십니까?
+              지금 로그인
+            </a> <span class="rarrow">&rsaquo;</span>
+          </div>
+          <div class="signup-disclaimer">
+            가입하면 Pocket의 <a href="/tos">서비스 약관</a>과 <a href="/privacy">개인정보 보호정책</a>에 동의하는 것입니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>window.__STATE__ = { "api": { "baseUrl": "\/v3", "consumerKey": "86291-f8d3e654be359e75b7625e79" }, "appleAuth": { "clientId": "com.pocket.apple-sso", "redirectURI": "https:\/\/getpocket.com\/connect\/apple\/check", "scope": "name email", "state": "12345" }, "csrf": { "token": "8137c0bcc3eaa808ce81903352cbbe0051603c74415209176f93ae9e4131b1dc" }, "captcha": { "isRequired": false, "siteKey": "6LfIpyYUAAAAAPtNSKafudr16odFL1eQte0vR0Py" }, "csrfSymfony": { "token": "yAyuFi-5Kww6is6H3DL-0wTjxEg5VjRgHZzuYJIwChw" }, "env": "prod", "googleAuth": { "clientId": "173409440056-oek12ddu7d36lbnpquv9dr8rs6ijcer0.apps.googleusercontent.com" }, "localization": { "locale": "ko-KR" }, "sentry": { "dsn": "https:\/\/15c50c1db6cf425594a1d4d779dc0792@sentry.io\/285989", "version": "811267c5e61ba469914b4f9d59662b4d118e4990", "environment": "prod" }, "stripe": { "publicKey": "pk_live_bh3nfDMzSI1Z9MvuwRWg8vWh" } };</script>
+  <script src="https://assets.getpocket.com/web/main.b2f564e7a54eadcdddc2.js"></script>
+  <script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+  </body>
+  {% endblock content%}
