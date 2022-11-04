@@ -6,7 +6,7 @@ class HomeView(TemplateView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-class Signup(TemplateView):
+class SignUpView(TemplateView):
     template_name = "user/signup.html"
 
     def get(self, request, *args, **kwargs):
