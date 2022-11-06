@@ -11,3 +11,16 @@ class SignUpView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+class LogInView(TemplateView):
+    template_name = "user/login.html"
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+
+class PwdHelpView(TemplateView):
+    template_name = 'user/password.html'
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
