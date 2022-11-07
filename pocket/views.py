@@ -33,7 +33,6 @@ class PremiumView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['login'] = True
         return context
-        # return render(request, 'premium/base.html', {'login': login})
 
 
 class PaymentView(TemplateView):

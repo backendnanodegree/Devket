@@ -8,7 +8,6 @@ from pocket.views import (
     PwdHelpView, 
     PremiumView,
     PaymentView,
-    Payment_View,
 )
 
 urlpatterns = [
