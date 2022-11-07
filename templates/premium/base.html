@@ -1,0 +1,221 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- OneTrust Cookies Consent Notice end for getpocket.com -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Pocket</title>
+    <link rel="stylesheet" href='{% static "css/main" %}'>
+    <link rel="stylesheet" href='{% static "css/premium" %}'>
+</head>
+<body class=" premium-page-body ">
+
+    <!-- HEADER -->   
+    {% if login %}
+        {% include "premium/header_after_login.html" %}
+    {% else %}
+        {% include "premium/header_before_login.html" %}
+    {% endif %}
+    
+    <!-- MAIN -->
+    <main>
+        <div class='premium-page'>
+            <section class="premium-hero">
+                <header>
+                    <h1>아이디어와 영감, 관심사를 만나볼 수 있는 곳.</h1>
+                    <p>미개척지와도 같은 인터넷 세상 속. Pocket Premium은 광고 없이 내가 원하는 대로 스토리를 수집하고 원하는 기간 만큼 보관할 수 있는 아름다운 공간을 제공합니다.</p>
+                    <button class="" data-url="#plans">
+                        Pocket Premium 활용하기
+                    </button>
+                </header>
+                <figure></figure>
+            </section>
+            <div class="hero-tile-wrapper">
+    
+                <div class="hero-tile">
+                    <figure class=library> </figure>
+                    <p>저장한 모든 콘텐츠의 영구 라이브러리를 구축하십시오</p>
+                </div>
+    
+                <div class="hero-tile">
+                    <figure class=blocker> </figure>
+                    <p>광고 없는 맞춤형 공간에서 읽으십시오</p>
+                </div>
+    
+                <div class="hero-tile">
+                    <figure class=tagging> </figure>
+                    <p>향상된 검색 및 태깅 기능으로 빠르게 콘텐츠를 찾으십시오</p>
+                </div>
+    
+                <div class="hero-tile">
+                    <figure class=highlights> </figure>
+                    <p>무제한 하이라이트 기능으로 아이디어를 포착하십시오</p>
+                </div>
+            </div>
+    
+            <div class="three-packages" id="plans">
+                <section class="package free">
+                    <div class="wrapper">
+                        <header>
+                            <div class="name">Pocket</div>
+                            <div class="plan">무료 계정</div>
+                            <div class="price">
+                            </div>
+                        </header>
+                        <ul>
+                            <li key="0">저장, 읽기, 시청, 청취</li>
+                        </ul>
+                        <button class="gray" data-url="#">
+                            목록 보기
+                        </button>
+                    </div>
+                </section>
+                <section class="package monthly">
+                    <div class="wrapper">
+                        <header>
+                            <div class="name">Premium</div>
+                            <div class="plan">월간 멤버십</div>
+                            <div class="price">
+                                ₩5113/월
+                            </div>
+                        </header>
+                        <ul>
+                            <li key="0">저장, 읽기, 시청, 청취</li>
+                            <li key="1">저장한 모든 콘텐츠의 영구 라이브러리</li>
+                            <li key="2">권장 태그</li>
+                            <li key="3">전문 검색</li>
+                            <li key="4">무제한 하이라이트</li>
+                            <li key="5">프리미엄 폰트</li>
+                        </ul>
+                        <button class="gray" type='button' onclick="location.href='{% url 'payment' %}'">
+                            이 옵션 선택
+                        </button>
+                    </div>
+                </section>
+            </div>
+            <section id="show-features" class="features">
+                <button class="gray" data-url="#show-features">
+                    더 보기
+                </button>
+                <div class='features-wrapper'>
+                    <div class="feature-tile">
+                        <h3>수집한 콘텐츠가 영구적으로 저장되는 홈</h3>
+                        <p>Pocket은 영구 라이브러리가 되므로, 저장한 페이지가 아래로 밀리긴 하더라도 여전히 Pocket에 복사본이 남아 있습니다.</p>
+                        <figure class=library></figure>
+                    </div>
+                    <div class="feature-tile">
+                        <h3>집중하기</h3>
+                        <p>조용하고 광고가 없는 환경에서 편안하게 콘텐츠를 확인할 수 있습니다.</p>
+                        <figure class=focused></figure>
+                    </div>
+                    <div class="feature-tile">
+                        <h3>손 안의 스토리</h3>
+                        <p>콘텐츠가 너무 많은가요? 걱정마세요. 프리미엄 검색 엔진을 활용하여 저장한 콘텐츠를 빠르게 검색할 수 있습니다. 키워드, 주제, 저자, 태그 등을 기준으로 아티클을
+                            찾아보십시오.</p>
+                        <figure class=search></figure>
+                    </div>
+                    <div class="feature-tile">
+                        <h3>스마트 태그</h3>
+                        <p>스토리를 저장할 때마다 목록에서 태그를 제안합니다 — 태그가 많을수록 제안이 더 유용해집니다. 콘텐츠 찾기가 너무나도 쉬워집니다.</p>
+                        <figure class=tags></figure>
+                    </div>
+                    <div class="feature-tile">
+                        <h3>아이디어에 하이라이트</h3>
+                        <p>모든 아티클에 무제한으로 하이라이트가 가능해, &quot;감탄스런&quot; 모든 순간을 영구적으로 기록할 수 있습니다.</p>
+                        <figure class=highlights></figure>
+                    </div>
+                    <div class="feature-tile">
+                        <h3>읽기 환경 맞춤화</h3>
+                        <p>둥근 글꼴, 넓은 자간, 폭이 좁은 텍스트... 어떤 스타일을 원하시나요? 맞춤형 텍스트 설정으로 원하는 읽기 스타일로 Pocket을 설정해 보십시오.</p>
+                        <figure class=customize></figure>
+                    </div>
+                </div>
+            </section>
+            <section class='quotes'>
+                <h2>현재 회원들의 의견 듣기</h2>
+                <div class='quotes-wrapper static'>
+                    <div class='quote-tile'>
+                        <div class='quote'>
+                            “
+                            <span class='highlight'>언론 분야에서 일을 하고 있는 제게 영구 라이브러리는 굉장히 중요한 기능이예요.</span>
+                            예고도 없이 사이트가 폐쇄되어 읽으려는 콘텐츠(또는 내가 쓴 콘텐츠)에 연결하지 못하게 될 리스크가 존재하기 마련이죠.”
+                        </div>
+                        <div class='attr'>Lisa, Saint Petersburg, FL</div>
+                    </div>
+                    <div class='quote-tile'>
+                        <div class='quote'>
+                            “정보를 탐색하는 일은 상당히 어려운 작업입니다.
+                            <span class='highlight'>경험상 광고가 없으면</span>
+                            콘텐츠 소비에 집중하고 정보를 찾는 데 도움이 됩니다.”
+                        </div>
+                        <div class='attr'>Priyanka, Toronto, Ontario</div>
+                    </div>
+                    <div class='quote-tile'>
+                        <div class='quote'>
+                            “
+                            <span class='highlight'>주로 Pocket에서 태그와 검색을 활용해서 콘텐츠를 확인하는데,</span>
+                            이전 달 아티클로 돌아가고 더 새로운 아티클에 연결하는 등의 작업이 한결 수월해 졌습니다.”
+                        </div>
+                        <div class='attr'>Matt, New York, NY</div>
+                    </div>
+                </div>
+                <div id="premium-quotes"></div>
+                <button class="" data-url="#plans">
+                    Pocket Premium 활용하기
+                </button>
+            </section>
+            <section class='stats'>
+                <h2>숫자로 보는 Premium 혜택:</h2>
+                <div class='stats-wrapper'>
+                    <div class="stats-tile">
+                        <div class="pre">Premium 회원 읽기</div>
+                        <div class="stat">2.6배</div>
+                        <div class="post">Premium을 사용하지 않은 경우에 비해 더 많은 스토리 개수</div>
+                    </div>
+                    <div class="stats-tile">
+                        <div class="stat">Ideal Sans</div>
+                        <div class="post">Premium 회원만이 이용할 수 있는 인기 폰트</div>
+                    </div>
+                    <div class="stats-tile">
+                        <div class="pre">Premium 회원 하이라이트</div>
+                        <div class="stat">360%</div>
+                        <div class="post">무제한 하이라이트 기능으로 아이디어를 낼 가능성 향상</div>
+                    </div>
+                </div>
+                <button class="" data-url="#plans">
+                    Pocket Premium 활용하기
+                </button>
+            </section>
+            <div class="sticky-button sticky" id="sticky">
+                <button class="" data-url="#plans-no-packages">
+                    플랜 선택
+                </button>
+            </div>
+            <div id="sticky-sister"></div>
+            <div class="sales-buttons" id="plans-no-packages">
+                <div class='sale-option annual'>
+                    <div class="discount">25% 할인</div>
+                    <div class="plan">연간 멤버십</div>
+                    <div class="price">₩46104/년</div>
+                    <button class="" data-url="/premium/subscription/new?planId=plan_F9rTIy9B2sA67C">
+                        플랜 선택
+                    </button>
+                </div>
+                <div class='sale-option monthly'>
+                    <div class="plan">월간 멤버십</div>
+                    <div class="price">₩5113/월</div>
+                    <button class="" data-url="/premium/subscription/new?planId=plan_F9rTxr2zS7XY74">
+                        플랜 선택
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- FOOTER -->
+    {% include "footer.html" %}
+    
+</body>
+</html>
