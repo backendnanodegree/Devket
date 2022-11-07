@@ -1,6 +1,7 @@
 from django.db import models
 class User(models.Model):
-    """ 노경민 : 사용자 모델 추가 """
+    """ 사용자 계정에 대한 정보 모델 """
+
     name = models.CharField(verbose_name='이름', max_length = 20)
     password = models.CharField(verbose_name='비밀번호', max_length = 15)
     introduce = models.TextField(verbose_name='자기소개', max_length = 200)
@@ -32,7 +33,7 @@ class User(models.Model):
 
 
 class Email(models.Model):
-    """ 노경민 : 이메일 모델 추가 """
+    """ 사용자 이메일과 관련된 모델 """
 
     email = models.EmailField(verbose_name='이메일', max_length=30, primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='유저')
@@ -60,7 +61,7 @@ class Email(models.Model):
 
 
 class List(models.Model):
-    """ 노경민 : 리스트 모델 추가 """
+    """ 항목에 관한 데이터 모델 """
 
     title = models.CharField(verbose_name='타이틀', max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='유저')
@@ -71,7 +72,7 @@ class List(models.Model):
     CATEGORY_CHOICES = [(1, 'python'), (2, 'django'), (3, 'javascript'), (4, 'orm'), (5, 'mysql'), (6, 'drf'), (7, 'docker'), (8, 'os'), (9, 'aws'), (10, 'html'), (11, 'css'), (12, 'git'), (13, 'linux')]
 
     category = models.IntegerField(verbose_name='카테고리', choices=CATEGORY_CHOICES)
-    favorite = models.TextField(verbose_name='즐겨찾기')
+    favorite = models.BooleanField(verbose_name='즐겨찾기', default=False)
     video = models.BooleanField(verbose_name='비디오', default=False)
     created_at = models.DateTimeField(verbose_name='생성일', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='갱신일', auto_now=True)
@@ -85,7 +86,7 @@ class List(models.Model):
 
 
 class Highlight(models.Model):
-    """ 노경민 : 하이라이트 모델 추가 """
+    """ 항목 하이라이트 기능 모델 """
 
     list = models.ForeignKey(List, on_delete=models.CASCADE, verbose_name='리스트')
     content = models.TextField(verbose_name='컨텐츠')
@@ -99,7 +100,7 @@ class Highlight(models.Model):
 
 
 class Tag(models.Model):
-    """ 노경민 : 태그 모델 추가 """
+    """ 웹 항목 태그 목록 모델  """
     name = models.CharField(verbose_name='이름', max_length=20)
     list = models.ManyToManyField(List, verbose_name='리스트')
 
@@ -112,7 +113,7 @@ class Tag(models.Model):
 
 
 class Payment(models.Model):
-    """ 노경민 : 결제 모델 추가 """
+    """ 웹 결제 데이터 모델 """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='유저')
     phone_number = models.IntegerField(verbose_name='휴대폰번호')
@@ -148,7 +149,6 @@ class Payment(models.Model):
     payment_date = models.IntegerField(verbose_name='결제갱신일')
 
 
-    """ 노경민 : self_status_display()가 제대로 작동하는 함수인지 확인이 필요함 """
     def __str__(self):
         return f"{self.payment_code} {self.get_status_display()}"
 
