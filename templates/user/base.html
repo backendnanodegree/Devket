@@ -6,9 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="{% static '/css/home.css' %}">
-    <link rel="stylesheet" href="{% static '/css/picto.css' %}">
-    <link rel="stylesheet" href="{% static '/css/split.css' %}">
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="{% static '/css/password.css' %}">
     <link rel="shortcut icon" href="{% static 'images/common/favicon.ico' %}">
     {% block head_css %}
     {% endblock head_css%}
@@ -16,7 +15,7 @@
 </head>
 <body>
     <!-- HEADER -->
-    {% include 'header.html' %}
+    {% include 'user/header.html' %}
 
     <!-- MAIN -->
     <main>
@@ -25,6 +24,6 @@
     </main>
 
     <!-- FOOTER -->
-    {% include 'footer.html' %}
+    {% include 'user/footer.html' %}
 </body>
 </html>
