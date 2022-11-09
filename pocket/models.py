@@ -67,6 +67,7 @@ class List(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='유저')
     url = models.CharField(verbose_name='url', max_length=2000, null=True)
     thumbnail_url = models.CharField(verbose_name='썸네일주소', max_length=2000)
+    host_name = models.CharField(verbose_name='호스트명', max_length=500)
     content = models.TextField(verbose_name='컨텐츠')
 
     # category choices
