@@ -65,7 +65,8 @@ class List(models.Model):
 
     title = models.CharField(verbose_name='타이틀', max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='유저')
-    thumbnail_url = models.CharField(verbose_name='썸네일주소', max_length=500)
+    url = models.CharField(verbose_name='url', max_length=2000, null=True)
+    thumbnail_url = models.CharField(verbose_name='썸네일주소', max_length=2000)
     content = models.TextField(verbose_name='컨텐츠')
 
     # category choices
