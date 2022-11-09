@@ -10,15 +10,15 @@
     <div class="header-navigation" aria-label="Page navigation">
         <ul class="header-navigation-list links">
         <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
-            href="#">등록</a></li>
+            href="{% url 'signup' %}">등록</a></li>
         <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
             href="#">저장 방법</a></li>
         <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
-            href="#">Premium 으로 이동</a></li>
+            href="{% url 'premium' %}">Premium 으로 이동</a></li>
         <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
             href="#">지원</a></li>
         <li class="header-navigation-list-item"><a class="header-navigation-list-item-link log-in-cta"
-            href="">로그인</a></li>
+            href="{% url 'login' %}">로그인</a></li>
         </ul>
     </div>
     </nav>

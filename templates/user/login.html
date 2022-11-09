@@ -1,0 +1,71 @@
+{% extends "user/base.html" %}
+{% load static %}
+{% block content %}
+<!-- MAIN -->
+<div class="signup-content ">
+    <div class="row">
+      <div class="small-12 large-6 columns wide-show">
+        <picture class="signup-graphic picture">
+          <source
+            srcset="/static/images/signup/product_mockup2x.9ede6a7b02ceb90f0748e7f8f4b0e5ca.png"
+            media="(min-width: 48em)">
+          <source srcset="/i/v4/signup_blank.png, /i/v4/signup_blank.png 2x">
+          <img srcset="/i/v4/signup_blank.png, /i/v4/signup_blank.png 2x" alt="">
+        </picture>
+      </div>
+      <div class="small-12 large-6 columns">
+        <div id="login-page-login-container" class=" ">
+          <div class="coreform-container loginform-container">
+            <h2>로그인</h2>
+            <form action="#" method="post" name="loginform" class="loginform">
+              <div class="loginform-formemail">
+                <!-- If the FxA login flag is not enabled, render the default login form -->
+                <div class="form-field">
+                  <span class="error-bubble"><span class="error-msg"></span><span class="error-arrow"></span></span>
+                  <label for="feed_id">이메일 또는 사용자 이름</label>
+                  <input type="text" id="feed_id" name="feed_id" autocomplete="off" autofocus tabindex="1"
+                    placeholder="이메일 또는 사용자 이름">
+                </div>
+                <br>
+                <div class="form-field">
+                  <span class="error-bubble"><span class="error-msg"></span><span class="error-arrow"></span></span>
+                  <label for="login_password">암호</label>
+                  <input type="password" id="login_password" name="password" autocomplete="off" tabindex="2"
+                    placeholder="암호">
+                </div>
+              </div>
+              <input type="hidden" class="field-form-route" name="route" value="">
+              <input type="hidden" class="field-form-check" name="form_check"
+                value="e6fd1003fb05c168563585a9e8c3e8b4af9a275d4b3f16a4bbc917047032a59b">
+              <input type="hidden" class="field-form-src" name="src" value="">
+              <div class="login-processing"></div>
+              <div id="captcha-placeholder"></div>
+              <input type="submit" tabindex="4" value="로그인" class="login-btn-email btn-disabled" disabled>
+              <p class="forgot-p">
+                <a class="forgot" href="{% url 'password' %}" target="">
+                  사용자 이름 또는 암호를 잊으셨습니까
+                </a>
+              </p>
+              <div class="signup-ordivider">또는</div>
+              <div class="login-btn-apple" data-text="Apple로 계속"></div>
+              <div class="logingoogle-processing"></div>
+              <a href="#" class="login-btn-google">
+                <span class="logo"></span>
+                <span class="text">Google로 계속</span>
+              </a>
+              <a href="#" class="login-btn-firefox">
+                <span class="logo"></span>
+                <span class="text">Firefox로 계속</span>
+              </a>
+            </form>
+            <p class="login-footer">
+              <a class="signup" href="{% url 'signup' %}" target="">
+                지금 등록
+              </a> <span class="rarrow">&rsaquo;</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock content%}

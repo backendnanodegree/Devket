@@ -1,0 +1,105 @@
+{% load static %}
+<!-- HEADER  -->
+<header class="h1bh2prp logged-in">
+    <div class="p16bck5y global-nav-container">
+        <nav class="n27eiag" data-cy="global-nav">
+            <div class="site-nav">
+                <button class="b18soqoe i1oaez37 hamburger-icon t1221eea pzhe358 inline normal" data-cy="nav-hamburger" aria-label="Pocket 모바일 메뉴 열기" data-tooltip="열기">
+                    <span class="i1qqph0t icon">
+                        <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M2 5a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1ZM2 12a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1ZM2 19a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1Z">
+
+                            </path>
+                        </svg>
+                    </span>
+                </button>
+                <a id="pocket-logo-nav" class="pocket-logo" data-cy="logo-link" href="/ko/my-list">
+                    <div class="lduquv9 logo">
+                        <span class="l1m2lm9u">Pocket</span>
+                    </div>
+                    <div class="l1n9llcl logo-mark">
+                        <span class="l1m2lm9u">Pocket</span>
+                    </div>
+                </a>
+            </div>
+            <div class="lvjqdba" aria-label="페이지 탐색">
+                <ul class="l1fcr43o links" data-cy="primary-links">
+                    <li>
+                        <a id="global-nav-home-link" data-cy="global-nav-home-link" class="" href="/ko/home?src=navbar">홈</a>
+                    </li>
+                    <li>
+                        <a id="global-nav-my-list-link" data-cy="global-nav-my-list-link" class="selected" href="/ko/my-list?src=navbar">내 목록</a>
+                    </li>
+                    <li>
+                        <a id="global-nav-discover-link" data-cy="global-nav-discover-link" class="" href="/ko/explore?src=navbar">검색</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <div class="tva5lsb">
+                <ul class="l1udqb06">
+                    <li>
+                        <button type="button" data-cy="global-nav-tool-search" aria-label="검색" data-tooltip="검색" class="t1221eea pzhe358">
+                            <span class="i1qqph0t icon">
+                                <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16.618 18.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675ZM18 11a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z">
+
+                                    </path>
+                                </svg>
+                            </span>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" data-cy="global-nav-tool-add-item" aria-label="URL 저장" data-tooltip="URL 저장" class="t1221eea pzhe358">
+                            <span class="i1qqph0t icon">
+                                <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 3a1 1 0 0 1 1 1v7h7a1 1 0 1 1 0 2h-7v7a1 1 0 1 1-2 0v-7H4a1 1 0 1 1 0-2h7V4a1 1 0 0 1 1-1Z">
+
+                                    </path>
+                                </svg>
+                            </span>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" data-cy="global-nav-tool-bulk-edit" aria-label="대량 편집" data-tooltip="대량 편집" class="t1221eea pzhe358">
+                            <span class="i1qqph0t icon">
+                                <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9 22a2 2 0 0 0 1.414-.586L20 11.828a4 4 0 0 0 0-5.656L17.828 4a4 4 0 0 0-5.656 0l-9.586 9.586A2 2 0 0 0 2 15v5a2 2 0 0 0 2 2h5Zm7.414-16.586 2.172 2.172a2 2 0 0 1 0 2.828l-1.379 1.379-5-5 1.379-1.379a2 2 0 0 1 2.828 0Zm-5.621 2.793L4 15v5h5l6.793-6.793-5-5Z">
+
+                                    </path>
+                                </svg>
+                            </span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <a href="https://getpocket.com/premium?utm_source=web-app-premium-cta&amp;utm_campaign=global-nav&amp;src=navbar" id="global-nav.upgrade-link" class="a6gcv5v u12stye0" data-cy="upgrade-link">
+                    <span class="i1qqph0t icon">
+                        <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.983 3.333A2.84 2.84 0 0 1 6.38 2h11.24c.969 0 1.872.502 2.397 1.333l2.528 4a2.958 2.958 0 0 1-.108 3.314l-8.148 11.18a2.82 2.82 0 0 1-4.578 0l-8.148-11.18a2.958 2.958 0 0 1-.108-3.314l2.528-4Zm2.397.607a.946.946 0 0 0-.799.445l-2.528 4c-.214.34-.2.78.037 1.104l8.147 11.18a.94.94 0 0 0 1.526 0l8.147-11.18a.986.986 0 0 0 .037-1.104l-2.528-4a.946.946 0 0 0-.8-.445H6.38Z">
+                            </path>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.39 2.046a.95.95 0 0 1 .614 1.197l-1.72 5.336a.95.95 0 0 0-.006.565l3.633 12.075a.951.951 0 1 1-1.821.548L7.457 9.692a2.853 2.853 0 0 1 .016-1.697l1.72-5.336a.95.95 0 0 1 1.197-.613Z">
+
+                            </path>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.61 2.046a.95.95 0 0 0-.613 1.197l1.72 5.336a.95.95 0 0 1 .005.565L11.09 21.22a.951.951 0 1 0 1.82.548l3.634-12.075a2.853 2.853 0 0 0-.017-1.697l-1.72-5.336a.95.95 0 0 0-1.197-.613Z">
+
+                            </path>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M21.985 9.608H2.015V7.706h19.97v1.902Z">
+
+                            </path>
+                        </svg>
+                    </span>
+                    <span class="label">업그레이드</span>
+                </a>
+                <div class="a170u95e t1221eea pzhe358" data-tooltip="계정">
+                    <button type="button" class="b502wo9 a1hh3oww" aria-label="계정 메뉴 열기" data-cy="account-menu-avatar">
+                        <span class="ajoca6s with-image" style="width: 40px; height: 40px;">
+                            <img src="https://lh3.googleusercontent.com/a/ALm5wu24gTvt8g8G6zKJOi6Ojbu6BgzkmDMxEZMBobCjdFE=s96-c" class="i6op735" data-cy="avatar-image-">
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
