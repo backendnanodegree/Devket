@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from pocket.views import HighlightView, HighlightListAPI
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('highlight', HighlightView.as_view(), name='highlight_list'),
+    path('api/testo/', HighlightListAPI.as_view(), name='api_highlight')
 ]

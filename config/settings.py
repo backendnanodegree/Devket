@@ -18,9 +18,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECRETS
-SECRET_DIR = BASE_DIR / ".secret"
+SECRET_DIR = BASE_DIR / ".secrets"
 
-secret_file = os.path.join(SECRET_DIR, 'secrets.json')
+secret_file = os.path.join(SECRET_DIR, 'secret.json')
 
 with open(secret_file) as f: 
     secrets = json.loads(f.read())
@@ -33,6 +33,13 @@ def get_secret(setting, secrets=secrets):
         raise ImproperlyConfigured(error_msg)
 
 SECRET_KEY = get_secret("DJANGO_SECRET_KEY")
+
+# TEMPLATE
+TEMPLATE_DIR = BASE_DIR / 'templates'
+
+# STATIC
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -74,7 +81,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
