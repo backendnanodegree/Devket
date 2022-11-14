@@ -120,11 +120,6 @@ a:hover {
     text-decoration:underline
 }
 
-a:not([href]):not([tabindex]), a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover {
-    color: inherit;
-    text-decoration:none
-}
-
 a:not([href]):not([tabindex]):focus {
     outline:0
 }
@@ -209,9 +204,9 @@ select {
     -webkit-appearance:button
 }
 
-[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+/* [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
     cursor:pointer
-}
+} */
 
 [type=button]::-moz-focus-inner, [type=reset]::-moz-focus-inner, [type=submit]::-moz-focus-inner, button::-moz-focus-inner {
     border-style: none;
@@ -1800,5 +1795,4 @@ body.modal-open {
     color: var(--color-textSecondary);
     word-break: break-all
 }
-/*# sourceMappingURL=dd049667434a30d2.css.map*/
 
