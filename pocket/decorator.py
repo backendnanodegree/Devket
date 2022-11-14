@@ -5,6 +5,7 @@ import re
 
 def scrap_decorator(func):
     header = {'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
+    validation: object = re.compile('^(https|http)')
 
     @wraps(func)
     def exec_func(self, request) -> func:
@@ -22,7 +23,6 @@ def scrap_decorator(func):
         프로토콜 추가
         '''
 
-        validation: object = re.compile('^(https|http)')
         url = f'https://{url}' if not validation.match(url) else url   
         return url
 
@@ -35,14 +35,14 @@ def scrap_decorator(func):
         return url
 
     # Issue : 접근 여부를 확인할때 try exception을 걸지않으면 어디서 에러가 났는지 찾기 어려움
-    def access(url: str, header: str) -> bool:
+    def access(url: str, header: dict) -> bool:
         '''
         robots.txt 검사
         '''
         
         result: dict = {}
         try: 
-            robots: object = urllib.robotparser.RobotFileParser(url + 'robots.txt')
+            robots: urllib.robotparser.RobotFileParser = urllib.robotparser.RobotFileParser(url + 'robots.txt')
             robots.read()  
             check: bool = robots.can_fetch(header['User-Agent'], url)
         except ValueError as e:

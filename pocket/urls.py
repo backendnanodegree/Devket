@@ -10,12 +10,12 @@ from pocket.views import (
     PremiumView,
     PaymentView,
     MyListView,
-    ListAPIView,
+    SiteAPIView,
 )
 
 
 api_patterns = [
-    path('list/', ListAPIView.as_view()),
+    path('list/', SiteAPIView.as_view()),
     path('scrap/parse/', ParseAPIView.as_view()),
 ]
 
