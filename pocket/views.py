@@ -1,8 +1,8 @@
 from django.views.generic import TemplateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import ListSerializer
-from .models import List
+from .serializers import SiteSerializer
+from .models import Site
 
 class HomeView(TemplateView):
     template_name = "common/home.html"
@@ -55,18 +55,18 @@ class MyListView(TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["lists"] = List.objects.all()
+        context["lists"] = Site.objects.all()
         return context
 
 
-class ListAPIView(APIView):
+class SiteAPIView(APIView):
     """
     저장한 모든 항목 데이터들을 api로 쏴주는 함수
     """
 
     def get(self, request): 
-        list_qs = List.objects.all()  
+        list_qs = Site.objects.all()  
         
-        serializer = ListSerializer(list_qs, many=True)
+        serializer = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)

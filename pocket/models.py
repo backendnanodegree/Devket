@@ -60,7 +60,7 @@ class Email(models.Model):
         verbose_name_plural = '이메일 목록'
 
 
-class List(models.Model):
+class Site(models.Model):
     """ 항목에 관한 데이터 모델 """
 
     title = models.CharField(verbose_name='타이틀', max_length=100)
@@ -90,8 +90,9 @@ class List(models.Model):
 class Highlight(models.Model):
     """ 항목 하이라이트 기능 모델 """
 
-    list = models.ForeignKey(List, on_delete=models.CASCADE, verbose_name='리스트')
-    content = models.TextField(verbose_name='컨텐츠')
+    site = models.ForeignKey(Site, on_delete=models.CASCADE, verbose_name='리스트')
+    content_text = models.TextField(verbose_name='컨텐츠문구')
+    content_location = models.JSONField(verbose_name='컨텐츠위치', default=dict)
 
     def __str__(self):
         return f"{self.content}"
@@ -104,7 +105,7 @@ class Highlight(models.Model):
 class Tag(models.Model):
     """ 웹 항목 태그 목록 모델  """
     name = models.CharField(verbose_name='이름', max_length=20)
-    list = models.ManyToManyField(List, verbose_name='리스트')
+    site = models.ManyToManyField(Site, verbose_name='리스트')
 
     def __str__(self):
         return f"{self.name}"
