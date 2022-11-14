@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 from pocket.views import (
-    HomeView, 
+    HomeView,
+    ParseAPIView, 
     SignUpView, 
     LogInView, 
     PwdHelpView, 
@@ -15,6 +16,7 @@ from pocket.views import (
 
 api_patterns = [
     path('list/', SiteAPIView.as_view()),
+    path('scrap/parse/', ParseAPIView.as_view()),
 ]
 
 urlpatterns = [
