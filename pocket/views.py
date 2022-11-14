@@ -1,5 +1,9 @@
-from django.shortcuts import render
 from django.views.generic import TemplateView
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import ListSerializer
+from .models import List
+
 class HomeView(TemplateView):
     template_name = "common/home.html"
 
@@ -40,3 +44,29 @@ class PaymentView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+
+class MyListView(TemplateView):
+    """
+    mylist/base.html에 모든 항목들 리스트를 전달하는 함수
+    """
+
+    template_name: str = 'mylist/base.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["lists"] = List.objects.all()
+        return context
+
+
+class ListAPIView(APIView):
+    """
+    저장한 모든 항목 데이터들을 api로 쏴주는 함수
+    """
+
+    def get(self, request): 
+        list_qs = List.objects.all()  
+        
+        serializer = ListSerializer(list_qs, many=True)
+
+        return Response(serializer.data)
