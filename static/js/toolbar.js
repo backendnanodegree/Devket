@@ -82,6 +82,90 @@ function makeSearchTopToolBar() {
     appendTag(mobileSearchSpan, mobileSearchText)
 }
 
+function makeSaveTopToolBar() {
+    /* 저장 toolbar 생성 함수 */
+
+    const saveForm                  = createNode('form')
+    saveForm.className              = 'a14hwmit'
+    saveForm.autocomplete           = 'off'
+    appendTag(headerContainer, saveForm)
+    
+    const saveWindow                = createNode('div')
+    saveWindow.className            = 'a2ytnol'
+    appendTag(saveForm, saveWindow)
+    
+    const saveIcon                  = createNode('span')
+    saveIcon.className              = 'i1qqph0t icon a7o7dd7'
+    appendTag(saveWindow, saveIcon)
+
+    let saveIconSvgHTML             = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='save-icon-svg'></svg>`
+    saveIcon.insertAdjacentHTML('beforeend', saveIconSvgHTML)
+    const saveIconSvg               = getElement('.save-icon-svg')
+    
+    let saveIconPathHTML            = `<path fill-rule="evenodd" clip-rule="evenodd" d="M12 3a1 1 0 0 1 1 1v7h7a1 1 0 1 1 0 2h-7v7a1 1 0 1 1-2 0v-7H4a1 1 0 1 1 0-2h7V4a1 1 0 0 1 1-1Z"></path>`
+    saveIconSvg.insertAdjacentHTML('beforeend', saveIconPathHTML)
+
+    const saveInput                 = createNode('input')
+
+    saveInput.enterkeyhint          = 'send'
+    saveInput.placeholder           = 'URL 저장 https://...'
+    saveInput.className             = 'add-input'
+    saveInput.name                  = 'add-input'
+    saveInput.type                  = 'url'
+
+    saveInput.setAttribute('aria-label', '주머니에 아이템 추가')
+    saveInput.setAttribute('data-cy', 'add-input')
+    appendTag(saveWindow, saveInput)
+
+    const saveButton                = createNode('button')
+    saveButton.className            = 'add-button'
+    saveButton.setAttribute('data-cy', 'add-submit')
+    appendTag(saveForm, saveButton)
+
+    const saveFont                  = createNode('font')
+    saveFont.style                  = 'vertical-align: inherit;'
+    appendTag(saveButton, saveFont)
+
+    const saveText                  = createNode('font')
+    saveText.style                  = 'vertical-align: inherit;'
+    saveText.textContent            = '추가하다'
+    appendTag(saveFont, saveText)
+
+    const mobileSaveInput           = createNode('input')
+    mobileSaveInput.type            = 'submit'
+    mobileSaveInput.className       = 'mobile-submit'
+    appendTag(saveForm, mobileSaveInput)
+
+    const mobileSaveButton          = createNode('button')
+    mobileSaveButton.className      = 'cj9zxq3'
+    mobileSaveButton.setAttribute('data-cy', 'add-cancel')
+    appendTag(saveForm, mobileSaveButton)
+    
+    const mobileSaveSpan            = createNode('span')
+    mobileSaveSpan.className        = 'i1qqph0t icon c6uzcx'
+    appendTag(mobileSaveButton, mobileSaveSpan)
+
+    let mobileSaveSvgHTML           = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='save-icon-svg-m'>`
+    mobileSaveSpan.insertAdjacentHTML('beforeend', mobileSaveSvgHTML)
+    const mobileSaveIconSvg         = getElement('.save-icon-svg-m')
+
+    let mobileSaveIconPathHTML      = `<path fill-rule="evenodd" clip-rule="evenodd" d="M4.293 4.293a1 1 0 0 1 1.414 0L12 10.586l6.293-6.293a1 1 0 1 1 1.414 1.414L13.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414L12 13.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L10.586 12 4.293 5.707a1 1 0 0 1 0-1.414Z"></path>`
+    mobileSaveIconSvg.insertAdjacentHTML('beforeend', mobileSaveIconPathHTML)
+
+    const mobileSaveSpanC           = createNode('span')
+    mobileSaveSpanC.className       = 'c1xd9hu9'
+    appendTag(saveButton, mobileSaveSpanC)
+
+    const mobileSaveFont            = createNode('font')
+    mobileSaveFont.style            = 'vertical-align: inherit;'
+    appendTag(mobileSaveSpanC, mobileSaveFont)
+
+    const mobileSaveText            = createNode('font')
+    mobileSaveText.style            = 'vertical-align: inherit;'
+    mobileSaveText.textContent      = '취소'
+    appendTag(mobileSaveFont, mobileSaveText)
+}
+
 const headerContainer   = getElement('.global-nav-container > .n27eiag');
 const toolContainer     = getElement('.toolbar-wrap');
 const profileContainer  = getElement('.profile-wrap');
