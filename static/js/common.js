@@ -1,4 +1,22 @@
+function getElement(elemVal) {
+    /* 단일 요소 가져오는 함수 */
 
+    return document.querySelector(elemVal);
+}
+
+function getElements(val) {
+    /* 다중 요소 가져오는 함수 */
+
+    return document.querySelectorAll(val)
+}
+
+function removeElement(...args) {
+    /* 요소 제거 함수 */
+
+    args.map((element) => {
+        element.remove()
+    });
+}
 
 function createNode(tag) {
     /* tag를 생성하는 함수 */
@@ -129,6 +147,9 @@ function makeBottomToolbar(parentNode) {
 }
 
 export {
+    getElement,
+    getElements, 
+    removeElement,
     createNode, 
     appendTag, 
     makeBottomToolbar
