@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from pocket.models import User, Email, List, Highlight, Tag, Payment
+from pocket.models import User, Email, Site, Highlight, Tag, Payment
 
 admin.site.register(User)
 """
@@ -12,9 +12,9 @@ admin.site.register(Email)
 노경민 : Email 모델 Admin
 """
 
-admin.site.register(List)
+admin.site.register(Site)
 """
-노경민 : List 모델 Admin
+노경민 : Site 모델 Admin
 """
 
 admin.site.register(Highlight)
