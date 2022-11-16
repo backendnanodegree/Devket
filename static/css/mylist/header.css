@@ -1718,7 +1718,9 @@ a:hover .b1bq2cra {
 
 .c1n69ads {
     margin-left: auto;
-    color:var(--color-actionSecondary)
+    color:var(--color-actionSecondary);
+    padding: 0.75rem;
+    white-space: nowrap;
 }
 
 .c1n69ads, .c1n69ads:hover {
@@ -1866,7 +1868,9 @@ a:hover .b1bq2cra {
 
 .cj9zxq3 {
     margin-left: auto;
-    color:var(--color-actionSecondary)
+    color:var(--color-actionSecondary);
+    white-space: nowrap;
+    padding: 0.75rem;
 }
 
 .cj9zxq3, .cj9zxq3:hover {
@@ -2034,4 +2038,8 @@ a:hover .b1bq2cra {
     position: relative;
     align-items: center;
     flex: 1 1
+}
+
+.off {
+    display: none;
 }
