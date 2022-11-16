@@ -3,5 +3,5 @@ from .models import Site
 
 class SiteSerializer(ModelSerializer): 
     class Meta: 
-        model = Site
+        model   = Site
         exclude = ["created_at", "updated_at"]

@@ -42,8 +42,10 @@ class PremiumView(TemplateView):
     template_name = 'premium/base.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+
+        context          = super().get_context_data(**kwargs)
         context['login'] = True
+
         return context
 
 
@@ -51,6 +53,7 @@ class PaymentView(TemplateView):
     template_name = 'premium/payment.html'
 
     def get(self, request, *args, **kwargs):
+
         return super().get(request, *args, **kwargs)
 
 
@@ -62,8 +65,10 @@ class MyListView(TemplateView):
     template_name: str = 'mylist/base.html'
 
     def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["lists"] = Site.objects.all()
+
+        context             = super().get_context_data(**kwargs)
+        context["lists"]    = Site.objects.all()
+
         return context
 
 
@@ -73,11 +78,53 @@ class SiteAPIView(APIView):
     """
 
     def get(self, request): 
-        list_qs = Site.objects.all()  
-        
-        serializer = SiteSerializer(list_qs, many=True)
+
+        list_qs     = Site.objects.all()  
+        serializer  = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)
+
+
+
+class FavoriteAPIView(APIView):
+    """
+    Site model의 favortie column 값이 true인 data를 api로 만드는 함수
+    """
+
+    def get(self, request): 
+        list_qs     = Site.objects.filter(favorite=True)  
+        
+        serializer  = SiteSerializer(list_qs, many=True)
+
+        return Response(serializer.data)
+
+
+
+class ArticleAPIView(APIView):
+    """
+     Site model의 Video column 값이 false인 data를 api로 만드는 함수
+    """
+
+    def get(self, request): 
+        list_qs     = Site.objects.filter(video=False)
+        
+        serializer  = SiteSerializer(list_qs, many=True)
+
+        return Response(serializer.data)
+
+
+class VideoAPIView(APIView):
+    """
+     Site model의 Video column 값이 True인 data를 api로 만드는 함수
+    """
+
+    def get(self, request): 
+        list_qs     = Site.objects.filter(video=True)
+        
+        serializer  = SiteSerializer(list_qs, many=True)
+
+        return Response(serializer.data)
+
 
 
 class Status():
@@ -90,16 +137,16 @@ class ParseAPIView(APIView):
     @scrap_decorator
     def get(self, request, **kwards):
         result: dict = {}
-        video_type, title, image, url= '', '', '', ''
+        video_type, title, image, url = '', '', '', ''
         try:
             # 접근 여부(데코레이터를 통해 반환)
             if kwards['access']:
 
-                request_url: Response = requests.get(kwards['url'], allow_redirects=False)
-                request_url.encoding = request_url.apparent_encoding
+                request_url: Response   = requests.get(kwards['url'], allow_redirects=False)
+                request_url.encoding    = request_url.apparent_encoding
         
                 # html 객체로 변환  
-                web: BeautifulSoup = BeautifulSoup(request_url.text, 'html.parser')    
+                web: BeautifulSoup      = BeautifulSoup(request_url.text, 'html.parser')    
                 if web.find("meta", property="og:type"):
                     video_type = web.find("meta", property="og:type")['content']
 

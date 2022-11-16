@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <script type="module" src="{% static 'js/get-item-list.js' %}"></script>
+    <script type="module" src="{% static '/js/get-site-list.js' %}"></script>
     <script src="https://kit.fontawesome.com/c7083b595c.js" crossorigin="anonymous"></script>
     
     <link rel="stylesheet" href="{% static '/css/mylist/base.css' %}">
@@ -12,23 +12,23 @@
     <link rel="stylesheet" href="{% static '/css/mylist/header.css' %}">
     <link rel="stylesheet" href="{% static '/css/mylist/body.css' %}">
     <link rel="shortcut icon" href="{% static 'images/common/favicon.ico' %}">
-
+    
     <title>Devket</title>
 </head>
 
 
 <body>
-    <div id="__next" data-reactroot="">
+    <div id="__next">
 
         <!-- HEADER -->
         {% include 'mylist/header.html' %}
 
         <div class="fzr3ha2">
-            <div class="p16bck5y ">
+            <div class="p16bck5y">
                 <div class="m1jnn1pl">
                     <div class="s3icf2j side-nav" data-cy="side-nav">
                         <nav role="navigation">
-                            <button class="sv813dg" data-cy="side-nav-home">
+                            <button onclick="location.href='{% url 'home' %}'" class="sv813dg" id="home" data-cy="side-nav-home">
                                 <span class="i1qqph0t icon side-nav-icon">
                                     <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                                         aria-hidden="true">
@@ -38,7 +38,7 @@
                                     </svg>
                                 </span> 홈
                             </button>
-                            <button class="sv813dg" data-cy="side-nav-mylist">
+                            <button onclick="location.href='{% url 'mylist' %}'" class="sv813dg" id="mylist" data-cy="side-nav-mylist">
                                 <span class="i1qqph0t icon side-nav-icon">
                                     <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                                         aria-hidden="true">
@@ -47,7 +47,6 @@
                                         </path>
                                         <path fill-rule="evenodd" clip-rule="evenodd"
                                             d="M7 5a1 1 0 0 1 1-1h13a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1ZM7 12a1 1 0 0 1 1-1h13a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1ZM7 19a1 1 0 0 1 1-1h13a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Z">
-
                                         </path>
                                     </svg>
                                 </span> 내 목록
@@ -57,73 +56,43 @@
                                             aria-hidden="true">
                                             <path
                                                 d="M18.765 22.848a2 2 0 0 1-2.18-.434L12 17.828l-4.586 4.586A2 2 0 0 1 4 21V6a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v15a2 2 0 0 1-1.235 1.848Z">
-
                                             </path>
                                         </svg>
                                     </span>
                                 </span>
                             </button>
-                            <button class="sv813dg" data-cy="side-nav-discover">
-                                <span class="i1qqph0t icon side-nav-icon">
-                                    <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                        aria-hidden="true">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M7.422 6.122a1 1 0 0 0-1.3 1.3l2.828 7.07a1 1 0 0 0 .557.558l7.071 2.828a1 1 0 0 0 1.3-1.3l-2.828-7.07a1 1 0 0 0-.557-.558L7.422 6.122Zm3.226 7.23 4.507 1.803-1.803-4.507-2.704 2.704Z">
-
-                                        </path>
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 2c6.075 0 11-4.925 11-11S18.075 1 12 1 1 5.925 1 12s4.925 11 11 11Z">
-
-                                        </path>
-                                    </svg>
-                                </span> 검색
-                            </button>
-
                             <div class="s1jxyudr">필터
-
                             </div>
-                            <button class="sv813dg" data-cy="side-nav-archive">
+
+                            <button onclick="" type="click" class="sv813dg" id="categories" data-cy="side-nav-archive">
                                 <span class="i1qqph0t icon side-nav-icon">
-                                    <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                        aria-hidden="true">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M1 4a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4Zm2 0v2h18V4H3Z">
-
-                                        </path>
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8Zm2 10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8H5v10Z">
-
-                                        </path>
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M15.707 11.293a1 1 0 0 1 0 1.414l-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 1 1 1.414-1.414L11 14.586l3.293-3.293a1 1 0 0 1 1.414 0Z">
-
-                                        </path>
-                                    </svg>
+                                    <i class='fa fa-regular fa-folder-open fa-lg'></i>
                                 </span> 카테고리
                             </button>
-                            <button class="sv813dg" data-cy="side-nav-favorites">
+
+                            <button onclick="location.href='{% url 'favorites' %}'" type="click" class="sv813dg" id="favorites" data-cy="side-nav-favorites">
                                 <span class="i1qqph0t icon side-nav-icon">
                                     <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                                         aria-hidden="true">
                                         <path fill-rule="evenodd" clip-rule="evenodd"
                                             d="M12 1a1 1 0 0 1 .897.557l2.706 5.484 6.051.88a1 1 0 0 1 .555 1.705l-4.38 4.268 1.034 6.027a1 1 0 0 1-1.45 1.054L12 18.13l-5.413 2.845a1 1 0 0 1-1.45-1.054l1.033-6.027-4.379-4.268a1 1 0 0 1 .555-1.706l6.051-.88 2.706-5.483A1 1 0 0 1 12 1Zm0 3.26L9.958 8.397a1 1 0 0 1-.753.548l-4.567.663 3.305 3.221a1 1 0 0 1 .287.885l-.78 4.548 4.085-2.147a1 1 0 0 1 .93 0l4.085 2.147-.78-4.548a1 1 0 0 1 .287-.885l3.305-3.22-4.567-.664a1 1 0 0 1-.753-.548L12 4.26Z">
-
                                         </path>
                                     </svg>
                                 </span> 즐겨찾기
                             </button>
-                            <button class="sv813dg" data-cy="side-nav-highlights">
+                            
+                            <button onclick="#" type="click" class="sv813dg" id="highlights" data-cy="side-nav-highlights">
                                 <span class="i1qqph0t icon side-nav-icon">
                                     <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                                         aria-hidden="true">
                                         <path fill-rule="evenodd" clip-rule="evenodd"
                                             d="M5.512 8.546a3 3 0 0 0-.51 4.195l-.724.723a3.001 3.001 0 0 0-.586 3.415L1.18 19.391a1 1 0 0 0 .39 1.656l4.243 1.414a1 1 0 0 0 1.023-.241l1.098-1.098a3.001 3.001 0 0 0 3.415-.586l.746-.746a3.001 3.001 0 0 0 4.133-.77l6.406-9.15a3 3 0 0 0-.337-3.842l-4.112-4.112a3 3 0 0 0-3.98-.233L5.512 8.546Zm9.932-5.294-8.693 6.863a1 1 0 0 0-.087 1.492l6.4 6.4a1 1 0 0 0 1.526-.134l6.405-9.15a1 1 0 0 0-.112-1.28L16.771 3.33a1 1 0 0 0-1.327-.078ZM6.4 14.172l-.707.707a1 1 0 0 0 0 1.414l2.829 2.828a1 1 0 0 0 1.414 0l.707-.707L6.4 14.172Z">
-
                                         </path>
                                     </svg>
                                 </span> 하이라이트
                             </button>
-                            <button class="sv813dg" data-cy="side-nav-articles">
+
+                            <button onclick="location.href='{% url 'articles' %}'"  type="click" class="sv813dg articles" id="articles" data-cy="side-nav-articles">
                                 <span class="i1qqph0t icon side-nav-icon">
                                     <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                                         aria-hidden="true">
@@ -136,7 +105,8 @@
                                     </svg>
                                 </span> 아티클
                             </button>
-                            <button class="sv813dg" data-cy="side-nav-videos">
+
+                            <button onclick="location.href='{% url 'videos' %}'" type="click" class="sv813dg videos" id="videos" data-cy="side-nav-videos">
                                 <span class="i1qqph0t icon side-nav-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
                                         <rect width="18" height="18" x="3" y="3" stroke="currentColor" fill="none"
@@ -149,19 +119,11 @@
                                 </span> 동영상
                             </button>
                             <div class="s1jxyudr">태그
-
                             </div>
 
-                            <button class="sv813dg" data-cy="side-nav-all-tags">
+                            <button onclick="#" type="click" class="sv813dg tags" id="tags" data-cy="side-nav-all-tags">
                                 <span class="i1qqph0t icon side-nav-icon">
-                                    <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                        aria-hidden="true">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 1.414.586L20 11.172a4 4 0 0 1 0 5.656L16.828 20a4 4 0 0 1-5.656 0l-8.586-8.586A2 2 0 0 1 2 10V4Zm8 0 8.586 8.586a2 2 0 0 1 0 2.828l-3.172 3.172a2 2 0 0 1-2.828 0L4 10V4h6Z">
-                                        </path>
-                                        <path d="M9 7.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z">
-                                        </path>
-                                    </svg>
+                                    <i class='fa-regular fa-hashtag fa-lg'></i>
                                 </span> 모든 태그
                             </button>
                         </nav>
