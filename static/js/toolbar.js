@@ -1,4 +1,4 @@
-import {getElement, getElements, offElement, onElement, removeElement, createNode, appendTag, makeBottomToolbar} from './common.js';
+import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, makeBottomToolbar} from './common.js';
 
 function makeSearchTopToolBar() {
     /* 검색 toolbar 생성 함수 */
@@ -81,7 +81,7 @@ function makeSearchTopToolBar() {
     mobileSearchText.textContent    = '취소'
     appendTag(mobileSearchFont, mobileSearchText)
 
-    toolbarCalcelBtn()
+    toolbarCancelBtn()
 }
 
 function makeSaveTopToolBar() {
@@ -166,7 +166,7 @@ function makeSaveTopToolBar() {
     mobileSaveText.textContent      = '취소'
     appendTag(mobileSaveFont, mobileSaveText)
 
-    toolbarCalcelBtn()
+    toolbarCancelBtn()
 }
 
 function makeBulkTopToolBar() {
@@ -322,16 +322,16 @@ function makeBulkTopToolBar() {
     cancleTextFont.textContent          = '취소'
     appendTag(cancleTextSpan, cancleTextFont)
     
-    toolbarCalcelBtn()
+    toolbarCancelBtn()
 }
 
-function toolbarCalcelBtn () {
-    const btnCancels                    = getElements('.toolbar-cancel');
-    const toolbarContainer              = getElement('.toolbar-container');
+function toolbarCancelBtn () {
+    const btnCancels        = getElements('.toolbar-cancel');
+    const toolbarContainer  = getElement('.toolbar-container');
 
     btnCancels.forEach((element) => {
         element.addEventListener('click', () => {
-            onElement(menuContainer, toolContainer, profileContainer)
+            makeElementOn(menuContainer, toolContainer, profileContainer)
             removeElement(toolbarContainer)
         })
     })
@@ -348,7 +348,7 @@ const btnBulk           = getElement('#bulk');
 btnSearch.addEventListener('click', () => {
     /* 검색 toolbar 클릭 이벤트 */
 
-    offElement(menuContainer, toolContainer, profileContainer);
+    makeElementOff(menuContainer, toolContainer, profileContainer);
 
     makeSearchTopToolBar();
 })
@@ -356,7 +356,7 @@ btnSearch.addEventListener('click', () => {
 btnSave.addEventListener('click', () => {
     /* 저장 toolbar 클릭 이벤트 */
 
-    offElement(menuContainer, toolContainer, profileContainer)
+    makeElementOff(menuContainer, toolContainer, profileContainer)
 
     makeSaveTopToolBar()
 })
@@ -364,7 +364,7 @@ btnSave.addEventListener('click', () => {
 btnBulk.addEventListener('click', () => {
     /* 벌크 toolbar 클릭 이벤트 */
 
-    offElement(menuContainer, toolContainer, profileContainer)
+    makeElementOff(menuContainer, toolContainer, profileContainer)
 
     makeBulkTopToolBar()
 })
