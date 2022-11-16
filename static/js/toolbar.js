@@ -326,8 +326,8 @@ function makeBulkTopToolBar() {
 }
 
 function toolbarCancelBtn () {
-    const btnCancels        = getElements('.toolbar-cancel');
-    const toolbarContainer  = getElement('.toolbar-container');
+    const btnCancels                    = getElements('.toolbar-cancel');
+    const toolbarContainer              = getElement('.toolbar-container');
 
     btnCancels.forEach((element) => {
         element.addEventListener('click', () => {
