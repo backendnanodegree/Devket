@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from pocket.views import (
-    HomeView,
+    HomeView, 
     ParseAPIView, 
     SignUpView, 
     LogInView, 
@@ -11,12 +11,18 @@ from pocket.views import (
     PaymentView,
     MyListView,
     SiteAPIView,
+    FavoriteAPIView, 
+    ArticleAPIView, 
+    VideoAPIView,
+
 )
 
-
 api_patterns = [
-    path('list/', SiteAPIView.as_view()),
-    path('scrap/parse/', ParseAPIView.as_view()),
+    path('sites/', SiteAPIView.as_view()),
+    path('scrap/parse/', ParseAPIView.as_view()), 
+    path('favorites/', FavoriteAPIView.as_view()),
+    path('articles/', ArticleAPIView.as_view()),
+    path('videos/', VideoAPIView.as_view()),
 ]
 
 urlpatterns = [
@@ -29,6 +35,9 @@ urlpatterns = [
 
     #mylist
     path('mylist/', MyListView.as_view(), name='mylist'), 
+    path('mylist/favorites/', MyListView.as_view(), name='favorites'), 
+    path('mylist/articles/', MyListView.as_view(), name='articles'), 
+    path('mylist/videos/', MyListView.as_view(), name='videos'), 
 
     # payment
     path('premium/', PremiumView.as_view(), name='premium'),
@@ -36,4 +45,5 @@ urlpatterns = [
 
     # api
     path('api/', include(api_patterns)),
+
 ]

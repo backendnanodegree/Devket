@@ -1,5 +1,3 @@
-
-
 function createNode(tag) {
     /* tag를 생성하는 함수 */
 
@@ -15,20 +13,20 @@ function appendTag(parent, element) {
 function makeFavoriteInToolBar(parentNode) {
     /* 하단 툴바의 즐겨찾기 버튼 Dom을 만드는 함수 */
 
-    const favoriteButtonContainer = createNode('span')
+    const favoriteButtonContainer   = createNode('span')
     appendTag(parentNode, favoriteButtonContainer)
 
-    const favoriteButton = createNode('button')
-    favoriteButton.className = 'm11fpiro t1221eea pmdugmx d1mp5exd'
+    const favoriteButton        = createNode('button')
+    favoriteButton.className    = 'm11fpiro t1221eea pmdugmx d1mp5exd'
     favoriteButton.setAttribute('data-tooltip', '즐겨찾기')
     appendTag(favoriteButtonContainer, favoriteButton)
 
-    const favoriteIconContainer = createNode('span')
+    const favoriteIconContainer     = createNode('span')
     favoriteIconContainer.className = 'i1qqph0t icon'
     appendTag(favoriteButton, favoriteIconContainer)
 
-    const favoriteIcon = createNode('i')
-    favoriteIcon.className = 'fa-regular fa-star fa-lg'
+    const favoriteIcon      = createNode('i')
+    favoriteIcon.className  = 'fa-regular fa-star fa-lg'
     appendTag(favoriteIconContainer, favoriteIcon)
 
 }
@@ -36,43 +34,42 @@ function makeFavoriteInToolBar(parentNode) {
 function makeCategoryInToolBar(parentNode) {
     /* 하단 툴바의 category button Dom을 만드는 함수 */
 
-    const categoryButtonContainer = createNode('span')
+    const categoryButtonContainer   = createNode('span')
     appendTag(parentNode, categoryButtonContainer)
 
-    const categoryButton = createNode('button')
-    categoryButton.className = 'm11fpiro t1221eea pmdugmx d1mp5exd'
+    const categoryButton        = createNode('button')
+    categoryButton.className    = 'm11fpiro t1221eea pmdugmx d1mp5exd'
     categoryButton.setAttribute('data-tooltip', '카테고리')
     appendTag(categoryButtonContainer, categoryButton)
 
-    const categoryIconContainer = createNode('span')
+    const categoryIconContainer     = createNode('span')
     categoryIconContainer.className = 'i1qqph0t icon'
     appendTag(categoryButton, categoryIconContainer)
 
-    const categoryIcon = createNode('i')
-    categoryIcon.className = 'fa fa-regular fa-folder-open fa-lg'
+    const categoryIcon      = createNode('i')
+    categoryIcon.className  = 'fa fa-regular fa-folder-open fa-lg'
     appendTag(categoryIconContainer, categoryIcon)
 
 }
 
-
 function makeTagInToolBar(itemActions) {
     /* 하단 툴바의 tag button Dom을 만드는 함수 */
 
-    const tagButtonContainer = createNode('span')
+    const tagButtonContainer    = createNode('span')
     appendTag(itemActions, tagButtonContainer)
 
-    const tagButton = createNode('button')
+    const tagButton     = createNode('button')
     tagButton.className = 'm11fpiro t1221eea pmdugmx d1mp5exd'
     tagButton.setAttribute('data-tooltip', '태그')
     appendTag(tagButtonContainer, tagButton)
 
-    const tagIconContainer = createNode('span')
-    tagIconContainer.className = 'i1qqph0t icon'
+    const tagIconContainer      = createNode('span')
+    tagIconContainer.className  = 'i1qqph0t icon'
     appendTag(tagButton, tagIconContainer)
 
     
-    const tagIcon = createNode('i')
-    tagIcon.className = 'fa-regular fa-hashtag fa-lg'
+    const tagIcon       = createNode('i')
+    tagIcon.className   = 'fa-regular fa-hashtag fa-lg'
     appendTag(tagIconContainer, tagIcon)
 
 }
@@ -83,18 +80,18 @@ function makeDeleteInToolBar(parentNode) {
     const deleteButtonContainer = createNode('span')
     appendTag(parentNode, deleteButtonContainer)
 
-    const deleteButton = createNode('button')
-    deleteButton.className = 'm11fpiro t1221eea pmdugmx d1mp5exd'
+    const deleteButton      = createNode('button')
+    deleteButton.className  = 'm11fpiro t1221eea pmdugmx d1mp5exd'
     deleteButton.setAttribute('data-tooltip', '삭제')
     appendTag(deleteButtonContainer, deleteButton)
 
-    const deleteIconContainer = createNode('span')
-    deleteIconContainer.className = 'i1qqph0t icon'
+    const deleteIconContainer       = createNode('span')
+    deleteIconContainer.className   = 'i1qqph0t icon'
     appendTag(deleteButton, deleteIconContainer)
 
 
-    const deleteIcon = createNode('i')
-    deleteIcon.className = 'fa fa-regular fa-trash fa-lg'
+    const deleteIcon        = createNode('i')
+    deleteIcon.className    = 'fa fa-regular fa-trash fa-lg'
     appendTag(deleteIconContainer, deleteIcon)
 
 }
@@ -103,16 +100,16 @@ function makeBottomToolbar(parentNode) {
     /*각 항목마다 하단 툴바를 만드는 함수*/
 
      // bottom toolbar container - footer
-     const footer = createNode('footer')
-     footer.className = 'footer'
+     const footer       = createNode('footer')
+     footer.className   = 'footer'
      appendTag(parentNode, footer)
  
-     const itemActionsContainer = createNode('div')
+     const itemActionsContainer     = createNode('div')
      itemActionsContainer.className = 'i18uycg6 actions'
      appendTag(footer, itemActionsContainer)
  
-     const itemActions = createNode('div')
-     itemActions.className = 'item-actions'
+     const itemActions      = createNode('div')
+     itemActions.className  = 'item-actions'
      appendTag(itemActionsContainer, itemActions)
  
      // bottom toolbar - favorite
