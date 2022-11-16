@@ -1,10 +1,10 @@
-import {getElement, getElements, removeElement, createNode, appendTag, makeBottomToolbar} from './common.js';
+import {getElement, getElements, offElement, onElement, removeElement, createNode, appendTag, makeBottomToolbar} from './common.js';
 
 function makeSearchTopToolBar() {
     /* 검색 toolbar 생성 함수 */
 
     const searchForm                = createNode('form')
-    searchForm.className            = 'sxpxhia'
+    searchForm.className            = 'sxpxhia toolbar-container'
     searchForm.autocomplete         = 'off'
     appendTag(headerContainer, searchForm)
 
@@ -52,8 +52,8 @@ function makeSearchTopToolBar() {
     mobileSearchInput.className     = 'mobile-submit'
     appendTag(searchForm, mobileSearchInput)
 
-    const mobileSearchButton        = createNode('button')
-    mobileSearchButton.className    = 'c1n69ads'
+    const mobileSearchButton        = createNode('span')
+    mobileSearchButton.className    = 'c1n69ads toolbar-cancel'
     mobileSearchButton.setAttribute('data-cy', 'search-cancel')
     appendTag(searchForm, mobileSearchButton)
     
@@ -70,7 +70,7 @@ function makeSearchTopToolBar() {
 
     const mobileSearchSpanC         = createNode('span')
     mobileSearchSpanC.className     = 'c1nzshxn'
-    appendTag(searchButton, mobileSearchSpanC)
+    appendTag(mobileSearchButton, mobileSearchSpanC)
 
     const mobileSearchFont          = createNode('font')
     mobileSearchFont.style          = 'vertical-align: inherit;'
@@ -79,14 +79,16 @@ function makeSearchTopToolBar() {
     const mobileSearchText          = createNode('font')
     mobileSearchText.style          = 'vertical-align: inherit;'
     mobileSearchText.textContent    = '취소'
-    appendTag(mobileSearchSpan, mobileSearchText)
+    appendTag(mobileSearchFont, mobileSearchText)
+
+    toolbarCalcelBtn()
 }
 
 function makeSaveTopToolBar() {
     /* 저장 toolbar 생성 함수 */
 
     const saveForm                  = createNode('form')
-    saveForm.className              = 'a14hwmit'
+    saveForm.className              = 'a14hwmit toolbar-container'
     saveForm.autocomplete           = 'off'
     appendTag(headerContainer, saveForm)
     
@@ -98,15 +100,14 @@ function makeSaveTopToolBar() {
     saveIcon.className              = 'i1qqph0t icon a7o7dd7'
     appendTag(saveWindow, saveIcon)
 
-    let saveIconSvgHTML             = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='save-icon-svg'></svg>`
-    saveIcon.insertAdjacentHTML('beforeend', saveIconSvgHTML)
+    let saveIconSvgHthml             = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='save-icon-svg'></svg>`
+    saveIcon.insertAdjacentHTML('beforeend', saveIconSvgHthml)
     const saveIconSvg               = getElement('.save-icon-svg')
     
-    let saveIconPathHTML            = `<path fill-rule="evenodd" clip-rule="evenodd" d="M12 3a1 1 0 0 1 1 1v7h7a1 1 0 1 1 0 2h-7v7a1 1 0 1 1-2 0v-7H4a1 1 0 1 1 0-2h7V4a1 1 0 0 1 1-1Z"></path>`
-    saveIconSvg.insertAdjacentHTML('beforeend', saveIconPathHTML)
+    let saveIconPathHtml            = `<path fill-rule="evenodd" clip-rule="evenodd" d="M12 3a1 1 0 0 1 1 1v7h7a1 1 0 1 1 0 2h-7v7a1 1 0 1 1-2 0v-7H4a1 1 0 1 1 0-2h7V4a1 1 0 0 1 1-1Z"></path>`
+    saveIconSvg.insertAdjacentHTML('beforeend', saveIconPathHtml)
 
     const saveInput                 = createNode('input')
-
     saveInput.enterkeyhint          = 'send'
     saveInput.placeholder           = 'URL 저장 https://...'
     saveInput.className             = 'add-input'
@@ -136,8 +137,8 @@ function makeSaveTopToolBar() {
     mobileSaveInput.className       = 'mobile-submit'
     appendTag(saveForm, mobileSaveInput)
 
-    const mobileSaveButton          = createNode('button')
-    mobileSaveButton.className      = 'cj9zxq3'
+    const mobileSaveButton          = createNode('span')
+    mobileSaveButton.className      = 'cj9zxq3 toolbar-cancel'
     mobileSaveButton.setAttribute('data-cy', 'add-cancel')
     appendTag(saveForm, mobileSaveButton)
     
@@ -145,16 +146,16 @@ function makeSaveTopToolBar() {
     mobileSaveSpan.className        = 'i1qqph0t icon c6uzcx'
     appendTag(mobileSaveButton, mobileSaveSpan)
 
-    let mobileSaveSvgHTML           = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='save-icon-svg-m'>`
-    mobileSaveSpan.insertAdjacentHTML('beforeend', mobileSaveSvgHTML)
+    let mobileSaveSvgHtml           = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='save-icon-svg-m'>`
+    mobileSaveSpan.insertAdjacentHTML('beforeend', mobileSaveSvgHtml)
     const mobileSaveIconSvg         = getElement('.save-icon-svg-m')
 
-    let mobileSaveIconPathHTML      = `<path fill-rule="evenodd" clip-rule="evenodd" d="M4.293 4.293a1 1 0 0 1 1.414 0L12 10.586l6.293-6.293a1 1 0 1 1 1.414 1.414L13.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414L12 13.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L10.586 12 4.293 5.707a1 1 0 0 1 0-1.414Z"></path>`
-    mobileSaveIconSvg.insertAdjacentHTML('beforeend', mobileSaveIconPathHTML)
+    let mobileSaveIconPathHtml      = `<path fill-rule="evenodd" clip-rule="evenodd" d="M4.293 4.293a1 1 0 0 1 1.414 0L12 10.586l6.293-6.293a1 1 0 1 1 1.414 1.414L13.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414L12 13.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L10.586 12 4.293 5.707a1 1 0 0 1 0-1.414Z"></path>`
+    mobileSaveIconSvg.insertAdjacentHTML('beforeend', mobileSaveIconPathHtml)
 
     const mobileSaveSpanC           = createNode('span')
     mobileSaveSpanC.className       = 'c1xd9hu9'
-    appendTag(saveButton, mobileSaveSpanC)
+    appendTag(mobileSaveButton, mobileSaveSpanC)
 
     const mobileSaveFont            = createNode('font')
     mobileSaveFont.style            = 'vertical-align: inherit;'
@@ -164,6 +165,176 @@ function makeSaveTopToolBar() {
     mobileSaveText.style            = 'vertical-align: inherit;'
     mobileSaveText.textContent      = '취소'
     appendTag(mobileSaveFont, mobileSaveText)
+
+    toolbarCalcelBtn()
+}
+
+function makeBulkTopToolBar() {
+    const bulkWrap                      = createNode('div')
+    bulkWrap.className                  = 'b1xsx9mu toolbar-container'
+    appendTag(headerContainer, bulkWrap)
+    
+    const bulkInnerWrap                 = createNode('div')
+    bulkInnerWrap.className             = 'bn8myry'
+    appendTag(bulkWrap, bulkInnerWrap)
+    
+    const bulkContainer                 = createNode('div')
+    bulkContainer.className             = 'bulk-container'
+    appendTag(bulkInnerWrap, bulkContainer)
+
+    const bulkAction                    = createNode('div')
+    bulkAction.className                = 'bulk-actions'
+    appendTag(bulkContainer, bulkAction)
+    
+    const tagButton                     = createNode('button')
+    tagButton.className                 = 'b1vi9mhm t1221eea pzhe358'
+
+    tagButton.setAttribute('aria-label', '꼬리표')
+    tagButton.setAttribute('data-cy', 'bulk-tag')
+    tagButton.setAttribute('data-tooltip', 'Tag')
+    appendTag(bulkAction, tagButton)
+
+    const tagIcon                       = createNode('span')
+    tagIcon.className                   = 'i1qqph0t icon b172fsd5'
+    appendTag(tagButton, tagIcon)
+
+    let tagIconSvgHtml                  = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="tag-icon-svg"></svg>`
+    tagIcon.insertAdjacentHTML('beforeend', tagIconSvgHtml)
+    const tagIconSvg = getElement('.tag-icon-svg')
+
+
+    const tagIconPathHtml               = `<path fill-rule="evenodd" clip-rule="evenodd" d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 1.414.586L20 11.172a4 4 0 0 1 0 5.656L16.828 20a4 4 0 0 1-5.656 0l-8.586-8.586A2 2 0 0 1 2 10V4Zm8 0 8.586 8.586a2 2 0 0 1 0 2.828l-3.172 3.172a2 2 0 0 1-2.828 0L4 10V4h6Z"></path>
+                                            <path d="M9 7.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"></path>`
+    tagIconSvg.insertAdjacentHTML('beforeend', tagIconPathHtml)
+
+    const favoriteButton                = createNode('button')
+    favoriteButton.className            = 'b1vi9mhm t1221eea pzhe358'
+
+    favoriteButton.setAttribute('aria-label', '가장 좋아하는')
+    favoriteButton.setAttribute('data-cy', 'bulk-favorite')
+    favoriteButton.setAttribute('data-tooltip', 'Favorite')
+    appendTag(bulkAction, favoriteButton)
+
+    const favoriteIcon                  = createNode('span')
+    favoriteIcon.className              = 'i1qqph0t icon b172fsd5'
+    appendTag(favoriteButton, favoriteIcon)
+
+    let favoriteIconSvgHtml             = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="favorite-icon-svg"></svg>`
+    favoriteIcon.insertAdjacentHTML('beforeend', favoriteIconSvgHtml)
+    const favoriteIconSvg               = getElement('.favorite-icon-svg')
+
+    const favoriteIconPathHtml          = `<path fill-rule="evenodd" clip-rule="evenodd" d="M12 1a1 1 0 0 1 .897.557l2.706 5.484 6.051.88a1 1 0 0 1 .555 1.705l-4.38 4.268 1.034 6.027a1 1 0 0 1-1.45 1.054L12 18.13l-5.413 2.845a1 1 0 0 1-1.45-1.054l1.033-6.027-4.379-4.268a1 1 0 0 1 .555-1.706l6.051-.88 2.706-5.483A1 1 0 0 1 12 1Zm0 3.26L9.958 8.397a1 1 0 0 1-.753.548l-4.567.663 3.305 3.221a1 1 0 0 1 .287.885l-.78 4.548 4.085-2.147a1 1 0 0 1 .93 0l4.085 2.147-.78-4.548a1 1 0 0 1 .287-.885l3.305-3.22-4.567-.664a1 1 0 0 1-.753-.548L12 4.26Z"></path>`
+    favoriteIconSvg.insertAdjacentHTML('beforeend', favoriteIconPathHtml)
+
+    const categoryButton                = createNode('button')
+    categoryButton.className            = 'b1vi9mhm t1221eea pzhe358'
+
+    categoryButton.setAttribute('aria-label', '카테고리')
+    categoryButton.setAttribute('data-cy', 'bulk-category')
+    categoryButton.setAttribute('data-tooltip', 'Category')
+    appendTag(bulkAction, categoryButton)
+
+    const categoryIcon                  = createNode('span')
+    categoryIcon.className              = 'i1qqph0t icon b172fsd5'
+    appendTag(categoryButton, categoryIcon)
+
+    let categoryIconSvgHtml             = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='category-icon-svg'></svg>`
+    categoryIcon.insertAdjacentHTML('beforeend', categoryIconSvgHtml)
+    const categoryIconSvg = getElement('.category-icon-svg')
+
+    const categoryIconPathHtml          = `<path fill-rule="evenodd" clip-rule="evenodd" d="M1 4a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4Zm2 0v2h18V4H3Z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8Zm2 10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8H5v10Z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.707 11.293a1 1 0 0 1 0 1.414l-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 1 1 1.414-1.414L11 14.586l3.293-3.293a1 1 0 0 1 1.414 0Z"></path>`
+    categoryIconSvg.insertAdjacentHTML('beforeend', categoryIconPathHtml)
+
+    const deleteButton                  = createNode('button')
+    deleteButton.className              = 'b1vi9mhm t1221eea pzhe358'
+    deleteButton.setAttribute('aria-label', '삭제')
+    deleteButton.setAttribute('data-cy', 'bulk-delete')
+    deleteButton.setAttribute('data-tooltip', 'Delete')
+    appendTag(bulkAction, deleteButton)
+
+    const deleteIcon                    = createNode('span')
+    deleteIcon.className                = 'i1qqph0t icon b172fsd5'
+    appendTag(deleteButton, deleteIcon)
+
+    let deleteIconSvgHtml               = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='delete-icon-svg'>`
+    deleteIcon.insertAdjacentHTML('beforeend', deleteIconSvgHtml)
+
+    deleteIcon.append()
+    const deleteIconSvg = getElement('.delete-icon-svg')
+
+    const deleteIconPathHtml            = `<path fill-rule="evenodd" clip-rule="evenodd" d="M7 5a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4h5a1 1 0 1 1 0 2h-1v11a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7H2a1 1 0 0 1 0-2h5Zm2 0a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2H9ZM5 7h14v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7Z"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9 10a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1ZM15 10a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1Z"></path>`
+    deleteIconSvg.insertAdjacentHTML('beforeend', deleteIconPathHtml)
+    
+    const toolbarActionLabl             = createNode('div')
+    toolbarActionLabl.className         = 'labelText'
+    appendTag(bulkAction, toolbarActionLabl)
+    
+    const mobileItemSelect              = createNode('font')
+    mobileItemSelect.style              = 'vertical-align: inherit;'
+    appendTag(toolbarActionLabl, mobileItemSelect)
+    
+    const mobileItemSelectFont          = createNode('font')
+    mobileItemSelectFont.style          = 'vertical-align: inherit;'
+    mobileItemSelectFont.textContent    = '항목선택'
+    appendTag(mobileItemSelect, mobileItemSelectFont)
+    
+    const bulkCancleButton              = createNode('button')
+    bulkCancleButton.className          = 'bulk-cancle toolbar-cancel'
+    bulkCancleButton.setAttribute('data-cy', 'clear-button')
+    appendTag(bulkInnerWrap, bulkCancleButton)
+    
+    const bulkCancleButtonFont              = createNode('font')
+    bulkCancleButtonFont.style              = 'vertical-align: inherit;'
+    appendTag(bulkCancleButton, bulkCancleButtonFont)
+    
+    const mobileItemSelectText          = createNode('font')
+    mobileItemSelectText.style          = 'vertical-align: inherit;'
+    mobileItemSelectText.textContent    = '취소'
+    appendTag(bulkCancleButtonFont, mobileItemSelectText)
+
+    const cancleButton                  = createNode('button')
+    cancleButton.className              = 'b1vi9mhm cancel-button toolbar-cancel'
+    cancleButton.setAttribute('data-cy', 'bulk-close')
+    appendTag(bulkInnerWrap, cancleButton)
+    
+    const cancleButtonSpan              = createNode('span')
+    cancleButtonSpan.className          = 'i1qqph0t icon nio91go'
+    appendTag(cancleButton, cancleButtonSpan)
+    
+    let cancleButtonSvgHtml             = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='cancle-icon-svg'></svg>`
+    cancleButtonSpan.insertAdjacentHTML('beforeend', cancleButtonSvgHtml)
+    const cancleButtonSvg = getElement('.cancle-icon-svg')
+    
+    let cancleButtonPathHtml            = `<path fill-rule="evenodd" clip-rule="evenodd" d="M4.293 4.293a1 1 0 0 1 1.414 0L12 10.586l6.293-6.293a1 1 0 1 1 1.414 1.414L13.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414L12 13.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L10.586 12 4.293 5.707a1 1 0 0 1 0-1.414Z"></path>`
+    cancleButtonSvg.insertAdjacentHTML('beforeend', cancleButtonPathHtml)
+
+    const cancleTextSpan                = createNode('span')
+    cancleTextSpan.className            = 'c1dmz8tx'
+    appendTag(cancleButton, cancleTextSpan)
+    
+    const cancleText                    = createNode('font')
+    cancleText.style                    = 'vertical-align: inherit;'
+    appendTag(cancleTextSpan, cancleText)
+    
+    const cancleTextFont                = createNode('font')
+    cancleTextFont.style                = 'vertical-align: inherit;'
+    cancleTextFont.textContent          = '취소'
+    appendTag(cancleTextSpan, cancleTextFont)
+    
+    toolbarCalcelBtn()
+}
+
+function toolbarCalcelBtn () {
+    const btnCancels                    = getElements('.toolbar-cancel');
+    const toolbarContainer              = getElement('.toolbar-container');
+
+    btnCancels.forEach((element) => {
+        element.addEventListener('click', () => {
+            onElement(menuContainer, toolContainer, profileContainer)
+            removeElement(toolbarContainer)
+        })
+    })
 }
 
 const headerContainer   = getElement('.global-nav-container > .n27eiag');
@@ -174,22 +345,26 @@ const btnSearch         = getElement('#search');
 const btnSave           = getElement('#save');
 const btnBulk           = getElement('#bulk');
 
-btnSearch.addEventListener('click', ()=>{
+btnSearch.addEventListener('click', () => {
+    /* 검색 toolbar 클릭 이벤트 */
 
-    removeElement(menuContainer, toolContainer, profileContainer);
+    offElement(menuContainer, toolContainer, profileContainer);
 
     makeSearchTopToolBar();
 })
 
-btnSave.addEventListener('click', ()=>{
+btnSave.addEventListener('click', () => {
+    /* 저장 toolbar 클릭 이벤트 */
 
-    removeElement(menuContainer, toolContainer, profileContainer);
+    offElement(menuContainer, toolContainer, profileContainer)
 
     makeSaveTopToolBar()
 })
 
-btnBulk.addEventListener('click', ()=>{
+btnBulk.addEventListener('click', () => {
+    /* 벌크 toolbar 클릭 이벤트 */
 
-    removeElement(menuContainer, toolContainer, profileContainer);
+    offElement(menuContainer, toolContainer, profileContainer)
 
+    makeBulkTopToolBar()
 })
