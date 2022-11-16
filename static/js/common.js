@@ -10,6 +10,27 @@ function getElements(val) {
     return document.querySelectorAll(val)
 }
 
+function offElement(...args) {
+    /* 요소 off 처리 함수 */
+
+    args.map((element) => {
+        if (!element.classList.contains('off')) {
+            element.classList.add('off')
+        }
+    });
+}
+
+function onElement(...args) {
+    /* 요소 off 제거 함수 */
+
+    args.map((element) => {
+        if (element.classList.contains('off')) {
+            element.classList.remove('off')
+        }
+    });
+}
+
+
 function removeElement(...args) {
     /* 요소 제거 함수 */
 
@@ -148,7 +169,9 @@ function makeBottomToolbar(parentNode) {
 
 export {
     getElement,
-    getElements, 
+    getElements,
+    offElement,
+    onElement, 
     removeElement,
     createNode, 
     appendTag, 
