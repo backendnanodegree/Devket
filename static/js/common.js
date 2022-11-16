@@ -10,7 +10,7 @@ function getElements(val) {
     return document.querySelectorAll(val)
 }
 
-function offElement(...args) {
+function makeElementOff(...args) {
     /* 요소 off 처리 함수 */
 
     args.map((element) => {
@@ -20,7 +20,7 @@ function offElement(...args) {
     });
 }
 
-function onElement(...args) {
+function makeElementOn(...args) {
     /* 요소 off 제거 함수 */
 
     args.map((element) => {
@@ -167,8 +167,8 @@ function makeBottomToolbar(parentNode) {
 export {
     getElement,
     getElements,
-    offElement,
-    onElement, 
+    makeElementOff,
+    makeElementOn, 
     removeElement,
     createNode, 
     appendTag, 
