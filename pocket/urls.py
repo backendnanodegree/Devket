@@ -3,6 +3,7 @@ from django.urls import path, include
 
 from pocket.views import (
     HomeView, 
+    ParseAPIView, 
     SignUpView, 
     LogInView, 
     PwdHelpView, 
@@ -17,10 +18,11 @@ from pocket.views import (
 )
 
 api_patterns = [
-    path('sites/', SiteAPIView.as_view(), name='sites_api'),
-    path('favorites/', FavoriteAPIView.as_view(), name='favorite_api'),
-    path('articles/', ArticleAPIView.as_view(), name='article_api'),
-    path('videos/', VideoAPIView.as_view(), name='video_api'),
+    path('sites/', SiteAPIView.as_view()),
+    path('scrap/parse/', ParseAPIView.as_view()), 
+    path('favorites/', FavoriteAPIView.as_view()),
+    path('articles/', ArticleAPIView.as_view()),
+    path('videos/', VideoAPIView.as_view()),
 ]
 
 urlpatterns = [
