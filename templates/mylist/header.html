@@ -1,4 +1,6 @@
 {% load static %}
+<script type="module" src="{% static '/js/toolbar.js' %}"></script>
+
 <!-- HEADER  -->
 <header class="h1bh2prp logged-in">
     <div class="p16bck5y global-nav-container">
@@ -22,7 +24,7 @@
                     </div>
                 </a>
             </div>
-            <div class="lvjqdba" aria-label="페이지 탐색">
+            <div class="lvjqdba menu-wrap" aria-label="페이지 탐색">
                 <ul class="l1fcr43o links" data-cy="primary-links">
                     <li>
                         <a id="global-nav-home-link" data-cy="global-nav-home-link" class="" href="/ko/home?src=navbar">홈</a>
@@ -36,10 +38,10 @@
                     
                 </ul>
             </div>
-            <div class="tva5lsb">
+            <div class="tva5lsb toolbar-wrap">
                 <ul class="l1udqb06">
                     <li>
-                        <button type="button" data-cy="global-nav-tool-search" aria-label="검색" data-tooltip="검색" class="t1221eea pzhe358">
+                        <button type="button" data-cy="global-nav-tool-search" aria-label="검색" data-tooltip="검색" class="t1221eea pzhe358" id="search">
                             <span class="i1qqph0t icon">
                                 <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M16.618 18.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675ZM18 11a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z">
@@ -50,7 +52,7 @@
                         </button>
                     </li>
                     <li>
-                        <button type="button" data-cy="global-nav-tool-add-item" aria-label="URL 저장" data-tooltip="URL 저장" class="t1221eea pzhe358">
+                        <button type="button" data-cy="global-nav-tool-add-item" aria-label="URL 저장" data-tooltip="URL 저장" class="t1221eea pzhe358" id="save">
                             <span class="i1qqph0t icon">
                                 <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M12 3a1 1 0 0 1 1 1v7h7a1 1 0 1 1 0 2h-7v7a1 1 0 1 1-2 0v-7H4a1 1 0 1 1 0-2h7V4a1 1 0 0 1 1-1Z">
@@ -61,7 +63,7 @@
                         </button>
                     </li>
                     <li>
-                        <button type="button" data-cy="global-nav-tool-bulk-edit" aria-label="대량 편집" data-tooltip="대량 편집" class="t1221eea pzhe358">
+                        <button type="button" data-cy="global-nav-tool-bulk-edit" aria-label="대량 편집" data-tooltip="대량 편집" class="t1221eea pzhe358" id="bulk">
                             <span class="i1qqph0t icon">
                                 <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M9 22a2 2 0 0 0 1.414-.586L20 11.828a4 4 0 0 0 0-5.656L17.828 4a4 4 0 0 0-5.656 0l-9.586 9.586A2 2 0 0 0 2 15v5a2 2 0 0 0 2 2h5Zm7.414-16.586 2.172 2.172a2 2 0 0 1 0 2.828l-1.379 1.379-5-5 1.379-1.379a2 2 0 0 1 2.828 0Zm-5.621 2.793L4 15v5h5l6.793-6.793-5-5Z">
@@ -73,7 +75,7 @@
                     </li>
                 </ul>
             </div>
-            <div>
+            <div class="profile-wrap">
                 <a href="https://getpocket.com/premium?utm_source=web-app-premium-cta&amp;utm_campaign=global-nav&amp;src=navbar" id="global-nav.upgrade-link" class="a6gcv5v u12stye0" data-cy="upgrade-link">
                     <span class="i1qqph0t icon">
                         <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

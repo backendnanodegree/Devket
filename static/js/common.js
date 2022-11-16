@@ -1,3 +1,42 @@
+function getElement(elemVal) {
+    /* 단일 요소 가져오는 함수 */
+
+    return document.querySelector(elemVal);
+}
+
+function getElements(val) {
+    /* 다중 요소 가져오는 함수 */
+
+    return document.querySelectorAll(val)
+}
+
+function makeElementOff(...args) {
+    /* 요소 off 처리 함수 */
+
+    args.map((element) => {
+        if (!element.classList.contains('off')) {
+            element.classList.add('off')
+        }
+    });
+}
+
+function makeElementOn(...args) {
+    /* 요소 off 제거 함수 */
+
+    args.map((element) => {
+        if (element.classList.contains('off')) {
+            element.classList.remove('off')
+        }
+    });
+}
+function removeElement(...args) {
+    /* 요소 제거 함수 */
+
+    args.map((element) => {
+        element.remove()
+    });
+}
+
 function createNode(tag) {
     /* tag를 생성하는 함수 */
 
@@ -126,6 +165,11 @@ function makeBottomToolbar(parentNode) {
 }
 
 export {
+    getElement,
+    getElements,
+    makeElementOff,
+    makeElementOn, 
+    removeElement,
     createNode, 
     appendTag, 
     makeBottomToolbar
