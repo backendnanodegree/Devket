@@ -1,9 +1,10 @@
-import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, makeBottomToolbar} from './common.js';
+import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie} from './common.js';
+import {getSiteList} from './get-site-list.js';
 
 function makeSearchTopToolBar() {
     /* 검색 toolbar 생성 함수 */
 
-    const searchForm                = createNode('form')
+    const searchForm                = createNode('div')
     searchForm.className            = 'sxpxhia toolbar-container'
     searchForm.autocomplete         = 'off'
     appendTag(headerContainer, searchForm)
@@ -81,13 +82,17 @@ function makeSearchTopToolBar() {
     mobileSearchText.textContent    = '취소'
     appendTag(mobileSearchFont, mobileSearchText)
 
+    searchInput.focus()
+
     toolbarCancelBtn()
+
+    searchSitebyToolbar()
 }
 
 function makeSaveTopToolBar() {
     /* 저장 toolbar 생성 함수 */
 
-    const saveForm                  = createNode('form')
+    const saveForm                  = createNode('div')
     saveForm.className              = 'a14hwmit toolbar-container'
     saveForm.autocomplete           = 'off'
     appendTag(headerContainer, saveForm)
@@ -166,10 +171,16 @@ function makeSaveTopToolBar() {
     mobileSaveText.textContent      = '취소'
     appendTag(mobileSaveFont, mobileSaveText)
 
+    saveInput.focus()
+
     toolbarCancelBtn()
+
+    saveSitebyToolbar()
 }
 
 function makeBulkTopToolBar() {
+    /* 벌크 toolbar 생성 함수 */
+
     const bulkWrap                      = createNode('div')
     bulkWrap.className                  = 'b1xsx9mu toolbar-container'
     appendTag(headerContainer, bulkWrap)
@@ -284,8 +295,8 @@ function makeBulkTopToolBar() {
     bulkCancleButton.setAttribute('data-cy', 'clear-button')
     appendTag(bulkInnerWrap, bulkCancleButton)
     
-    const bulkCancleButtonFont              = createNode('font')
-    bulkCancleButtonFont.style              = 'vertical-align: inherit;'
+    const bulkCancleButtonFont          = createNode('font')
+    bulkCancleButtonFont.style          = 'vertical-align: inherit;'
     appendTag(bulkCancleButton, bulkCancleButtonFont)
     
     const mobileItemSelectText          = createNode('font')
@@ -326,6 +337,8 @@ function makeBulkTopToolBar() {
 }
 
 function toolbarCancelBtn () {
+    /* toolbar 닫기 클릭 이벤트 */
+
     const btnCancels                    = getElements('.toolbar-cancel');
     const toolbarContainer              = getElement('.toolbar-container');
 
@@ -334,6 +347,63 @@ function toolbarCancelBtn () {
             makeElementOn(menuContainer, toolContainer, profileContainer)
             removeElement(toolbarContainer)
         })
+    })
+}
+
+function saveSitebyToolbar () {
+    /* toolbar URL 저장 클릭 이벤트 */
+
+    const toolbarSaveBtn = getElement('.add-button');
+
+    toolbarSaveBtn.addEventListener('click', () => {
+
+        const csrftoken = getCookie('csrftoken');
+        let url         = getElement('.add-input').value;
+        let regex       = /^(http(s)?:\/\/)([^\/]*)(\.)(com|net|kr|my|shop|info|site|io)(\/)/gi
+
+        if(regex.test(url)){
+            const data = {
+                method: "POST",
+                headers: {
+                    'content-type': 'application/json',
+                    'X-CSRFToken' : csrftoken,        
+                },
+                body: JSON.stringify({
+                    url: url,
+                    id : 'User Id' 
+                })
+            }
+            
+            fetch(`/api/scrap/parse/`, data)
+                .then(response => {
+                    let status = response.status
+                    if (status === 200) {
+                        alert('저장에 성공하였습니다.')
+                    }else if (status === 202) {
+                        alert('저장할 수 없는 사이트입니다.')
+                    }else if (status === 400) {
+                        alert(response.json.msg)
+                    }
+                    return response.json()
+                })
+                // 조회함수 호출
+                .then(result => getSiteList()) 
+                .catch(error => console.log(error))
+        }else{
+            alert('형식에 맞는 url을 입력바랍니다. (http://... or https://...)')
+        }
+    })
+}
+
+function searchSitebyToolbar () {
+    /* toolbar title 조회 클릭 이벤트*/
+
+    const searchToolbarBtn = getElement('.search-button');
+
+    searchToolbarBtn.addEventListener('click', () => {
+        let word = getElement('.search-input').value;
+
+        getSiteList(word)
     })
 }
 

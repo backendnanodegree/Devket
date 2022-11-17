@@ -1,4 +1,4 @@
-import {createNode, appendTag, makeBottomToolbar} from './common.js';
+import {createNode, appendTag, makeBottomToolbar, removeAllNode} from './common.js';
 import { apiURL } from './api-url.js';
 
 const root = document.getElementById("root")
@@ -45,8 +45,9 @@ function renderItem(post) {
 
     const publisher     = createNode('a')
     publisher.className = 'publisher'
-    publisher.href      = 'https://www.theatlantic.com/technology/archive/2022/10/phone-call-greeting-smartphone-technological-error/671910/?utm_source=pocket_saves'
-    publisher.innerText = 'The Atlantic'
+    publisher.href      = post.url == null ? '#' : post.url
+    publisher.innerText = post.host_name
+    publisher.setAttribute('target', post.url == null ? '' : '_blank')
     appendTag(details, publisher)
 
     // 각 항목(item)의 하단 툴바
@@ -56,6 +57,9 @@ function renderItem(post) {
 
 function mapPosts(data) {
     /* 각 데이터를 renderPost에 전달하여 rendering하는 함수 */
+
+    // root 모든 요소 초기화
+    removeAllNode(root)
 
     return data.map(item => {
         renderItem(item);
@@ -77,11 +81,11 @@ function makeActive() {
     }
     
     // 선택한 태그만 활성화
-    tabName.className += ' active';
+    tabName.classList.add('active')
    
   }
 
-function getSiteList() {
+function getSiteList(word='') {
     /* 각 탭에 해당되는 모든 항목들을 조회하여 함수 */
     
     // 선택한 탭 활성화하기  
@@ -91,15 +95,18 @@ function getSiteList() {
     const url = window.location.pathname.split('/');
     const apiUrlKey = url.filter((element) => element != "").pop();
 
-    fetch(`${apiURL[apiUrlKey]}`)
-    .then(response => response.json())
-    .then(data => {
-        mapPosts(data)
-    })
-    .catch(err => {
-        console.log(err);
-    })
-
+    fetch(`${apiURL[apiUrlKey]}?word=${word}`)
+        .then(response => response.json())
+        .then(data => {
+            mapPosts(data)
+        })
+        .catch(err => {
+            console.log(err);
+        })
 }
 
 getSiteList()
+
+export {
+    getSiteList
+};

@@ -9,7 +9,8 @@ def scrap_decorator(func):
 
     @wraps(func)
     def exec_func(self, request) -> func:
-        url: str = request.GET.get('url')
+        # path 파라미터 -> request body 파라미터로 절달 변경
+        url: str = self.request.data.get('url')
 
         if access(scheme(slash(url)), header): 
             # Issue : scheme가 붙어있지 않으면 파싱 불가

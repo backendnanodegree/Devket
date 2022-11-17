@@ -10,6 +10,7 @@ from django.db import transaction
 from bs4 import BeautifulSoup
 import requests
 
+from django.db.models import Q
 from .models import Site, User
 
 class HomeView(TemplateView):
@@ -78,9 +79,11 @@ class SiteAPIView(APIView):
     """
 
     def get(self, request): 
-
-        list_qs     = Site.objects.all()  
-        serializer  = SiteSerializer(list_qs, many=True)
+        word: str  = request.GET['word']              
+        list_qs    = Site.objects.filter(
+                        Q(title__contains=word)|
+                        Q(host_name__contains=word))  
+        serializer = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)
 
@@ -105,10 +108,14 @@ class ArticleAPIView(APIView):
      Site model의 Video column 값이 false인 data를 api로 만드는 함수
     """
 
-    def get(self, request): 
-        list_qs     = Site.objects.filter(video=False)
-        
-        serializer  = SiteSerializer(list_qs, many=True)
+    def get(self, request):
+        word: str  = request.GET['word']   
+        list_qs    = Site.objects.filter(
+                            Q(video=False)&(
+                            Q(title__contains=word)|
+                            Q(host_name__contains=word)))
+
+        serializer = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)
 
@@ -118,24 +125,21 @@ class VideoAPIView(APIView):
      Site model의 Video column 값이 True인 data를 api로 만드는 함수
     """
 
-    def get(self, request): 
-        list_qs     = Site.objects.filter(video=True)
-        
-        serializer  = SiteSerializer(list_qs, many=True)
+    def get(self, request):
+        word: str  = request.GET['word'] 
+        list_qs    = Site.objects.filter(
+                        Q(video=True)&(
+                        Q(title__contains=word)|
+                        Q(host_name__contains=word)))
+
+        serializer = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)
 
-
-
-class Status():
-    OK = 'True'
-    NO = 'False'
-    ERROR = 'Error'        
-
-
+        
 class ParseAPIView(APIView):
     @scrap_decorator
-    def get(self, request, **kwards):
+    def post(self, request, **kwards):
         result: dict = {}
         video_type, title, image, url = '', '', '', ''
         try:
@@ -187,22 +191,22 @@ class ParseAPIView(APIView):
                             content         = content
                         )
 
-                    return Response({'msg':'Success save that web site', 'status':status.HTTP_200_OK})
+                    return Response({'msg':'Success save that web site'}, status=status.HTTP_200_OK)
 
                 else:
-                    return Response({'msg':'Do not save that web site', 'status':status.HTTP_202_ACCEPTED})
+                    return Response({'msg':'Do not save that web site'}, status=status.HTTP_202_ACCEPTED)
 
             else:
-                return Response({'msg':'Do not access that web site', 'status':status.HTTP_202_ACCEPTED})
+                return Response({'msg':'Do not access that web site'}, status=status.HTTP_202_ACCEPTED)
                                 
         except SyntaxError as s:
-            return Response({'msg':f'Save list process SyntaxError that Class ParseAPIView: {s.args}', 'status':status.HTTP_400_BAD_REQUEST})
+            return Response({'msg':f'Save list process SyntaxError that Class ParseAPIView: {s.args}'}, status=status.HTTP_400_BAD_REQUEST)
 
         except NameError as n:
-            return Response({'msg':f'Save list process NameError that Class ParseAPIView : {n.args}', 'status':status.HTTP_400_BAD_REQUEST})
+            return Response({'msg':f'Save list process NameError that Class ParseAPIView : {n.args}'}, status=status.HTTP_400_BAD_REQUEST)
             
         except KeyError as k:
-            return Response({'msg':f'Save list process KeyError that Class ParseAPIView : {k.args}', 'status':status.HTTP_400_BAD_REQUEST})
+            return Response({'msg':f'Save list process KeyError that Class ParseAPIView : {k.args}'}, status=status.HTTP_400_BAD_REQUEST)
 
     def parse(self, web: object) -> str:
         ''' 
@@ -213,6 +217,6 @@ class ParseAPIView(APIView):
             html: str = str(web.main)
 
         except Exception as e:       
-            raise RuntimeError('Function parse Exception error that Class ParseAPIView : {e.args}')
+            raise RuntimeError(f'Function parse Exception error that Class ParseAPIView : {e.args}')
         
         return html

@@ -49,6 +49,34 @@ function appendTag(parent, element) {
     return parent.appendChild(element);
 }
 
+function removeAllNode(element) {
+    /* 요소의 내부 요소 초기화 */
+
+    while (element.hasChildNodes()) {
+        element.removeChild(element.firstChild);
+    }
+}
+
+function getCookie(name) {
+    /* 이름값의 cookie 값 가져오기 */
+
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+
+        const cookies = document.cookie.split(';');
+
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 function makeFavoriteInToolBar(parentNode) {
     /* 하단 툴바의 즐겨찾기 버튼 Dom을 만드는 함수 */
 
@@ -171,6 +199,8 @@ export {
     makeElementOn, 
     removeElement,
     createNode, 
-    appendTag, 
+    appendTag,
+    removeAllNode,
+    getCookie, 
     makeBottomToolbar
 };
