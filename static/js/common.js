@@ -49,6 +49,14 @@ function appendTag(parent, element) {
     return parent.appendChild(element);
 }
 
+function removeAllNode(element) {
+    /* 요소의 내부 요소 초기화 */
+
+    while (element.hasChildNodes()) {
+        element.removeChild(element.firstChild);
+    }
+}
+
 function getCookie(name) {
     /* 이름값의 cookie 값 가져오기 */
 
@@ -192,6 +200,7 @@ export {
     removeElement,
     createNode, 
     appendTag,
+    removeAllNode,
     getCookie, 
     makeBottomToolbar
 };
