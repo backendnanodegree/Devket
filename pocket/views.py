@@ -125,17 +125,10 @@ class VideoAPIView(APIView):
 
         return Response(serializer.data)
 
-
-
-class Status():
-    OK = 'True'
-    NO = 'False'
-    ERROR = 'Error'        
-
-
+        
 class ParseAPIView(APIView):
     @scrap_decorator
-    def get(self, request, **kwards):
+    def post(self, request, **kwards):
         result: dict = {}
         video_type, title, image, url = '', '', '', ''
         try:
@@ -187,22 +180,22 @@ class ParseAPIView(APIView):
                             content         = content
                         )
 
-                    return Response({'msg':'Success save that web site', 'status':status.HTTP_200_OK})
+                    return Response({'msg':'Success save that web site'}, status=status.HTTP_200_OK)
 
                 else:
-                    return Response({'msg':'Do not save that web site', 'status':status.HTTP_202_ACCEPTED})
+                    return Response({'msg':'Do not save that web site'}, status=status.HTTP_202_ACCEPTED)
 
             else:
-                return Response({'msg':'Do not access that web site', 'status':status.HTTP_202_ACCEPTED})
+                return Response({'msg':'Do not access that web site'}, status=status.HTTP_202_ACCEPTED)
                                 
         except SyntaxError as s:
-            return Response({'msg':f'Save list process SyntaxError that Class ParseAPIView: {s.args}', 'status':status.HTTP_400_BAD_REQUEST})
+            return Response({'msg':f'Save list process SyntaxError that Class ParseAPIView: {s.args}'}, status=status.HTTP_400_BAD_REQUEST)
 
         except NameError as n:
-            return Response({'msg':f'Save list process NameError that Class ParseAPIView : {n.args}', 'status':status.HTTP_400_BAD_REQUEST})
+            return Response({'msg':f'Save list process NameError that Class ParseAPIView : {n.args}'}, status=status.HTTP_400_BAD_REQUEST)
             
         except KeyError as k:
-            return Response({'msg':f'Save list process KeyError that Class ParseAPIView : {k.args}', 'status':status.HTTP_400_BAD_REQUEST})
+            return Response({'msg':f'Save list process KeyError that Class ParseAPIView : {k.args}'}, status=status.HTTP_400_BAD_REQUEST)
 
     def parse(self, web: object) -> str:
         ''' 
@@ -213,6 +206,6 @@ class ParseAPIView(APIView):
             html: str = str(web.main)
 
         except Exception as e:       
-            raise RuntimeError('Function parse Exception error that Class ParseAPIView : {e.args}')
+            raise RuntimeError(f'Function parse Exception error that Class ParseAPIView : {e.args}')
         
         return html
