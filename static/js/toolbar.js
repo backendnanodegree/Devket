@@ -1,9 +1,9 @@
-import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, makeBottomToolbar} from './common.js';
+import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie} from './common.js';
 
 function makeSearchTopToolBar() {
     /* 검색 toolbar 생성 함수 */
 
-    const searchForm                = createNode('form')
+    const searchForm                = createNode('div')
     searchForm.className            = 'sxpxhia toolbar-container'
     searchForm.autocomplete         = 'off'
     appendTag(headerContainer, searchForm)
@@ -87,7 +87,7 @@ function makeSearchTopToolBar() {
 function makeSaveTopToolBar() {
     /* 저장 toolbar 생성 함수 */
 
-    const saveForm                  = createNode('form')
+    const saveForm                  = createNode('div')
     saveForm.className              = 'a14hwmit toolbar-container'
     saveForm.autocomplete           = 'off'
     appendTag(headerContainer, saveForm)
@@ -167,9 +167,13 @@ function makeSaveTopToolBar() {
     appendTag(mobileSaveFont, mobileSaveText)
 
     toolbarCancelBtn()
+
+    saveSitebyToolbar()
 }
 
 function makeBulkTopToolBar() {
+    /* 벌크 toolbar 생성 함수 */
+
     const bulkWrap                      = createNode('div')
     bulkWrap.className                  = 'b1xsx9mu toolbar-container'
     appendTag(headerContainer, bulkWrap)
@@ -284,8 +288,8 @@ function makeBulkTopToolBar() {
     bulkCancleButton.setAttribute('data-cy', 'clear-button')
     appendTag(bulkInnerWrap, bulkCancleButton)
     
-    const bulkCancleButtonFont              = createNode('font')
-    bulkCancleButtonFont.style              = 'vertical-align: inherit;'
+    const bulkCancleButtonFont          = createNode('font')
+    bulkCancleButtonFont.style          = 'vertical-align: inherit;'
     appendTag(bulkCancleButton, bulkCancleButtonFont)
     
     const mobileItemSelectText          = createNode('font')
@@ -326,6 +330,8 @@ function makeBulkTopToolBar() {
 }
 
 function toolbarCancelBtn () {
+    /* toolbar 닫기 클릭 이벤트 */
+
     const btnCancels                    = getElements('.toolbar-cancel');
     const toolbarContainer              = getElement('.toolbar-container');
 
@@ -334,6 +340,36 @@ function toolbarCancelBtn () {
             makeElementOn(menuContainer, toolContainer, profileContainer)
             removeElement(toolbarContainer)
         })
+    })
+}
+
+function saveSitebyToolbar () {
+    /* toolbar URL 저장 클릭 이벤트 */
+
+    const btnToolbarSave = getElement('.add-button');
+
+    btnToolbarSave.addEventListener('click', () => {
+
+        const csrftoken = getCookie('csrftoken');
+        let inputUrlValue = getElement('.add-input').value;
+
+        const data = {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json',
+                'X-CSRFToken' : csrftoken,
+
+            },
+            body: JSON.stringify({
+                url: inputUrlValue,
+                id : 'User Id' 
+            })
+        }
+        
+        fetch(`/api/scrap/parse/`, data)
+            .then(response  => response.json())
+            .then(result    => console.log(result))
+            .catch(error    => console.log(error))
     })
 }
 
