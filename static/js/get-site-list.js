@@ -1,4 +1,4 @@
-import {createNode, appendTag, makeBottomToolbar} from './common.js';
+import {createNode, appendTag, makeBottomToolbar, removeAllNode} from './common.js';
 import { apiURL } from './api-url.js';
 
 const root = document.getElementById("root")
@@ -57,6 +57,9 @@ function renderItem(post) {
 function mapPosts(data) {
     /* 각 데이터를 renderPost에 전달하여 rendering하는 함수 */
 
+    // root 모든 요소 초기화
+    removeAllNode(root)
+
     return data.map(item => {
         renderItem(item);
     })
@@ -103,3 +106,7 @@ function getSiteList() {
 }
 
 getSiteList()
+
+export {
+    getSiteList
+};
