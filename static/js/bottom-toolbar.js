@@ -128,23 +128,23 @@ function changeFavoriteValue(favoriteButton, post) {
         if (favoriteButton.classList.contains('active') == false) {
           
             // PUT: favorite 값 True로 수정
-            const data          = {
-                                    method: 'PUT',
-                                    headers: {
-                                        'content-type': 'application/json',
-                                        'X-CSRFToken' : csrftoken,  
-                                    },
-                                    body: JSON.stringify({
-                                        favorite: true,
-                                    })
-                                }
+          const data          = {
+              method: 'PUT',
+              headers: {
+                  'content-type': 'application/json',
+                  'X-CSRFToken' : csrftoken,  
+                },
+                body: JSON.stringify({
+                    favorite: true,
+                })
+            }
             fetch(`/api/sites/${post.id}/`, data)
             .then(response => {
                 let status = response.status
 
                 // 하단 툴바의 즐겨찾기 버튼 활성화
-                if (status === 200) {
-                
+                if (status === 202) {
+                    
                     favoriteButton.classList.add('active');
                     favoriteButton.setAttribute('data-tooltip', '즐겨찾기 해제');
                     console.log("즐겨찾기 목록에 추가했습니다.", data)
@@ -155,7 +155,6 @@ function changeFavoriteValue(favoriteButton, post) {
         
         // 하단 툴바의 즐겨찾기 버튼 비활성화 및 즐겨찾기 목록에서 제거
         else { 
-
             // PUT: favorite 값 false로 수정
             const data          = {
                                     method: 'PUT',
@@ -167,13 +166,12 @@ function changeFavoriteValue(favoriteButton, post) {
                                         'favorite': false,
                                     })
                                 }
-         
             fetch(`/api/sites/${post.id}/`, data)
             .then(response => {
                 let status = response.status
 
                 // 하단 툴바의 즐겨찾기 버튼 비활성화
-                if (status === 200) {
+                if (status === 202) {
                 
                     favoriteButton.classList.remove('active');
                     favoriteButton.setAttribute('data-tooltip', '즐겨찾기');
