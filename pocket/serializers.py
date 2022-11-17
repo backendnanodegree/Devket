@@ -2,18 +2,6 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from .models import Site
 
-"""
-{
-    'title': [ErrorDetail(string='This field is required.', code='required')], 
-'thumbnail_url': [ErrorDetail(string='This field is required.', code='required')], 
-'host_name': [ErrorDetail(string='This field is required.', code='required')], 
-'content': [ErrorDetail(string='This field is required.', code='required')], 
-'category': [ErrorDetail(string='This field is required.', code='required')], 
-'user': [ErrorDetail(string='This field is required.', code='required')]
-}
-"""
-
-
 class SiteSerializer(ModelSerializer):
 
     CATEGORY_CHOICES = [(1, 'python'), (2, 'django'), (3, 'javascript'), (4, 'orm'), (5, 'mysql'), (6, 'drf'), (7, 'docker'), (8, 'os'), (9, 'aws'), (10, 'html'), (11, 'css'), (12, 'git'), (13, 'linux')]
