@@ -116,6 +116,23 @@ function makeBottomToolbar(parentNode, post) {
  
      // bottom toolbar - delete
      makeDeleteInToolBar(itemActions, post)
+
+     let itemBulkContainer = createNode('div')
+     itemBulkContainer.className = 'item-bulk-select off'
+     appendTag(itemActionsContainer, itemBulkContainer)
+
+     let itemBulkIcon = createNode('span')
+     itemBulkIcon.className = 'i1qqph0t icon'
+     appendTag(itemBulkContainer, itemBulkIcon)
+
+     let itemBulkIconSvgHtml = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='select-icon-svg'></svg>`
+     itemBulkIcon.insertAdjacentHTML('beforeend', itemBulkIconSvgHtml)   
+     
+     let itemBulkIconSvg = itemBulkIcon.querySelector('.select-icon-svg')
+
+     let itemBulkIconPathHtml = `<path fill-rule="evenodd" clip-rule="evenodd" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 2c6.075 0 11-4.925 11-11S18.075 1 12 1 1 5.925 1 12s4.925 11 11 11Z"></path>`
+     itemBulkIconSvg.insertAdjacentHTML('beforeend', itemBulkIconPathHtml)   
+     
 }
 
 function changeFavoriteValue(favoriteButton, post) {
