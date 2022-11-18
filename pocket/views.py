@@ -1,6 +1,7 @@
 from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 
 from pocket.decorator import scrap_decorator
@@ -30,7 +31,6 @@ class LogInView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
-
 
 class PwdHelpView(TemplateView):
     template_name = 'user/password.html'
@@ -89,9 +89,52 @@ class SiteAPIView(APIView):
 
 
 
+class SiteDetailAPIView(APIView):
+    """
+    세부 항목 조회, 수정, 삭제 api
+    """
+
+    def get_object(self, pk):
+        
+        return get_object_or_404(Site, pk=pk)
+
+
+    def get(self, request, pk, *args, **kwargs): 
+
+        site = self.get_object(pk)
+
+        serializer  = SiteSerializer(site)
+
+        return Response(serializer.data)
+    
+
+    def put(self, request, pk):
+        
+        site = self.get_object(pk)
+
+        serializer = SiteSerializer(site, data=request.data, partial=True)
+ 
+        if serializer.is_valid(raise_exception=True):
+           
+            serializer.save()
+            
+            return Response({'msg':'Updated successfully'}, status=status.HTTP_202_ACCEPTED)
+      
+        return Response({'msg': f'{serializer.errors}'})
+
+
+    def delete(self, request, pk):
+
+        site = self.get_object(pk)
+        
+        site.delete()
+
+        return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)
+       
+
 class FavoriteAPIView(APIView):
     """
-    Site model의 favortie column 값이 true인 data를 api로 만드는 함수
+    Site model의 favorite 값이 true인 data를 api로 만드는 함수
     """
 
     def get(self, request): 
@@ -105,7 +148,7 @@ class FavoriteAPIView(APIView):
 
 class ArticleAPIView(APIView):
     """
-     Site model의 Video column 값이 false인 data를 api로 만드는 함수
+     Site model의 video 값이 false인 data를 api로 만드는 함수
     """
 
     def get(self, request):
@@ -122,7 +165,7 @@ class ArticleAPIView(APIView):
 
 class VideoAPIView(APIView):
     """
-     Site model의 Video column 값이 True인 data를 api로 만드는 함수
+     Site model의 video 값이 true인 data를 api로 만드는 함수
     """
 
     def get(self, request):

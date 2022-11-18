@@ -11,6 +11,7 @@ from pocket.views import (
     PaymentView,
     MyListView,
     SiteAPIView,
+    SiteDetailAPIView,
     FavoriteAPIView, 
     ArticleAPIView, 
     VideoAPIView,
@@ -19,6 +20,7 @@ from pocket.views import (
 
 api_patterns = [
     path('sites/', SiteAPIView.as_view()),
+    path('sites/<int:pk>/', SiteDetailAPIView.as_view()),
     path('scrap/parse/', ParseAPIView.as_view()), 
     path('favorites/', FavoriteAPIView.as_view()),
     path('articles/', ArticleAPIView.as_view()),
