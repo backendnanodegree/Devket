@@ -2041,5 +2041,5 @@ a:hover .b1bq2cra {
 }
 
 .off {
-    display: none;
+    display: none !important;
 }
