@@ -286,7 +286,7 @@ function makeBulkTopToolBar() {
     appendTag(toolbarActionLabl, mobileItemSelect)
     
     const mobileItemSelectFont          = createNode('font')
-    mobileItemSelectFont.style          = 'vertical-align: inherit;'
+    mobileItemSelectFont.style          = 'vertical-align: inherit; display:block; min-width:100px;'
     mobileItemSelectFont.textContent    = '항목선택'
     appendTag(mobileItemSelect, mobileItemSelectFont)
     
@@ -334,19 +334,49 @@ function makeBulkTopToolBar() {
     appendTag(cancleTextSpan, cancleTextFont)
     
     toolbarCancelBtn()
+
+    // bulk 버튼 클릭 시 벌크 선택 활성화
+    activeSelectBulk()
+}
+
+function activeSelectBulk() {
+    /* toolbar bulk 활성화시 사이트 항목 선택 버튼 활성화 */
+    
+    // toolbar 활성화 시 벌크 선택 toggle 처리(활성화)
+    changeSelectBulk()
 }
 
 function toolbarCancelBtn () {
     /* toolbar 닫기 클릭 이벤트 */
-
-    const btnCancels                    = getElements('.toolbar-cancel');
-    const toolbarContainer              = getElement('.toolbar-container');
+    
+    const btnCancels = getElements('.toolbar-cancel');
+    const toolbarContainer = getElement('.toolbar-container');
 
     btnCancels.forEach((element) => {
         element.addEventListener('click', () => {
+            // 취소 버튼 클릭 시 툴바 컨테이너 지운 후 기본 mane 활성화
             makeElementOn(menuContainer, toolContainer, profileContainer)
             removeElement(toolbarContainer)
+            
+            // 취소 버튼 클릭 시 벌크 선택 toggle 처리(비확성화)      
+            changeSelectBulk()
         })
+    }) 
+}
+
+function changeSelectBulk() {
+    /* 벌크 선택 유무를 확인 후 change 함수 */
+    
+    const bottomToolbarConatiner = getElements('.i18uycg6')
+
+    bottomToolbarConatiner.forEach(element => {
+        element.classList.toggle('bulkEdit')
+
+        let bottomToolbar = element.querySelector('.item-actions')
+        let bulkToolbar = element.querySelector('.item-bulk-select')
+
+        bottomToolbar.classList.toggle('off')
+        bulkToolbar.classList.toggle('off')
     })
 }
 
@@ -407,13 +437,13 @@ function searchSitebyToolbar () {
     })
 }
 
-const headerContainer   = getElement('.global-nav-container > .n27eiag');
-const toolContainer     = getElement('.toolbar-wrap');
-const profileContainer  = getElement('.profile-wrap');
-const menuContainer     = getElement('.menu-wrap');
-const btnSearch         = getElement('#search');
-const btnSave           = getElement('#save');
-const btnBulk           = getElement('#bulk');
+const headerContainer  = getElement('.global-nav-container > .n27eiag');
+const toolContainer    = getElement('.toolbar-wrap');
+const profileContainer = getElement('.profile-wrap');
+const menuContainer    = getElement('.menu-wrap');
+const btnSearch        = getElement('#search');
+const btnSave          = getElement('#save');
+const btnBulk          = getElement('#bulk');
 
 btnSearch.addEventListener('click', () => {
     /* 검색 toolbar 클릭 이벤트 */
