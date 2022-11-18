@@ -286,6 +286,7 @@ function makeBulkTopToolBar() {
     appendTag(toolbarActionLabl, mobileItemSelect)
     
     const mobileItemSelectFont          = createNode('font')
+    mobileItemSelectFont.className      = 'selected-site'
     mobileItemSelectFont.style          = 'vertical-align: inherit; display:block; min-width:100px;'
     mobileItemSelectFont.textContent    = '항목선택'
     appendTag(mobileItemSelect, mobileItemSelectFont)
@@ -366,8 +367,12 @@ function toolbarCancelBtn () {
 
 function changeSelectBulk() {
     /* 벌크 선택 유무를 확인 후 change 함수 */
-    
+
+    const headerToolbar = getElement('.n27eiag')
     const bottomToolbarConatiner = getElements('.i18uycg6')
+
+    // 벌크 활성화 상태 체크
+    headerToolbar.classList.toggle('bulk')
 
     bottomToolbarConatiner.forEach(element => {
         element.classList.toggle('bulkEdit')

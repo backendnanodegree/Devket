@@ -1,4 +1,4 @@
-import {createNode, appendTag, getElement, removeAllNode} from './common.js';
+import {createNode, appendTag, getElement, getElements, removeAllNode} from './common.js';
 import { makeBottomToolbar } from './bottom-toolbar.js';
 import { apiURL } from './api-url.js';
 
@@ -11,7 +11,12 @@ function renderItem(post) {
 
     const article               = createNode('article')
     article.className           = 'c18o9ext grid hiddenActions noExcerpt'
+    article.onclick             = selectBulkIcon
     appendTag(root, article)
+
+    const selectedBack          = createNode('div')
+    selectedBack.className      = 'selectedBack'
+    appendTag(article, selectedBack)
 
     const item                  = createNode('div')
     item.className              = 'cardWrap'
@@ -56,6 +61,36 @@ function renderItem(post) {
     // 각 항목(item)의 하단 툴바
     makeBottomToolbar(article, post)
    
+}
+
+function selectBulkIcon(){
+    /* bulk toolbar 활성화 시 사이트 항목 선택 이벤트  */
+
+    const headerToolbar = getElement('.n27eiag')
+
+    if (headerToolbar.classList.contains('bulk')) {
+        this.classList.toggle('selected')
+    
+        let choiceIcon = this.querySelector('.select-dot-choice')
+        choiceIcon.classList.toggle('off')
+        
+        // 선택 벌크 카운팅
+        countSelectedBuik()
+    }
+}
+
+function countSelectedBuik(){
+    const selected_articles = []
+    const articles = getElements('.c18o9ext')
+
+    articles.forEach(element => {
+        if(element.classList.contains('selected')){
+            selected_articles.push(element)
+        }
+    })
+
+    const selectedSite = getElement('.selected-site')
+    selectedSite.textContent = selected_articles.length == 0 ? '항목선택' : `${selected_articles.length}개 항목`
 }
 
 function mapPosts(data) {

@@ -3,7 +3,8 @@
     position: relative;
     border-radius: var(--size025);
     overflow: hidden;
-    padding-bottom: 1rem
+    padding-bottom: 1rem;
+    padding-top : 1rem;
 }
 
 .side-by-side .c97c5c {
@@ -463,7 +464,8 @@
 .c18o9ext.block .cardWrap,
 .c18o9ext.grid .cardWrap {
     display: block;
-    padding-bottom: 2.5rem
+    padding-bottom: 2.5rem;
+    cursor: pointer;
 }
 
 .c18o9ext.block.hiddenActions .actions a,
@@ -525,7 +527,8 @@
     .c18o9ext.block .cardWrap,
     .c18o9ext.grid .cardWrap {
         display: grid;
-        padding-bottom: 1.85rem
+        padding-bottom: 1.85rem;
+        cursor: pointer;
     }
 
     .c18o9ext.block .footer .actions,
@@ -1428,4 +1431,9 @@
 
 .fa-lg {
     vertical-align: -0.6em;
+}
+
+.item-bulk-select {
+    cursor: pointer;
+    padding-left: 85%;
 }
