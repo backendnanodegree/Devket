@@ -2043,3 +2043,8 @@ a:hover .b1bq2cra {
 .off {
     display: none !important;
 }
+
+.item-bulk-select {
+    cursor: pointer;
+    padding-left: 85%;
+}
