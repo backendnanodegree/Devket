@@ -198,7 +198,7 @@ function makeBulkTopToolBar() {
     appendTag(bulkContainer, bulkAction)
     
     const tagButton                     = createNode('button')
-    tagButton.className                 = 'b1vi9mhm t1221eea pzhe358'
+    tagButton.className                 = 'b1vi9mhm t1221eea pzhe358 bulk-tag'
 
     tagButton.setAttribute('aria-label', '꼬리표')
     tagButton.setAttribute('data-cy', 'bulk-tag')
@@ -219,7 +219,7 @@ function makeBulkTopToolBar() {
     tagIconSvg.insertAdjacentHTML('beforeend', tagIconPathHtml)
 
     const favoriteButton                = createNode('button')
-    favoriteButton.className            = 'b1vi9mhm t1221eea pzhe358'
+    favoriteButton.className            = 'b1vi9mhm t1221eea pzhe358 bulk-favorite'
 
     favoriteButton.setAttribute('aria-label', '가장 좋아하는')
     favoriteButton.setAttribute('data-cy', 'bulk-favorite')
@@ -238,7 +238,7 @@ function makeBulkTopToolBar() {
     favoriteIconSvg.insertAdjacentHTML('beforeend', favoriteIconPathHtml)
 
     const categoryButton                = createNode('button')
-    categoryButton.className            = 'b1vi9mhm t1221eea pzhe358'
+    categoryButton.className            = 'b1vi9mhm t1221eea pzhe358 bulk-category'
 
     categoryButton.setAttribute('aria-label', '카테고리')
     categoryButton.setAttribute('data-cy', 'bulk-category')
@@ -257,7 +257,7 @@ function makeBulkTopToolBar() {
     categoryIconSvg.insertAdjacentHTML('beforeend', categoryIconPathHtml)
 
     const deleteButton                  = createNode('button')
-    deleteButton.className              = 'b1vi9mhm t1221eea pzhe358'
+    deleteButton.className              = 'b1vi9mhm t1221eea pzhe358 bulk-delete'
     deleteButton.setAttribute('aria-label', '삭제')
     deleteButton.setAttribute('data-cy', 'bulk-delete')
     deleteButton.setAttribute('data-tooltip', 'Delete')
@@ -338,6 +338,9 @@ function makeBulkTopToolBar() {
 
     // bulk 버튼 클릭 시 벌크 선택 활성화
     activeSelectBulk()
+
+    // bulk 내 태그, 즐겨찾기, 카테고리, 삭제 버튼 이베트
+    bulkButtonEventSet()
 }
 
 function activeSelectBulk() {
@@ -373,7 +376,7 @@ function changeSelectBulk() {
 
     // 벌크 활성화 상태 체크
     headerToolbar.classList.toggle('bulk')
-
+    
     bottomToolbarConatiner.forEach(element => {
         element.classList.toggle('bulkEdit')
 
@@ -473,3 +476,26 @@ btnBulk.addEventListener('click', () => {
 
     makeBulkTopToolBar()
 })
+
+function bulkButtonEventSet(){
+    const btnBulkTag       = getElement('.bulk-tag')
+    const btnBulkFavorite  = getElement('.bulk-favorite')
+    const btnBulkCategory  = getElement('.bulk-category')
+    const btnBulkDelete    = getElement('.bulk-delete')
+
+    btnBulkTag.addEventListener('click', () => {
+        alert('벌크 태그')
+    })
+    
+    btnBulkFavorite.addEventListener('click', () => {
+        alert('벌크 즐겨찾기')
+    })
+    
+    btnBulkCategory.addEventListener('click', () => {
+        alert('벌크 카테고리')
+    })
+    
+    btnBulkDelete.addEventListener('click', () => {
+        alert('벌크 삭제')
+    })
+}

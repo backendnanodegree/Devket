@@ -14,6 +14,12 @@ function renderItem(post) {
     article.onclick             = selectBulkIcon
     appendTag(root, article)
 
+    const postId                = createNode('input')
+    postId.className            = 'site-id'
+    postId.value                = post.id
+    postId.type                 = 'hidden'
+    appendTag(article, postId)
+
     const selectedBack          = createNode('div')
     selectedBack.className      = 'selectedBack'
     appendTag(article, selectedBack)
@@ -75,11 +81,13 @@ function selectBulkIcon(){
         choiceIcon.classList.toggle('off')
         
         // 선택 벌크 카운팅
-        countSelectedBuik()
+        countSelectedBulk()
     }
 }
 
-function countSelectedBuik(){
+function countSelectedBulk(){
+    /* 사이트 항목 선택 시 선택한 개수 toolbar에 표시하는 카운팅 함수 */
+
     const selected_articles = []
     const articles = getElements('.c18o9ext')
 
