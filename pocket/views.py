@@ -1,18 +1,29 @@
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
 from rest_framework import status
 
 from pocket.decorator import scrap_decorator
 from .serializers import SiteSerializer
 from urllib.parse import urlparse
 from django.db import transaction
+from django.db.models import Q
+from .models import Site, User
 from bs4 import BeautifulSoup
 import requests
 
-from django.db.models import Q
-from .models import Site, User
+# template view
+
+def mylist_view(request):
+
+    """
+    mylist/base.html에 모든 항목들 리스트를 전달하는 함수
+    """
+    if request.method == 'GET': 
+
+        return render(request, 'mylist/base.html')
 
 class HomeView(TemplateView):
     template_name = "common/home.html"
@@ -58,21 +69,8 @@ class PaymentView(TemplateView):
         return super().get(request, *args, **kwargs)
 
 
-class MyListView(TemplateView):
-    """
-    mylist/base.html에 모든 항목들 리스트를 전달하는 함수
-    """
 
-    template_name: str = 'mylist/base.html'
-
-    def get_context_data(self, *args, **kwargs):
-
-        context             = super().get_context_data(**kwargs)
-        context["lists"]    = Site.objects.all()
-
-        return context
-
-
+# api view
 class SiteAPIView(APIView):
     """
     저장한 모든 항목 데이터들을 api로 쏴주는 함수
@@ -113,9 +111,9 @@ class SiteDetailAPIView(APIView):
         site = self.get_object(pk)
 
         serializer = SiteSerializer(site, data=request.data, partial=True)
- 
+    
         if serializer.is_valid(raise_exception=True):
-           
+     
             serializer.save()
             
             return Response({'msg':'Updated successfully'}, status=status.HTTP_202_ACCEPTED)
@@ -128,7 +126,7 @@ class SiteDetailAPIView(APIView):
         site = self.get_object(pk)
         
         site.delete()
-
+    
         return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)
        
 

@@ -2,29 +2,32 @@ from django.contrib import admin
 from django.urls import path, include
 
 from pocket.views import (
-    HomeView, 
-    ParseAPIView, 
-    SignUpView, 
-    LogInView, 
-    PwdHelpView, 
-    PremiumView,
-    PaymentView,
-    MyListView,
+    # api_view
+    ParseAPIView,
     SiteAPIView,
     SiteDetailAPIView,
     FavoriteAPIView, 
     ArticleAPIView, 
     VideoAPIView,
 
+    # template_view
+    HomeView,
+    mylist_view, 
+    SignUpView, 
+    LogInView, 
+    PwdHelpView, 
+    PremiumView,
+    PaymentView,
+
 )
 
 api_patterns = [
-    path('sites/', SiteAPIView.as_view()),
-    path('sites/<int:pk>/', SiteDetailAPIView.as_view()),
-    path('scrap/parse/', ParseAPIView.as_view()), 
-    path('favorites/', FavoriteAPIView.as_view()),
-    path('articles/', ArticleAPIView.as_view()),
-    path('videos/', VideoAPIView.as_view()),
+    path('scrap/parse', ParseAPIView.as_view()), 
+    path('sites', SiteAPIView.as_view()),
+    path('sites/<int:pk>', SiteDetailAPIView.as_view()),
+    path('favorites', FavoriteAPIView.as_view()),
+    path('articles', ArticleAPIView.as_view()),
+    path('videos', VideoAPIView.as_view()),
 ]
 
 urlpatterns = [
@@ -35,11 +38,11 @@ urlpatterns = [
     path('login/', LogInView.as_view(), name='login'),
     path('login/password/', PwdHelpView.as_view(), name='password'),
 
-    #mylist
-    path('mylist/', MyListView.as_view(), name='mylist'), 
-    path('mylist/favorites/', MyListView.as_view(), name='favorites'), 
-    path('mylist/articles/', MyListView.as_view(), name='articles'), 
-    path('mylist/videos/', MyListView.as_view(), name='videos'), 
+    # mylist
+    path('mylist/', mylist_view, name='mylist'), 
+    path('mylist/favorites/', mylist_view, name='favorites'), 
+    path('mylist/articles/', mylist_view, name='articles'), 
+    path('mylist/videos/', mylist_view, name='videos'), 
 
     # payment
     path('premium/', PremiumView.as_view(), name='premium'),
@@ -47,5 +50,4 @@ urlpatterns = [
 
     # api
     path('api/', include(api_patterns)),
-
 ]
