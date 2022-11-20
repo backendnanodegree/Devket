@@ -177,6 +177,17 @@ class VideoAPIView(APIView):
 
         return Response(serializer.data)
 
+class DetailView(TemplateView):
+    """
+    detail 상세화면 템플릿 뷰
+    """
+    template_name = 'mylist/detail/detail.html'
+
+    def get(self, request, *args, **kwargs):
+        response = super(DetailView, self).get(self, *args, **kwargs)
+        return response
+
+
         
 class ParseAPIView(APIView):
     @scrap_decorator
