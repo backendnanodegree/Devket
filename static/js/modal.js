@@ -1,4 +1,4 @@
-import { createNode, appendTag, getElement, getCookie } from './common.js';
+import { createNode, appendTag, getElement, getCookie, getElements } from './common.js';
 
 function makeModal() {
     /* modal 창 만들기 */
@@ -12,7 +12,7 @@ function makeModal() {
     appendTag(next, modalOverlay)
 
     const modalContent              = createNode('div')
-    modalContent.className          = "ReactModal__Content ReactModal__Content--after-open m1gbisw7 animation-base animation-show"
+    modalContent.className          = "ReactModal__Content ReactModal__Content--after-open m1gbisw7 animation-base animation-show off"
     modalContent.tabindex           = '-1'
     modalContent.role               = 'dialog'
     modalContent.setAttribute('aria-label', '항목 삭제')
@@ -90,28 +90,32 @@ function makeModal() {
 
 }
 
-function openModal(deleteButton) {
+function openModal() {
     /* 하단 툴바의 삭제 버튼 클릭으로 modal 창 open */
-    
-    deleteButton.addEventListener('click', () => {
-        const body              = getElement('body');
-        const modalOverlay      = getElement('.o1ohlj7h')
+    const body              = getElement('body');
+    const modalOverlay      = getElement('.o1ohlj7h')
+    const hidModal          = getElement('.m1gbisw7')
 
-        body.classList.add('modal-open')
-        modalOverlay.classList.add('animation-show');
-    })
-
-
+    modalOverlay.classList.add('animation-show');
+    body.classList.add('modal-open')
+    hidModal.classList.toggle('off')
 }   
 
 function closeModal() {
     /* Modal 창 닫기 */
 
     const body                  = getElement('body');
+    const articles              = getElements('article')
     const modalOverlay          = getElement('.o1ohlj7h')
-        
+    const hidModal              = getElement('.m1gbisw7')
+
     modalOverlay.classList.remove('animation-show');
     body.classList.remove('modal-open')
+    hidModal.classList.toggle('off')       
+
+    articles.forEach((element) => {
+        element.classList.remove('selected')
+    })
 }
 
 function deleteSite() {

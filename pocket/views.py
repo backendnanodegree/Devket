@@ -97,7 +97,7 @@ class SiteDetailAPIView(APIView):
         return get_object_or_404(Site, pk=pk)
 
 
-    def get(self, request, pk, *args, **kwargs): 
+    def get(self, request, pk): 
 
         site = self.get_object(pk)
 
@@ -128,7 +128,23 @@ class SiteDetailAPIView(APIView):
         site.delete()
     
         return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)
-       
+
+
+class SiteBulkAPIView(APIView):
+    """
+    벌크 항목 즐겨찾기, 삭제 api
+    """
+
+    def delete(self, request):
+        pk_ids: list = self.request.data.get('pk_ids')
+        
+        sites = Site.objects.filter(id__in=pk_ids)
+
+        for site in sites:
+            site.delete()
+    
+        return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)  
+
 
 class FavoriteAPIView(APIView):
     """
@@ -228,7 +244,7 @@ class ParseAPIView(APIView):
                             host_name       = urlparse(url).hostname,
                             thumbnail_url   = image,
                             favorite        = False,
-                            video           = False if video_type == 'article' else True,
+                            video           = False if video_type == 'article' or 'website' else True,
                             content         = content
                         )
 

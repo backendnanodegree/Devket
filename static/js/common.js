@@ -77,6 +77,23 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function setFechData(method, body){
+    /* bulk 삭제 이벤트 */
+
+    let csrftoken   = getCookie('csrftoken');
+
+    const data = {
+        method: method,
+        headers: {
+            'content-type': 'application/json',
+            'X-CSRFToken' : csrftoken,        
+        },
+        body: JSON.stringify(body)
+    }
+
+    return data
+}
+
 export {
     getElement,
     getElements,
@@ -87,4 +104,5 @@ export {
     appendTag,
     removeAllNode,
     getCookie, 
+    setFechData,
 };
