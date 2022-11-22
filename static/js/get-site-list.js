@@ -3,9 +3,10 @@ import { makeBottomToolbar } from './bottom-toolbar.js';
 import { makeModal } from './modal.js';
 import { apiURL } from './api-url.js';
 
-const root          = document.getElementById("root")
-const url           = window.location.pathname.split('/');
-const apiUrlKey     = url.filter((element) => element != "").pop();
+const root            = document.getElementById("root")
+const url             = window.location.pathname.split('/');
+const apiUrlKey       = url.filter((element) => element != "").pop();
+let selected_articles = []
 
 function renderItem(site) {
     /* 각 item의 tag를 rendering 하는 함수 */
@@ -18,7 +19,7 @@ function renderItem(site) {
 
     const postId                = createNode('input')
     postId.className            = 'site-id'
-    postId.value                = post.id
+    postId.value                = site.id
     postId.type                 = 'hidden'
     appendTag(article, postId)
 
@@ -76,6 +77,7 @@ function selectBulkIcon(){
 
     const headerToolbar = getElement('.n27eiag')
 
+    // toolbar가 bulk상태인지 확인 후 선택 이벤트 부여
     if (headerToolbar.classList.contains('bulk')) {
         this.classList.toggle('selected')
     
@@ -90,14 +92,15 @@ function selectBulkIcon(){
 function countSelectedBulk(){
     /* 사이트 항목 선택 시 선택한 개수 toolbar에 표시하는 카운팅 함수 */
 
-    const selected_articles = []
     const articles = getElements('.c18o9ext')
+    selected_articles = new Array()
 
     articles.forEach(element => {
-        if(element.classList.contains('selected')){
-            selected_articles.push(element)
-        }
-    })
+        
+        if(element.classList.contains('selected'))
+            selected_articles.push(element.querySelector('.site-id').value)
+        
+        })
 
     const selectedSite = getElement('.selected-site')
     selectedSite.textContent = selected_articles.length == 0 ? '항목선택' : `${selected_articles.length}개 항목`
@@ -145,14 +148,15 @@ function makeActive() {
    
   }
 
-function getSiteList(word='') {
+// 비동기로 조회 되면 앞의 생성되는 DOM을 읽지 못하므로 동기처리
+async function getSiteList(word='') {
     /* 각 탭에 해당되는 모든 항목들을 조회하여 함수 */
     
     // 선택한 탭 활성화하기  
     makeActive()
 
     // 해당되는 항목들 조회하기  
-    fetch(`${apiURL[apiUrlKey]}?word=${word}`)
+    await fetch(`${apiURL[apiUrlKey]}?word=${word}`)
         .then(response => response.json())
         .then(data => {
             mapPosts(data)
@@ -166,5 +170,6 @@ getSiteList()
 makeModal()
 
 export {
-    getSiteList
+    getSiteList,
+    selected_articles,
 };

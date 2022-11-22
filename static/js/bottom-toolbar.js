@@ -90,7 +90,7 @@ function makeDeleteInToolBar(parentNode, site) {
     deleteButton.addEventListener('click', () => {
         const article = document.getElementById(`${site.id}`)
         article.classList.add('selected')
-        openModal(deleteButton)
+        openModal()
     })
 
 }
