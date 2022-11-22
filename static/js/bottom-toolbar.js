@@ -1,15 +1,15 @@
-import { createNode, appendTag, getCookie } from "./common.js"
+import { createNode, appendTag, getCookie, getElement } from "./common.js"
+import { openModal } from "./modal.js"
 
-
-function makeFavoriteInToolBar(parentNode, post) {
+function makeFavoriteInToolBar(parentNode, site) {
     /* 하단 툴바의 즐겨찾기 버튼 Dom을 만드는 함수 */
 
     const favoriteButtonContainer   = createNode('span')
     appendTag(parentNode, favoriteButtonContainer)
 
     const favoriteButton        = createNode('button')
-    favoriteButton.className    = post.favorite == false ? 'm11fpiro t1221eea pmdugmx d1mp5exd' : 'm11fpiro t1221eea pmdugmx d1mp5exd active'
-    favoriteButton.setAttribute('data-tooltip', post.favorite == false ? '즐겨찾기' : '즐겨찾기 해제')
+    favoriteButton.className    = site.favorite == false ? 'm11fpiro t1221eea pmdugmx d1mp5exd favorite' : 'm11fpiro t1221eea pmdugmx d1mp5exd favorite active'
+    favoriteButton.setAttribute('data-tooltip', site.favorite == false ? '즐겨찾기' : '즐겨찾기 해제')
     appendTag(favoriteButtonContainer, favoriteButton)
 
     const favoriteIconContainer     = createNode('span')
@@ -20,18 +20,18 @@ function makeFavoriteInToolBar(parentNode, post) {
     favoriteIcon.className  = 'fa-regular fa-star fa-lg'
     appendTag(favoriteIconContainer, favoriteIcon)
 
-    changeFavoriteValue(favoriteButton, post)
+    changeFavoriteValue(favoriteButton, site)
 
 }
 
-function makeCategoryInToolBar(parentNode, post) {
+function makeCategoryInToolBar(parentNode, site) {
     /* 하단 툴바의 category button Dom을 만드는 함수 */
 
     const categoryButtonContainer   = createNode('span')
     appendTag(parentNode, categoryButtonContainer)
 
     const categoryButton        = createNode('button')
-    categoryButton.className    = 'm11fpiro t1221eea pmdugmx d1mp5exd'
+    categoryButton.className    = 'm11fpiro t1221eea pmdugmx d1mp5exd category'
     categoryButton.setAttribute('data-tooltip', '카테고리')
     appendTag(categoryButtonContainer, categoryButton)
 
@@ -45,14 +45,14 @@ function makeCategoryInToolBar(parentNode, post) {
 
 }
 
-function makeTagInToolBar(itemActions, post) {
+function makeTagInToolBar(parentNode, site) {
     /* 하단 툴바의 tag button Dom을 만드는 함수 */
 
     const tagButtonContainer    = createNode('span')
-    appendTag(itemActions, tagButtonContainer)
+    appendTag(parentNode, tagButtonContainer)
 
     const tagButton     = createNode('button')
-    tagButton.className = 'm11fpiro t1221eea pmdugmx d1mp5exd'
+    tagButton.className = 'm11fpiro t1221eea pmdugmx d1mp5exd tag'
     tagButton.setAttribute('data-tooltip', '태그')
     appendTag(tagButtonContainer, tagButton)
 
@@ -67,14 +67,14 @@ function makeTagInToolBar(itemActions, post) {
 
 }
 
-function makeDeleteInToolBar(parentNode, post) {
+function makeDeleteInToolBar(parentNode, site) {
      /* 하단 툴바의 delete button Dom을 만드는 함수 */
 
     const deleteButtonContainer = createNode('span')
     appendTag(parentNode, deleteButtonContainer)
 
     const deleteButton      = createNode('button')
-    deleteButton.className  = 'm11fpiro t1221eea pmdugmx d1mp5exd'
+    deleteButton.className  = 'm11fpiro t1221eea pmdugmx d1mp5exd delete'
     deleteButton.setAttribute('data-tooltip', '삭제')
     appendTag(deleteButtonContainer, deleteButton)
 
@@ -82,14 +82,20 @@ function makeDeleteInToolBar(parentNode, post) {
     deleteIconContainer.className   = 'i1qqph0t icon'
     appendTag(deleteButton, deleteIconContainer)
 
-
     const deleteIcon        = createNode('i')
     deleteIcon.className    = 'fa fa-regular fa-trash fa-lg'
     appendTag(deleteIconContainer, deleteIcon)
 
+    // click 시, modal 창 열기
+    deleteButton.addEventListener('click', () => {
+        const article = document.getElementById(`${site.id}`)
+        article.classList.add('selected')
+        openModal(deleteButton)
+    })
+
 }
 
-function makeBottomToolbar(parentNode, post) {
+function makeBottomToolbar(parentNode, site) {
     /*각 항목마다 하단 툴바를 만드는 함수*/
 
      // bottom toolbar container - footer
@@ -106,16 +112,16 @@ function makeBottomToolbar(parentNode, post) {
      appendTag(itemActionsContainer, itemActions)
  
      // bottom toolbar - favorite
-     makeFavoriteInToolBar(itemActions, post)
+     makeFavoriteInToolBar(itemActions, site)
     
      // bottom toolbar - category
-     makeCategoryInToolBar(itemActions, post)
+     makeCategoryInToolBar(itemActions, site)
  
      // bottom toolbar - tag
-     makeTagInToolBar(itemActions, post)
+     makeTagInToolBar(itemActions, site)
  
      // bottom toolbar - delete
-     makeDeleteInToolBar(itemActions, post)
+     makeDeleteInToolBar(itemActions, site)
 
      // toolbar bulk 선택 시 활성화 icon
      let itemBulkContainer = createNode('div')
@@ -139,27 +145,29 @@ function makeBottomToolbar(parentNode, post) {
 
 }
 
-function changeFavoriteValue(favoriteButton, post) {
+function changeFavoriteValue(favoriteButton, site) {
     /* 하단 툴바의 즐겨찾기 버튼 상태 변경에 따른 즐겨찾기 목록에 추가 및 제거 */
 
     favoriteButton.addEventListener('click', () => {
 
         // 하단 툴바의 즐겨찾기 버튼 활성화 및 즐겨찾기 목록에 추가
-        const csrftoken     = getCookie('csrftoken');
+        const csrftoken         = getCookie('csrftoken');
+
         if (favoriteButton.classList.contains('active') == false) {
           
             // PUT: favorite 값 True로 수정
-          const data          = {
-              method: 'PUT',
-              headers: {
-                  'content-type': 'application/json',
-                  'X-CSRFToken' : csrftoken,  
-                },
-                body: JSON.stringify({
-                    favorite: true,
-                })
-            }
-            fetch(`/api/sites/${post.id}/`, data)
+            const data          = {
+                                    method: 'PUT',
+                                    headers: {
+                                        'content-type': 'application/json',
+                                        'X-CSRFToken' : csrftoken,  
+                                        },
+                                        body: JSON.stringify({
+                                            favorite: true,
+                                        })
+                                    }
+
+            fetch(`/api/sites/${site.id}`, data)
             .then(response => {
                 let status = response.status
 
@@ -187,9 +195,11 @@ function changeFavoriteValue(favoriteButton, post) {
                                         'favorite': false,
                                     })
                                 }
-            fetch(`/api/sites/${post.id}/`, data)
+
+            fetch(`/api/sites/${site.id}`, data)
             .then(response => {
-                let status = response.status
+
+                let status      = response.status
 
                 // 하단 툴바의 즐겨찾기 버튼 비활성화
                 if (status === 202) {
@@ -207,5 +217,5 @@ function changeFavoriteValue(favoriteButton, post) {
 }
 
 export {
-    makeBottomToolbar
+    makeBottomToolbar,
 }

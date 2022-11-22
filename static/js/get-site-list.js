@@ -1,17 +1,19 @@
 import {createNode, appendTag, getElement, getElements, removeAllNode} from './common.js';
 import { makeBottomToolbar } from './bottom-toolbar.js';
+import { makeModal } from './modal.js';
 import { apiURL } from './api-url.js';
 
 const root          = document.getElementById("root")
 const url           = window.location.pathname.split('/');
 const apiUrlKey     = url.filter((element) => element != "").pop();
 
-function renderItem(post) {
+function renderItem(site) {
     /* 각 item의 tag를 rendering 하는 함수 */
 
     const article               = createNode('article')
     article.className           = 'c18o9ext grid hiddenActions noExcerpt'
     article.onclick             = selectBulkIcon
+    article.id                  = site.id 
     appendTag(root, article)
 
     const postId                = createNode('input')
@@ -33,11 +35,11 @@ function renderItem(post) {
     appendTag(item, imgContainer)
 
     const itemLink              = createNode('a')
-    itemLink.href               = post.thumbnail_url
+    itemLink.href               = site.thumbnail_url
     appendTag(imgContainer, itemLink)
 
     const img                   = createNode('img')
-    img.src                     = post.thumbnail_url
+    img.src                     = site.thumbnail_url
     img.style                   = '--fallbackBackground:#1CB0A880; --fallbackColor:#1CB0A8; --fallbackLetter:&quot;T&quot;;">'
     appendTag(itemLink, img)
 
@@ -50,7 +52,7 @@ function renderItem(post) {
     appendTag(content, titleContainer)
 
     const title                 = createNode('a')
-    title.innerText             = post.title
+    title.innerText             = site.title
     appendTag(titleContainer, title)
 
     const details               = createNode('cite')
@@ -59,13 +61,13 @@ function renderItem(post) {
 
     const publisher             = createNode('a')
     publisher.className         = 'publisher'
-    publisher.href              = post.url == null ? '#' : post.url
-    publisher.innerText         = post.host_name
-    publisher.setAttribute('target', post.url == null ? '' : '_blank')
+    publisher.href              = site.url == null ? '#' : site.url
+    publisher.innerText         = site.host_name
+    publisher.setAttribute('target', site.url == null ? '' : '_blank')
     appendTag(details, publisher)
 
     // 각 항목(item)의 하단 툴바
-    makeBottomToolbar(article, post)
+    makeBottomToolbar(article, site)
    
 }
 
@@ -161,6 +163,7 @@ function getSiteList(word='') {
 }
 
 getSiteList()
+makeModal()
 
 export {
     getSiteList
