@@ -415,7 +415,7 @@ function saveSitebyToolbar () {
     toolbarSaveBtn.addEventListener('click', () => {
 
         let url         = getElement('.add-input').value;
-        let regex       = /^(http(s)?:\/\/)([^\/]*)(\.)(com|net|kr|my|shop|info|site|io)(\/)/gi
+        let regex       = /^(http(s)?:\/\/)([^\/]*)(\.)(com|net|kr|my|shop|info|site|io|org)(\/)/gi
 
         if(regex.test(url)){
 
@@ -471,7 +471,7 @@ function bulkButtonEventSet(){
     })
     
     btnBulkFavorite.addEventListener('click', () => {
-        alert('벌크 즐겨찾기')
+        favoriteBulkSelectedSite()
     })
     
     btnBulkCategory.addEventListener('click', () => {
@@ -483,12 +483,39 @@ function bulkButtonEventSet(){
     })
 }
 
-function deleteBulkSelectedSite(){
+function favoriteBulkSelectedSite() {
+    /* bulk 즐겨찾기 이벤트 */
+
+    if (selected_articles.length > 0) {
+        if(confirm('선택한 항목을 즐겨찾기목록에 추가하시겠습니까?')) {
+            const data = setFechData("PUT",{
+                pk_ids: selected_articles,//[1, 2, 3, 4]
+                favorite: true,
+                user: "User Id"
+            })
+    
+            fetch(`/api/sites/bulk`, data)
+                .then(response => {
+                    let status = response.status
+    
+                    if(status == 200) {
+                        alert('즐겨찾기 목록에 추가하였습니다.')
+                    }else if(status == 400) {
+                        alert('즐겨찾기 목록에 추가하지 못했습니다.')
+                    }
+                })
+                .then(() => getSiteList())
+                .then(() => changeSelected())
+                .catch(error   => console.log(error))      
+        }
+    }
+}
+
+function deleteBulkSelectedSite() {
     /* bulk 삭제 이벤트 */
     
-    if (selected_articles.length > 0){
-   
-        if(confirm('선택한 항목을 삭제하시겠습니까?')){
+    if (selected_articles.length > 0) {
+        if(confirm('선택한 항목을 삭제하시겠습니까?')) {
             const data = setFechData("DELETE", {
                 pk_ids: selected_articles, // [1, 2, 3, 4, 5]
                 user: 'User Id'
@@ -498,7 +525,7 @@ function deleteBulkSelectedSite(){
                 .then(response => {
                     let status = response.status
 
-                    if (status == 200)
+                    if(status == 200)
                         alert('삭제에 성공하였습니다.')                    
                 })
                 .then(() => getSiteList())
