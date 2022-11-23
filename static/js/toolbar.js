@@ -351,7 +351,6 @@ function activeSelectBulk() {
     changeSelectBulk()
 }
 
-
 function toolbarCancelBtn (type) {
     /*  toolbar 닫기 클릭 이벤트 
         type : toolbarCancelBtn 호출할때 save, search, bulk를 구분하여
@@ -383,8 +382,7 @@ function changeSelectBulk() {
     /* 벌크 선택 유무를 확인 후 change 함수 */
 
     const headerToolbar = getElement('.n27eiag')
-    
-
+        
     /*  벌크 활성화 상태 체크
         bulk 토클은 선택 이벤트를 적용시 사용 
         => function selectBulkIcon()
@@ -399,11 +397,15 @@ function changeSelected() {
     bottomToolbarConatiner.forEach(element => {
         element.classList.toggle('bulkEdit')
 
-        let bottomToolbar = element.querySelector('.item-actions')
-        let bulkToolbar = element.querySelector('.item-bulk-select')
+        let bottomToolbar     = element.querySelector('.item-actions')
+        let bulkToolbar       = element.querySelector('.item-bulk-select')
+        let selectedDotChoice = element.querySelector('.item-bulk-select>.i1qqph0t>.select-icon-svg>.select-dot-choice')
+        let article           = element.closest('article')
 
         bottomToolbar.classList.toggle('off')
         bulkToolbar.classList.toggle('off')
+        selectedDotChoice.classList.add('off')
+        article.classList.remove('selected')
     })
 }
 
@@ -458,7 +460,7 @@ function searchSitebyToolbar () {
     })
 }
 
-function bulkButtonEventSet(){
+function bulkButtonEventSet() {
     /* bulk 선택 후 각 버튼 별 이벤트 부여 */
 
     const btnBulkTag       = getElement('.bulk-tag')
