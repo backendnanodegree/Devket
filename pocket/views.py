@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,10 +9,21 @@ from pocket.decorator import scrap_decorator
 from .serializers import SiteSerializer
 from urllib.parse import urlparse
 from django.db import transaction
+from django.db.models import Q
+from .models import Site, User
 from bs4 import BeautifulSoup
 import requests
 
-from .models import Site, User
+# template view
+
+def mylist_view(request):
+
+    """
+    mylist/base.html에 모든 항목들 리스트를 전달하는 함수
+    """
+    if request.method == 'GET': 
+
+        return render(request, 'mylist/base.html')
 
 class HomeView(TemplateView):
     template_name = "common/home.html"
@@ -29,7 +42,6 @@ class LogInView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
-
 
 class PwdHelpView(TemplateView):
     template_name = 'user/password.html'
@@ -57,38 +69,86 @@ class PaymentView(TemplateView):
         return super().get(request, *args, **kwargs)
 
 
-class MyListView(TemplateView):
-    """
-    mylist/base.html에 모든 항목들 리스트를 전달하는 함수
-    """
 
-    template_name: str = 'mylist/base.html'
-
-    def get_context_data(self, *args, **kwargs):
-
-        context             = super().get_context_data(**kwargs)
-        context["lists"]    = Site.objects.all()
-
-        return context
-
-
+# api view
 class SiteAPIView(APIView):
     """
     저장한 모든 항목 데이터들을 api로 쏴주는 함수
     """
 
     def get(self, request): 
-
-        list_qs     = Site.objects.all()  
-        serializer  = SiteSerializer(list_qs, many=True)
+        word: str  = request.GET['word']              
+        list_qs    = Site.objects.filter(
+                        Q(title__contains=word)|
+                        Q(host_name__contains=word))  
+        serializer = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)
 
 
 
+class SiteDetailAPIView(APIView):
+    """
+    세부 항목 조회, 수정, 삭제 api
+    """
+
+    def get_object(self, pk):
+        
+        return get_object_or_404(Site, pk=pk)
+
+
+    def get(self, request, pk): 
+
+        site = self.get_object(pk)
+
+        serializer  = SiteSerializer(site)
+
+        return Response(serializer.data)
+    
+
+    def put(self, request, pk):
+        
+        site = self.get_object(pk)
+
+        serializer = SiteSerializer(site, data=request.data, partial=True)
+    
+        if serializer.is_valid(raise_exception=True):
+     
+            serializer.save()
+            
+            return Response({'msg':'Updated successfully'}, status=status.HTTP_202_ACCEPTED)
+      
+        return Response({'msg': f'{serializer.errors}'})
+
+
+    def delete(self, request, pk):
+
+        site = self.get_object(pk)
+        
+        site.delete()
+    
+        return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)
+
+
+class SiteBulkAPIView(APIView):
+    """
+    벌크 항목 즐겨찾기, 삭제 api
+    """
+
+    def delete(self, request):
+        pk_ids: list = self.request.data.get('pk_ids')
+        
+        sites = Site.objects.filter(id__in=pk_ids)
+
+        for site in sites:
+            site.delete()
+    
+        return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)  
+
+
 class FavoriteAPIView(APIView):
     """
-    Site model의 favortie column 값이 true인 data를 api로 만드는 함수
+    Site model의 favorite 값이 true인 data를 api로 만드는 함수
     """
 
     def get(self, request): 
@@ -102,40 +162,41 @@ class FavoriteAPIView(APIView):
 
 class ArticleAPIView(APIView):
     """
-     Site model의 Video column 값이 false인 data를 api로 만드는 함수
+     Site model의 video 값이 false인 data를 api로 만드는 함수
     """
 
-    def get(self, request): 
-        list_qs     = Site.objects.filter(video=False)
-        
-        serializer  = SiteSerializer(list_qs, many=True)
+    def get(self, request):
+        word: str  = request.GET['word']   
+        list_qs    = Site.objects.filter(
+                            Q(video=False)&(
+                            Q(title__contains=word)|
+                            Q(host_name__contains=word)))
+
+        serializer = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)
 
 
 class VideoAPIView(APIView):
     """
-     Site model의 Video column 값이 True인 data를 api로 만드는 함수
+     Site model의 video 값이 true인 data를 api로 만드는 함수
     """
 
-    def get(self, request): 
-        list_qs     = Site.objects.filter(video=True)
-        
-        serializer  = SiteSerializer(list_qs, many=True)
+    def get(self, request):
+        word: str  = request.GET['word'] 
+        list_qs    = Site.objects.filter(
+                        Q(video=True)&(
+                        Q(title__contains=word)|
+                        Q(host_name__contains=word)))
+
+        serializer = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)
 
-
-
-class Status():
-    OK = 'True'
-    NO = 'False'
-    ERROR = 'Error'        
-
-
+        
 class ParseAPIView(APIView):
     @scrap_decorator
-    def get(self, request, **kwards):
+    def post(self, request, **kwards):
         result: dict = {}
         video_type, title, image, url = '', '', '', ''
         try:
@@ -183,26 +244,26 @@ class ParseAPIView(APIView):
                             host_name       = urlparse(url).hostname,
                             thumbnail_url   = image,
                             favorite        = False,
-                            video           = False if video_type == 'article' else True,
+                            video           = False if video_type == 'article' or 'website' else True,
                             content         = content
                         )
 
-                    return Response({'msg':'Success save that web site', 'status':status.HTTP_200_OK})
+                    return Response({'msg':'Success save that web site'}, status=status.HTTP_200_OK)
 
                 else:
-                    return Response({'msg':'Do not save that web site', 'status':status.HTTP_202_ACCEPTED})
+                    return Response({'msg':'Do not save that web site'}, status=status.HTTP_202_ACCEPTED)
 
             else:
-                return Response({'msg':'Do not access that web site', 'status':status.HTTP_202_ACCEPTED})
+                return Response({'msg':'Do not access that web site'}, status=status.HTTP_202_ACCEPTED)
                                 
         except SyntaxError as s:
-            return Response({'msg':f'Save list process SyntaxError that Class ParseAPIView: {s.args}', 'status':status.HTTP_400_BAD_REQUEST})
+            return Response({'msg':f'Save list process SyntaxError that Class ParseAPIView: {s.args}'}, status=status.HTTP_400_BAD_REQUEST)
 
         except NameError as n:
-            return Response({'msg':f'Save list process NameError that Class ParseAPIView : {n.args}', 'status':status.HTTP_400_BAD_REQUEST})
+            return Response({'msg':f'Save list process NameError that Class ParseAPIView : {n.args}'}, status=status.HTTP_400_BAD_REQUEST)
             
         except KeyError as k:
-            return Response({'msg':f'Save list process KeyError that Class ParseAPIView : {k.args}', 'status':status.HTTP_400_BAD_REQUEST})
+            return Response({'msg':f'Save list process KeyError that Class ParseAPIView : {k.args}'}, status=status.HTTP_400_BAD_REQUEST)
 
     def parse(self, web: object) -> str:
         ''' 
@@ -213,6 +274,6 @@ class ParseAPIView(APIView):
             html: str = str(web.main)
 
         except Exception as e:       
-            raise RuntimeError('Function parse Exception error that Class ParseAPIView : {e.args}')
+            raise RuntimeError(f'Function parse Exception error that Class ParseAPIView : {e.args}')
         
         return html

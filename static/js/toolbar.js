@@ -1,9 +1,11 @@
-import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, makeBottomToolbar} from './common.js';
+import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie, setFechData} from './common.js';
+import {getSiteList, selected_articles} from './get-site-list.js';
+import { openModal } from "./modal.js"
 
 function makeSearchTopToolBar() {
     /* 검색 toolbar 생성 함수 */
 
-    const searchForm                = createNode('form')
+    const searchForm                = createNode('div')
     searchForm.className            = 'sxpxhia toolbar-container'
     searchForm.autocomplete         = 'off'
     appendTag(headerContainer, searchForm)
@@ -81,13 +83,17 @@ function makeSearchTopToolBar() {
     mobileSearchText.textContent    = '취소'
     appendTag(mobileSearchFont, mobileSearchText)
 
-    toolbarCancelBtn()
+    searchInput.focus()
+
+    toolbarCancelBtn('search')
+
+    searchSitebyToolbar()
 }
 
 function makeSaveTopToolBar() {
     /* 저장 toolbar 생성 함수 */
 
-    const saveForm                  = createNode('form')
+    const saveForm                  = createNode('div')
     saveForm.className              = 'a14hwmit toolbar-container'
     saveForm.autocomplete           = 'off'
     appendTag(headerContainer, saveForm)
@@ -129,7 +135,7 @@ function makeSaveTopToolBar() {
 
     const saveText                  = createNode('font')
     saveText.style                  = 'vertical-align: inherit;'
-    saveText.textContent            = '추가하다'
+    saveText.textContent            = '저장'
     appendTag(saveFont, saveText)
 
     const mobileSaveInput           = createNode('input')
@@ -166,10 +172,16 @@ function makeSaveTopToolBar() {
     mobileSaveText.textContent      = '취소'
     appendTag(mobileSaveFont, mobileSaveText)
 
-    toolbarCancelBtn()
+    saveInput.focus()
+
+    toolbarCancelBtn('save')
+
+    saveSitebyToolbar()
 }
 
 function makeBulkTopToolBar() {
+    /* 벌크 toolbar 생성 함수 */
+
     const bulkWrap                      = createNode('div')
     bulkWrap.className                  = 'b1xsx9mu toolbar-container'
     appendTag(headerContainer, bulkWrap)
@@ -187,7 +199,7 @@ function makeBulkTopToolBar() {
     appendTag(bulkContainer, bulkAction)
     
     const tagButton                     = createNode('button')
-    tagButton.className                 = 'b1vi9mhm t1221eea pzhe358'
+    tagButton.className                 = 'b1vi9mhm t1221eea pzhe358 bulk-tag'
 
     tagButton.setAttribute('aria-label', '꼬리표')
     tagButton.setAttribute('data-cy', 'bulk-tag')
@@ -208,7 +220,7 @@ function makeBulkTopToolBar() {
     tagIconSvg.insertAdjacentHTML('beforeend', tagIconPathHtml)
 
     const favoriteButton                = createNode('button')
-    favoriteButton.className            = 'b1vi9mhm t1221eea pzhe358'
+    favoriteButton.className            = 'b1vi9mhm t1221eea pzhe358 bulk-favorite'
 
     favoriteButton.setAttribute('aria-label', '가장 좋아하는')
     favoriteButton.setAttribute('data-cy', 'bulk-favorite')
@@ -227,7 +239,7 @@ function makeBulkTopToolBar() {
     favoriteIconSvg.insertAdjacentHTML('beforeend', favoriteIconPathHtml)
 
     const categoryButton                = createNode('button')
-    categoryButton.className            = 'b1vi9mhm t1221eea pzhe358'
+    categoryButton.className            = 'b1vi9mhm t1221eea pzhe358 bulk-category'
 
     categoryButton.setAttribute('aria-label', '카테고리')
     categoryButton.setAttribute('data-cy', 'bulk-category')
@@ -246,7 +258,7 @@ function makeBulkTopToolBar() {
     categoryIconSvg.insertAdjacentHTML('beforeend', categoryIconPathHtml)
 
     const deleteButton                  = createNode('button')
-    deleteButton.className              = 'b1vi9mhm t1221eea pzhe358'
+    deleteButton.className              = 'b1vi9mhm t1221eea pzhe358 bulk-delete'
     deleteButton.setAttribute('aria-label', '삭제')
     deleteButton.setAttribute('data-cy', 'bulk-delete')
     deleteButton.setAttribute('data-tooltip', 'Delete')
@@ -275,7 +287,8 @@ function makeBulkTopToolBar() {
     appendTag(toolbarActionLabl, mobileItemSelect)
     
     const mobileItemSelectFont          = createNode('font')
-    mobileItemSelectFont.style          = 'vertical-align: inherit;'
+    mobileItemSelectFont.className      = 'selected-site'
+    mobileItemSelectFont.style          = 'vertical-align: inherit; display:block; min-width:100px;'
     mobileItemSelectFont.textContent    = '항목선택'
     appendTag(mobileItemSelect, mobileItemSelectFont)
     
@@ -284,8 +297,8 @@ function makeBulkTopToolBar() {
     bulkCancleButton.setAttribute('data-cy', 'clear-button')
     appendTag(bulkInnerWrap, bulkCancleButton)
     
-    const bulkCancleButtonFont              = createNode('font')
-    bulkCancleButtonFont.style              = 'vertical-align: inherit;'
+    const bulkCancleButtonFont          = createNode('font')
+    bulkCancleButtonFont.style          = 'vertical-align: inherit;'
     appendTag(bulkCancleButton, bulkCancleButtonFont)
     
     const mobileItemSelectText          = createNode('font')
@@ -322,28 +335,186 @@ function makeBulkTopToolBar() {
     cancleTextFont.textContent          = '취소'
     appendTag(cancleTextSpan, cancleTextFont)
     
-    toolbarCancelBtn()
+    toolbarCancelBtn('bulk')
+
+    // bulk 버튼 클릭 시 벌크 선택 활성화
+    activeSelectBulk()
+
+    // bulk 내 태그, 즐겨찾기, 카테고리, 삭제 버튼 이벤트
+    bulkButtonEventSet()
 }
 
-function toolbarCancelBtn () {
-    const btnCancels                    = getElements('.toolbar-cancel');
-    const toolbarContainer              = getElement('.toolbar-container');
+function activeSelectBulk() {
+    /* toolbar bulk 활성화시 사이트 항목 선택 버튼 활성화 */
+    
+    // toolbar 활성화 시 벌크 선택 toggle 처리(활성화)
+    changeSelectBulk()
+}
 
+
+function toolbarCancelBtn (type) {
+    /*  toolbar 닫기 클릭 이벤트 
+        type : toolbarCancelBtn 호출할때 save, search, bulk를 구분하여
+        벌크인 경우에만 선택할 수 있는 상태를 해제함
+    */
+    
+    const btnCancels = getElements('.toolbar-cancel');
+    
     btnCancels.forEach((element) => {
         element.addEventListener('click', () => {
-            makeElementOn(menuContainer, toolContainer, profileContainer)
-            removeElement(toolbarContainer)
+            toolbarCancel(type)
         })
+    }) 
+}
+
+function toolbarCancel(type) {
+    const toolbarContainer = getElement('.toolbar-container');
+
+    // 취소 버튼 클릭 시 툴바 컨테이너 지운 후 기본 mane 활성화
+    makeElementOn(menuContainer, toolContainer, profileContainer)
+    removeElement(toolbarContainer)
+    
+    // 취소 버튼 클릭 시 벌크 선택 toggle 처리(비활성화)      
+    if (type == 'bulk') 
+        changeSelectBulk()
+}
+
+function changeSelectBulk() {
+    /* 벌크 선택 유무를 확인 후 change 함수 */
+
+    const headerToolbar = getElement('.n27eiag')
+    
+
+    /*  벌크 활성화 상태 체크
+        bulk 토클은 선택 이벤트를 적용시 사용 
+        => function selectBulkIcon()
+    */
+    headerToolbar.classList.toggle('bulk')
+    changeSelected()
+}
+
+function changeSelected() {
+    const bottomToolbarConatiner = getElements('.i18uycg6')
+
+    bottomToolbarConatiner.forEach(element => {
+        element.classList.toggle('bulkEdit')
+
+        let bottomToolbar = element.querySelector('.item-actions')
+        let bulkToolbar = element.querySelector('.item-bulk-select')
+
+        bottomToolbar.classList.toggle('off')
+        bulkToolbar.classList.toggle('off')
     })
 }
 
-const headerContainer   = getElement('.global-nav-container > .n27eiag');
-const toolContainer     = getElement('.toolbar-wrap');
-const profileContainer  = getElement('.profile-wrap');
-const menuContainer     = getElement('.menu-wrap');
-const btnSearch         = getElement('#search');
-const btnSave           = getElement('#save');
-const btnBulk           = getElement('#bulk');
+function saveSitebyToolbar () {
+    /* toolbar URL 저장 클릭 이벤트 */
+
+    const toolbarSaveBtn = getElement('.add-button');
+
+    toolbarSaveBtn.addEventListener('click', () => {
+
+        let url         = getElement('.add-input').value;
+        let regex       = /^(http(s)?:\/\/)([^\/]*)(\.)(com|net|kr|my|shop|info|site|io)(\/)/gi
+
+        if(regex.test(url)){
+
+            const data = setFechData('POST', {
+                url: url,
+                user: 'User Id' ,
+            })
+            
+            fetch(`/api/scrap/parse`, data)
+                .then(response => {
+                    let status = response.status
+                    if (status === 200) {
+                        alert('저장에 성공하였습니다.')
+                    }else if (status === 202) {
+                        alert('저장할 수 없는 사이트입니다.')
+                    }else if (status === 400) {
+                        alert(response.json.msg)
+                    }
+                    return response.json()
+                })
+                // 조회함수 호출
+                .then(() => getSiteList()) 
+                .then(() => toolbarCancel())
+                .catch(error => console.log(error))
+        }else{
+            alert('형식에 맞는 url을 입력바랍니다. (http://... or https://...)')
+        }
+    })
+}
+
+function searchSitebyToolbar () {
+    /* toolbar title 조회 클릭 이벤트*/
+
+    const searchToolbarBtn = getElement('.search-button');
+
+    searchToolbarBtn.addEventListener('click', () => {
+        let word = getElement('.search-input').value;
+
+        getSiteList(word)
+    })
+}
+
+function bulkButtonEventSet(){
+    /* bulk 선택 후 각 버튼 별 이벤트 부여 */
+
+    const btnBulkTag       = getElement('.bulk-tag')
+    const btnBulkFavorite  = getElement('.bulk-favorite')
+    const btnBulkCategory  = getElement('.bulk-category')
+    const btnBulkDelete    = getElement('.bulk-delete')
+
+    btnBulkTag.addEventListener('click', () => {
+        alert('벌크 태그')
+    })
+    
+    btnBulkFavorite.addEventListener('click', () => {
+        alert('벌크 즐겨찾기')
+    })
+    
+    btnBulkCategory.addEventListener('click', () => {
+        alert('벌크 카테고리')
+    })
+    
+    btnBulkDelete.addEventListener('click', () => {
+        deleteBulkSelectedSite()
+    })
+}
+
+function deleteBulkSelectedSite(){
+    /* bulk 삭제 이벤트 */
+    
+    if (selected_articles.length > 0){
+   
+        if(confirm('선택한 항목을 삭제하시겠습니까?')){
+            const data = setFechData("DELETE", {
+                pk_ids: selected_articles, // [1, 2, 3, 4, 5]
+                user: 'User Id'
+            })
+
+            fetch(`/api/sites/bulk`, data)
+                .then(response => {
+                    let status = response.status
+
+                    if (status == 200)
+                        alert('삭제에 성공하였습니다.')                    
+                })
+                .then(() => getSiteList())
+                .then(() => changeSelected())
+                .catch(error   => console.log(error))
+        }      
+    }
+}
+
+const headerContainer  = getElement('.global-nav-container > .n27eiag');
+const toolContainer    = getElement('.toolbar-wrap');
+const profileContainer = getElement('.profile-wrap');
+const menuContainer    = getElement('.menu-wrap');
+const btnSearch        = getElement('#search');
+const btnSave          = getElement('#save');
+const btnBulk          = getElement('#bulk');
 
 btnSearch.addEventListener('click', () => {
     /* 검색 toolbar 클릭 이벤트 */

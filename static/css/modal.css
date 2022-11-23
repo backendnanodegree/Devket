@@ -1,0 +1,153 @@
+.m1gbisw7 {
+    position: absolute;
+    overflow: auto;
+    overflow-x: hidden;
+    max-width: 552px;
+    padding: 0;
+    background: var(--color-popoverCanvas);
+    margin: 0 auto;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+    box-shadow: 0 var(--spacing150) 32px rgba(0, 0, 0, 0.16);
+    border-radius: 4px;
+    max-height: calc(100vh - (calc(var(--spacing650) + var(--spacing400))));
+    min-height: 200px;
+    top: var(--spacing650);
+    right: var(--spacing400);
+    bottom: auto;
+    left: var(--spacing400);
+    z-index: var(--zIndexModal);
+    -webkit-transition: opacity var(--dialogsDurationExitMS) var(--easingDecelerate), -webkit-transform var(--dialogsDurationExitMS) var(--easingDecelerate);
+    -webkit-transition: opacity var(--dialogsDurationExitMS) var(--easingDecelerate), transform var(--dialogsDurationExitMS) var(--easingDecelerate);
+    transition: opacity var(--dialogsDurationExitMS) var(--easingDecelerate), transform var(--dialogsDurationExitMS) var(--easingDecelerate);
+}
+
+.m1gbisw7.animation-base {
+    pointer-events: none;
+    opacity: 0;
+    -webkit-transform: scale(0.8);
+    -ms-transform: scale(0.8);
+    transform: scale(0.8);
+}
+
+.m1gbisw7.animation-show {
+    pointer-events: auto;
+    opacity: 1;
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition: opacity var(--dialogsDurationEnterMS) var(--easingAccelerate), -webkit-transform var(--dialogsDurationEnterMS) var(--easingAccelerate);
+    -webkit-transition: opacity var(--dialogsDurationEnterMS) var(--easingAccelerate), transform var(--dialogsDurationEnterMS) var(--easingAccelerate);
+    transition: opacity var(--dialogsDurationEnterMS) var(--easingAccelerate), transform var(--dialogsDurationEnterMS) var(--easingAccelerate);
+}
+
+.m1gbisw7.animation-hide {
+    opacity: 0;
+}
+
+@media (max-width:1279px) {
+    .m1gbisw7 {
+        max-height: calc(100vh - (calc(var(--spacing400) * 2)));
+        top: var(--spacing400);
+    }
+}
+
+@media (max-width:719px) {
+    .m1gbisw7 {
+        left: var(--spacing150);
+        right: var(--spacing150);
+    }
+}
+
+@media (max-width:599px) {
+    .m1gbisw7 {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        border-radius: 0;
+        max-height: calc(100vh - var(--spacing650));
+        max-width: 100%;
+        -webkit-transform-origin: bottom;
+        -ms-transform-origin: bottom;
+        transform-origin: bottom;
+    }
+
+    .m1gbisw7.animation-base {
+        -webkit-transform: scale(1) translateY(20%);
+        -ms-transform: scale(1) translateY(20%);
+        transform: scale(1) translateY(20%);
+    }
+
+    .m1gbisw7.animation-show {
+        -webkit-transform: scale(1) translateY(0);
+        -ms-transform: scale(1) translateY(0);
+        transform: scale(1) translateY(0);
+        -webkit-transition-property: opacity, -webkit-transform;
+        -webkit-transition-property: opacity, transform;
+        transition-property: opacity, transform;
+    }
+}
+
+.m1gbisw7.force-mobile {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    border-radius: 0;
+    max-height: calc(100vh - var(--spacing650));
+    max-width: 100%;
+    -webkit-transform-origin: bottom;
+    -ms-transform-origin: bottom;
+    transform-origin: bottom;
+}
+
+.m1gbisw7.force-mobile.animation-base {
+    -webkit-transform: scale(1) translateY(20%);
+    -ms-transform: scale(1) translateY(20%);
+    transform: scale(1) translateY(20%);
+}
+
+.m1gbisw7.force-mobile.animation-show {
+    -webkit-transform: scale(1) translateY(0);
+    -ms-transform: scale(1) translateY(0);
+    transform: scale(1) translateY(0);
+    -webkit-transition-property: opacity, -webkit-transform;
+    -webkit-transition-property: opacity, transform;
+    transition-property: opacity, transform;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+.o1ohlj7h {
+    position: fixed;
+    background: rgba(26, 26, 26, 0.24) none repeat scroll 0 0;
+    mix-blend-mode: normal;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--zIndexModalShade);
+    -webkit-transition: opacity var(--dialogsDurationExitMS) var(--easingAccelerate), -webkit-transform var(--dialogsDurationExitMS) var(--easingAccelerate);
+    -webkit-transition: opacity var(--dialogsDurationExitMS) var(--easingAccelerate), transform var(--dialogsDurationExitMS) var(--easingAccelerate);
+    transition: opacity var(--dialogsDurationExitMS) var(--easingAccelerate), transform var(--dialogsDurationExitMS) var(--easingAccelerate);
+}
+
+.o1ohlj7h.animation-base {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.o1ohlj7h.animation-show {
+    pointer-events: auto;
+    opacity: 1;
+    -webkit-transition: opacity var(--dialogsDurationEnterMS) var(--easingDecelerate), -webkit-transform var(--dialogsDurationEnterMS) var(--easingDecelerate);
+    -webkit-transition: opacity var(--dialogsDurationEnterMS) var(--easingDecelerate), transform var(--dialogsDurationEnterMS) var(--easingDecelerate);
+    transition: opacity var(--dialogsDurationEnterMS) var(--easingDecelerate), transform var(--dialogsDurationEnterMS) var(--easingDecelerate);
+}
+
+.o1ohlj7h.animation-hide {
+    opacity: 0;
+}å
