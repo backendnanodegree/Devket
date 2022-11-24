@@ -90,7 +90,17 @@ function makeDeleteInToolBar(parentNode, site) {
     deleteButton.addEventListener('click', () => {
         const article = document.getElementById(`${site.id}`)
         article.classList.add('selected')
-        openModal()
+
+        let modalParam = {
+            func        : deleteSite,
+            type        : 'bottom',
+            alarm_txt   : `이 항목을 삭제하겠습니까? 삭제한 항목은 복원할 수 없습니다.`,
+            title       : '항목 삭제',
+            buttonName  : '삭제', 
+            args        : '',
+        }
+        
+        openModal(modalParam)
     })
 
 }
@@ -214,6 +224,32 @@ function changeFavoriteValue(favoriteButton, site) {
         
         }
     )
+}
+
+function deleteSite() {
+    /* DELETE http message를 보내는 함수 */
+
+    const site = getElement('.c18o9ext.grid.hiddenActions.noExcerpt.selected')
+    const csrftoken             = getCookie('csrftoken');
+    const data                  = {
+        method: 'DELETE',
+        headers: {
+            'content-type': 'application/json',
+            'X-CSRFToken' : csrftoken,  
+        },
+    }
+    
+    fetch(`/api/sites/${site.id}`, data)
+    .then(response => {
+        const status             = response.status
+        
+        if (status === 200) {
+            console.log('삭제 완료했습니다.')
+        } else if (status === 404) {
+            console.log('해당 항목이 존재하지 않습니다.')
+        } return response.json() 
+    })
+    .catch(error => console.log('Error:', error))
 }
 
 export {

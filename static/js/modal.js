@@ -1,6 +1,7 @@
-import { createNode, appendTag, getElement, getCookie, getElements } from './common.js';
+import { createNode, appendTag, getElement, getCookie, getElements, removeElement } from './common.js';
 
-function makeModal() {
+function makeModal(param) {
+    
     /* modal 창 만들기 */
 
     const next                      = getElement('#__next')
@@ -15,7 +16,7 @@ function makeModal() {
     modalContent.className          = "ReactModal__Content ReactModal__Content--after-open m1gbisw7 animation-base animation-show off"
     modalContent.tabindex           = '-1'
     modalContent.role               = 'dialog'
-    modalContent.setAttribute('aria-label', '항목 삭제')
+    modalContent.setAttribute('aria-label', param['title'])
     modalContent.setAttribute('aria-modal', 'true')
     appendTag(modalOverlay, modalContent)
 
@@ -42,7 +43,7 @@ function makeModal() {
     // modal 창 header
     const modalHeader               = createNode('h6')
     modalHeader.className           = 'm1oixje6 bordered sticky'
-    modalHeader.innerText           = '항목 삭제'
+    modalHeader.innerText           = param['title']
     modalHeader.setAttribute('data-cy', 'modal-header')
     appendTag(btnContainer, modalHeader)
 
@@ -55,30 +56,30 @@ function makeModal() {
     appendTag(confirmContainer, confirmTextContainer)
 
     const confirmText               = createNode('p')
-    confirmText.innerText           = `이 항목을 삭제하겠습니까? 삭제한 항목은 복원할 수 없습니다.`
+    confirmText.innerText           = param['alarm_txt']
     appendTag(confirmTextContainer, confirmText)
 
     const deleteBtnContainer        = createNode('div')
     deleteBtnContainer.className    = 'm11mcrga bordered sticky'
     appendTag(btnContainer, deleteBtnContainer)
 
-    const deleteButton              = createNode('button')
-    deleteButton.className          = 'b18soqoe primary normal'
-    deleteButton.type               = 'submit'
-    deleteButton.innerText          = '삭제'
-    deleteButton.setAttribute('data-cy' ,'delete-confirm')
-    appendTag(deleteBtnContainer, deleteButton)
+    const eventButton              = createNode('button')
+    eventButton.className          = 'b18soqoe primary normal'
+    eventButton.type               = 'submit'
+    eventButton.innerText          = param['buttonName']
+    eventButton.setAttribute('data-cy' ,'delete-confirm')
+    appendTag(deleteBtnContainer, eventButton)
 
     // Modal 창 닫기
     closeBtn.addEventListener('click', () => {
-        closeModal()
+        closeModal(param['type'])
     })
 
-    // modal 창 삭제 버튼 클릭 시, 삭제 실행 및 modal 창 닫기 
-    deleteButton.addEventListener('click', () => {
+    // Modal 창 버튼 클릭 시, event func 실행 및 modal 창 닫기 
+    eventButton.addEventListener('click', () => {
         
-        // 삭제 실행
-        deleteSite()
+        // 매개변수로 받은 함수 실행
+        param['func'](param['args'])
 
         // Modal 창 닫기
         closeModal()
@@ -90,8 +91,11 @@ function makeModal() {
 
 }
 
-function openModal() {
-    /* 하단 툴바의 삭제 버튼 클릭으로 modal 창 open */
+function openModal(param) {
+    /* Modal 창 열기 */
+
+    makeModal(param);
+
     const body              = getElement('body');
     const modalOverlay      = getElement('.o1ohlj7h')
     const hidModal          = getElement('.m1gbisw7')
@@ -101,47 +105,27 @@ function openModal() {
     hidModal.classList.toggle('off')
 }   
 
-function closeModal() {
+function closeModal(type='') {
     /* Modal 창 닫기 */
 
     const body                  = getElement('body');
     const articles              = getElements('article')
     const modalOverlay          = getElement('.o1ohlj7h')
     const hidModal              = getElement('.m1gbisw7')
+    const modalPop              = getElement('.ReactModal__Overlay')
+
+    if (modalPop != null)
+        removeElement(modalPop)
 
     modalOverlay.classList.remove('animation-show');
     body.classList.remove('modal-open')
     hidModal.classList.toggle('off')       
 
-    articles.forEach((element) => {
-        element.classList.remove('selected')
-    })
-}
-
-function deleteSite() {
-    /* DELETE http message를 보내는 함수 */
-
-    const site = getElement('.c18o9ext.grid.hiddenActions.noExcerpt.selected')
-    const csrftoken             = getCookie('csrftoken');
-    const data                  = {
-        method: 'DELETE',
-        headers: {
-            'content-type': 'application/json',
-            'X-CSRFToken' : csrftoken,  
-        },
-    }
-    
-    fetch(`/api/sites/${site.id}`, data)
-    .then(response => {
-        const status             = response.status
-        
-        if (status === 200) {
-            console.log('삭제 완료했습니다.')
-        } else if (status === 404) {
-            console.log('해당 항목이 존재하지 않습니다.')
-        } return response.json() 
-    })
-    .catch(error => console.log('Error:', error))
+    if(type == 'bottom') {
+        articles.forEach((element) => {
+            element.classList.remove('selected')
+        })
+    } 
 }
 
 

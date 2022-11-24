@@ -225,7 +225,6 @@ async function getSiteList(word='') {
 }
 
 getSiteList()
-makeModal()
 
 export {
     getSiteList,

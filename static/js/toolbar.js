@@ -486,65 +486,93 @@ function bulkButtonEventSet() {
 }
 
 function favoriteBulkSelectedSite() {
-    /* bulk 즐겨찾기 이벤트 */
-
+    /* bulk 즐겨찾기 클릭 이벤트 */
+    
     let favorite = JSON.parse(getElement('.favorite-icon-svg>path').className['baseVal'])
-    let alamText = favorite ? '선택한 항목을 즐겨찾기목록에 추가하시겠습니까?' :'선택한 항목을 즐겨찾기 목록에서 제거하시겠습니까?'
+    let alarm_txt = favorite ? '선택한 항목을 즐겨찾기목록에 추가하시겠습니까?' :'선택한 항목을 즐겨찾기 목록에서 제거하시겠습니까?'
 
     if (selected_articles.length > 0) {
-        if(confirm(alamText)) {
-            const data = setFechData("PUT",{
-                pk_ids: selected_articles,//[1, 2, 3, 4]
-                favorite: favorite,
-                user: "User Id"
-            })
-    
-            fetch(`/api/sites/bulk`, data)
-                .then(response => {
-                    let status = response.status
-                    if(favorite){
-                        if(status == 200) {
-                            alert('즐겨찾기 목록에 추가하였습니다.')
-                        }else if(status == 400) {
-                            alert('즐겨찾기 목록에 추가하지 못했습니다.')
-                        }
-                    }else{
-                        if(status == 200) {
-                            alert('즐겨찾기 목록에서 제거했습니다.')
-                        }else if(status == 400) {
-                            alert('즐겨찾기 목록에서 제거하지 못했습니다.')
-                        }
-                    }
-                })
-                .then(() => getSiteList())
-                .then(() => changeSelected())
-                .catch(error   => console.log(error))      
+
+        let modalParam = {
+            func        : bulkFavorite,
+            type        : 'bulk', 
+            alarm_txt   : alarm_txt,
+            title       : '선택 항목 즐겨찾기',
+            buttonName  : '추가', 
+            args        : favorite,
         }
+
+        openModal(modalParam)
+
     }
 }
 
 function deleteBulkSelectedSite() {
-    /* bulk 삭제 이벤트 */
+    /* bulk 삭제 클릭 이벤트 */
     
     if (selected_articles.length > 0) {
-        if(confirm('선택한 항목을 삭제하시겠습니까?')) {
-            const data = setFechData("DELETE", {
-                pk_ids: selected_articles, // [1, 2, 3, 4, 5]
-                user: 'User Id'
-            })
 
-            fetch(`/api/sites/bulk`, data)
-                .then(response => {
-                    let status = response.status
+        let modalParam = {
+            func        : bulkDelete,
+            type        : 'bulk', 
+            alarm_txt   : `선택한 항목들은 삭제하시겠습니까? \n 삭제한 항목은 복원할 수 없습니다.`,
+            title       : '선택 항목 삭제',
+            buttonName  : '삭제',
+            args        : '', 
+        }
 
-                    if(status == 200)
-                        alert('삭제에 성공하였습니다.')                    
-                })
-                .then(() => getSiteList())
-                .then(() => changeSelected())
-                .catch(error   => console.log(error))
-        }      
+        openModal(modalParam)
     }
+}
+
+function bulkFavorite(favorite) {
+    /* 벌크 즐겨찾기 이벤트 */
+
+    const data = setFechData("PUT",{
+        pk_ids: selected_articles,//[1, 2, 3, 4]
+        favorite: favorite,
+        user: "User Id"
+    })
+
+    fetch(`/api/sites/bulk`, data)
+        .then(response => {
+            let status = response.status
+            if(favorite){
+                if(status == 200) {
+                    alert('즐겨찾기 목록에 추가하였습니다.')
+                }else if(status == 400) {
+                    alert('즐겨찾기 목록에 추가하지 못했습니다.')
+                }
+            }else{
+                if(status == 200) {
+                    alert('즐겨찾기 목록에서 제거했습니다.')
+                }else if(status == 400) {
+                    alert('즐겨찾기 목록에서 제거하지 못했습니다.')
+                }
+            }
+        })
+        .then(() => getSiteList())
+        .then(() => changeSelected())
+        .catch(error   => console.log(error))
+}
+
+function bulkDelete() {
+    /* 벌크 삭제 이벤트 */
+    const data = setFechData("DELETE", {
+        pk_ids: selected_articles, // [1, 2, 3, 4, 5]
+        user: 'User Id'
+    })
+
+    fetch(`/api/sites/bulk`, data)
+        .then(response => {
+            let status = response.status
+
+            if(status == 200)
+                alert('삭제에 성공하였습니다.')                    
+        })
+        .then(() => getSiteList())
+        .then(() => changeSelected())
+        .catch(error   => console.log(error))
 }
 
 const headerContainer  = getElement('.global-nav-container > .n27eiag');
