@@ -326,7 +326,8 @@
 .i18uycg6 {
     display: flex;
     padding: var(--size100) 0 var(--size025);
-    justify-content:space-between
+    justify-content:space-between;
+    cursor: pointer;
 }
 
 .i18uycg6 .item-actions {
