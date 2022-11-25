@@ -1,6 +1,6 @@
-import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie, setFechData} from './common.js';
-import {getSiteList, selected_articles} from './get-site-list.js';
-import { openModal } from "./modal.js"
+import { getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie, setFechData } from './common.js';
+import { getSiteList, selected_articles } from './get-site-list.js';
+import { openModal, openTagModal } from "./modal.js"
 
 function makeSearchTopToolBar() {
     /* 검색 toolbar 생성 함수 */
@@ -389,6 +389,9 @@ function changeSelectBulk() {
     */
     headerToolbar.classList.toggle('bulk')
     changeSelected()
+
+    // 툴바 닫기 버튼 클릭 시 선택 전역변수 초기화
+    selected_articles.length = 0;
 }
 
 function changeSelected() {
@@ -469,20 +472,36 @@ function bulkButtonEventSet() {
     const btnBulkDelete    = getElement('.bulk-delete')
 
     btnBulkTag.addEventListener('click', () => {
-        alert('벌크 태그')
+        /* bulk 태그 */
+
+        tagBulkSelectedSite()
     })
     
     btnBulkFavorite.addEventListener('click', () => {
+        /* bulk 즐겨찾기 */
+
         favoriteBulkSelectedSite()
     })
     
     btnBulkCategory.addEventListener('click', () => {
+        /* bulk 카테고리 */
+
         alert('벌크 카테고리')
     })
     
     btnBulkDelete.addEventListener('click', () => {
+        /* bulk 삭제 */
+
         deleteBulkSelectedSite()
     })
+}
+
+function tagBulkSelectedSite() {
+    /* bulk 태그 클릭 이벤트 */
+
+    if (selected_articles.length > 0) {
+        openTagModal()
+    }
 }
 
 function favoriteBulkSelectedSite() {
