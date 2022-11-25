@@ -278,8 +278,8 @@ class ParseAPIView(APIView):
                             host_name       = urlparse(url).hostname,
                             thumbnail_url   = image,
                             favorite        = False,
-                            video           = False if video_type == 'article' or 'website' else True,
-                            content         = content
+                            video           = True if 'video' in video_type else False,
+                            content         = content,
                         )
 
                     return Response({'msg':'Success save that web site'}, status=status.HTTP_200_OK)
