@@ -49,6 +49,12 @@ function appendTag(parent, element) {
     return parent.appendChild(element);
 }
 
+function insertAfter(element, referenceElement) {
+    /* 요소 다음에 추가하는 함수 */
+
+    referenceElement.parentElement.insertBefore(element, referenceElement.nextSibling);
+}
+
 function removeAllNode(element) {
     /* 요소의 내부 요소 초기화 */
 
@@ -102,6 +108,7 @@ export {
     removeElement,
     createNode, 
     appendTag,
+    insertAfter,
     removeAllNode,
     getCookie, 
     setFechData,
