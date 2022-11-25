@@ -1,0 +1,54 @@
+.main {
+    display: flex;
+}
+
+.content {
+    position: relative;
+    width: 100%;
+    transition:all .3s;
+}
+
+.content.on {
+    width: 80%;
+    transition:all .3s;
+}
+
+.side-area {
+    height: 100vh;
+    background-color: #dddd;
+    transition:all .3s;
+    border-right: 1px solid #bbb;
+    box-shadow: 2px 0 4px 0 rgb(0 0 0 / 12%);;
+}
+
+.side-area.on {
+    width: 20%;
+    transition:all .3s;
+}
+
+.side-toggle-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 15%);;
+}
+
+.side-toggle-button > svg {
+    transform: rotate(180deg);
+    transition:all 0.3s;
+    cursor: pointer;
+}
+
+
+.side-toggle-button.on > svg {
+    transform: rotate(0deg);
+    transition:all 0.3s;
+    cursor: pointer;
+}

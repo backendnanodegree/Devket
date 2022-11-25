@@ -1,16 +1,13 @@
-const sideToggleButton = document.querySelector('.side-toggle-button')
+import {getElement} from './common.js';
+
+const sideToggleButton = getElement('.side-toggle-button')
 
 sideToggleButton.addEventListener('click', ()=>{
-    const sideArea = document.querySelector('.side-area')
-    const content = document.querySelector('.content')
-    if(!sideArea.classList.contains('on')){
-        sideArea.classList.add('on')
-        sideToggleButton.classList.add('on')
-        content.classList.add('on')
-    } else {
-        sideArea.classList.remove('on')
-        sideToggleButton.classList.remove('on')
-        content.classList.remove('on')
-    }
+    const sideArea = getElement('.side-area')
+    const content = getElement('.content')
+
+    sideArea.classList.toggle('on')
+    sideToggleButton.classList.toggle('on')
+    content.classList.toggle('on')
 
 })

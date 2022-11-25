@@ -18,7 +18,7 @@ from pocket.views import (
     PwdHelpView, 
     PremiumView,
     PaymentView,
-    DetailView
+    site_detail_view
 
 )
 
@@ -46,7 +46,7 @@ urlpatterns = [
     path('mylist/videos/', mylist_view, name='videos'),
 
     # detail
-    path('mylist/detail/', DetailView.as_view(), name='detail'), 
+    path('mylist/detail/<int:pk>/', site_detail_view, name='site_detail_view'), 
 
     # payment
     path('premium/', PremiumView.as_view(), name='premium'),

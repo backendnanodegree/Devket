@@ -16,6 +16,17 @@ import requests
 
 # template view
 
+
+def site_detail_view(request, pk):
+
+    """
+    mylist/base.html에 모든 항목들 리스트를 전달하는 함수
+    """
+    if request.method == 'GET': 
+
+        return render(request, 'mylist/detail/detail.html')
+
+
 def mylist_view(request):
 
     """
@@ -177,15 +188,15 @@ class VideoAPIView(APIView):
 
         return Response(serializer.data)
 
-class DetailView(TemplateView):
-    """
-    detail 상세화면 템플릿 뷰
-    """
-    template_name = 'mylist/detail/detail.html'
+# class DetailView(TemplateView):
+#     """
+#     detail 상세화면 템플릿 뷰
+#     """
+#     template_name = 'mylist/detail/detail.html'
 
-    def get(self, request, *args, **kwargs):
-        response = super(DetailView, self).get(self, *args, **kwargs)
-        return response
+#     def get(self, request, *args, **kwargs):
+#         response = super(DetailView, self).get(self, request, *args, **kwargs)
+#         return response
 
 
         
