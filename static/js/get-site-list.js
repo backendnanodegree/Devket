@@ -185,12 +185,13 @@ function makeActive() {
     const tabName       = document.getElementById(idName);
     const pageTitle     = getElement('.pageTitle');
     const tabTitle      =   {
-                            'mylist' : '내 목록',
+                            'mylist'     : '내 목록',
                             'categories' : '카테고리',
-                            'favorites' : '즐겨찾기',
+                            'favorites'  : '즐겨찾기',
                             'highlights' : '하이라이트',
-                            'articles' : '아티클',
-                            'videos' : '동영상',
+                            'articles'   : '아티클',
+                            'videos'     : '동영상',
+                            'tags'       : '태그',
                             }
     
     // side bar의 각 탭 비활성화
