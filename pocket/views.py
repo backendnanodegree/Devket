@@ -4,12 +4,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
-from pocket.decorator import scrap_decorator
+from pocket.decorator import bulk_decorator, scrap_decorator
 from .serializers import  SiteSerializer
 from urllib.parse import urlparse
 from django.db import transaction
 from django.db.models import Q
-from .models import Site, User
+from .models import Site, Tag, User
 from bs4 import BeautifulSoup
 import requests
 
@@ -134,33 +134,16 @@ class SiteBulkAPIView(APIView):
     벌크 항목 즐겨찾기, 삭제 api
     """
 
-    def get_list(self):
-
-        pk_ids: list = self.request.data.get('pk_ids')
-        
-        return get_list_or_404(Site, id__in=pk_ids)
-    
-    def validate_ids(self):
-
-        pk_ids: list = self.request.data.get('pk_ids')
-
-        for id in pk_ids:
-            get_object_or_404(Site,id=id)
-
-        return self.get_list()
-
-    def put(self, request):
+    @bulk_decorator
+    def put(self, request, **kwards):
         """
         Site 벌크 즐겨찾기 추가
         """ 
-
-        sites = self.validate_ids()
-        
         try:
             with transaction.atomic():
                 '''트랜젝션 시작'''
 
-                for site in sites:
+                for site in kwards['sites']:
                     site.favorite = self.request.data.get('favorite')
                     site.save()
         except:
@@ -168,17 +151,40 @@ class SiteBulkAPIView(APIView):
 
         return Response({'msg':'Updated successfully'}, status=status.HTTP_200_OK)
 
-    def delete(self, request):
+    @bulk_decorator
+    def delete(self, request, **kwards):
         """
         Site 벌크 삭제
         """        
-        sites = self.get_list()
+        with transaction.atomic():
+            '''트랜젝션 시작'''
 
-        for site in sites:
-            site.delete()
+            for site in kwards['sites']:
+                site.delete()
     
         return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)  
 
+class SiteTagsAPIView(APIView):
+    """
+    벌크 태그 api
+    """
+
+    @bulk_decorator
+    def post(self, request, **kwards):
+        """
+        Site 태그 추가
+        """ 
+        sites = kwards['sites']
+        tags  = self.request.data.get('tags')
+
+        with transaction.atomic():
+            '''트랜젝션 시작'''
+            
+            created_tags = [Tag.objects.get_or_create(name=tag)[0] for tag in tags]
+
+            [tag.site.add(site.id) for tag in created_tags for site in sites]
+        
+        return Response({'msg':'Add tag successfully'}, status=status.HTTP_200_OK)
 
 class FavoriteAPIView(APIView):
     """
