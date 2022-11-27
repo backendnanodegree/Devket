@@ -1,5 +1,7 @@
 import { createNode, appendTag, insertAfter, getElement, getCookie, getElements, removeElement } from './common.js';
 
+let added_tags =[] 
+
 function makeModal(param) {
     
     /* modal 창 만들기 */
@@ -128,7 +130,7 @@ function closeModal(type='') {
     } 
 }
 
-function makeTagModal() {
+function makeTagModal(param) {
     const next                      = getElement('#__next')
     next.setAttribute('aria-hidden','true')
 
@@ -188,6 +190,7 @@ function makeTagModal() {
 
     const tagInputTagArea           = createNode('div')
     tagInputTagArea.className       = 'tchv94s'
+    tagInputTagArea.onclick         = tagInputFocus
     appendTag(tagInputWrap, tagInputTagArea)
 
     const tagInputI1h0              = createNode('div')
@@ -232,7 +235,7 @@ function makeTagModal() {
     eventButton.addEventListener('click', () => {
         
         // 매개변수로 받은 함수 실행
-        // param['func'](param['args'])
+        param['func']()
 
         // Modal 창 닫기
         closeModal()
@@ -242,16 +245,22 @@ function makeTagModal() {
     })
 
     // 포커싱이 dom생성보다 빠르기 때문에 setTimeout으로 딜레이 주기
-    setTimeout(() => {tagInput.focus(), 1})
+    tagInputFocus()
 
     // input width event
     inputClickEvent()
 }
 
-function openTagModal() {
+function tagInputFocus(){
+    const tagInput = getElement('.i18xvto0')
+
+    setTimeout(() => {tagInput.focus(), 1})
+}
+
+function openTagModal(param) {
     /* Tag Modal 창 열기 */
 
-    makeTagModal();
+    makeTagModal(param);
 
     const modalOverlay      = getElement('.o1ohlj7h')
     const hidModal          = getElement('.m1gbisw7')
@@ -265,7 +274,12 @@ function openTagModal() {
 function inputClickEvent() {
     /* Input 입력 시 width 조절  */
 
-    const input = getElement('.i18xvto0')
+    const input         = getElement('.i18xvto0')
+    const inputWidth    = 30
+    const minWidthLimit = 2
+    const maxWidthLimit = 300
+    const minWidth      = 5
+    const maxWidth      = 300
 
     input.addEventListener('keydown', (event) => {
 
@@ -276,21 +290,22 @@ function inputClickEvent() {
 
 
         // 입력 값의 길이를 보고 width 조절
-        input.style.width = input.value.length*30 < 2     ? '5px' 
-                          : input.value.length*30 >= 300  ? '300px' 
-                          : `${(input.value.length*30)}px`;
+        input.style.width = input.value.length*inputWidth <  minWidthLimit   ? `${minWidth}px`
+                          : input.value.length*inputWidth >= maxWidthLimit   ? `${maxWidth}px`
+                          : `${(input.value.length*inputWidth)}px`;
 
         // Enter 클릭 시 입력값 Tag 추가
         // event.key == 'Enter'로 설정 시 keydown, keyup으로 이중 처리 됨
         if(event.keyCode === 13) { //13 = enter
 
             // 빈값을 모두 지우고 빈값이면 태그 추가 불가
-            if(!input.value.replaceAll(' ','') == '')
+            if(duplicateCheck(input.value.trim())&&(!input.value.replaceAll(' ','') == ''))
                 makeTag(input)
             
             // 입력 값 초기화
             input.value = ''
 
+            // 추가 버튼 활성화
             activeApplyButton()
         }
 
@@ -308,23 +323,44 @@ function inputClickEvent() {
 
                 // 태그개수가 0이 아닐 때 마지막 태그 선택 적용
                 if(tags.length != 0)      
-                    tags[tags.length-1].classList.add('selected')
+                tags[tags.length-1].classList.add('selected')
 
                 // 마지막 태그가 선택이 적용되어 있으면 그 항목 지우기
-                if(flag)
+                if(flag) {
                     tags[tags.length-1].remove()
+                    
+                    // 태그 지우면서 전역변수 added_tags의 태그가 가진 text값도 제거
+                    added_tags = added_tags.filter((element) => element !== tags[tags.length-1].innerText)
+                }
             }
-
+            
+            // 추가 버튼 활성화
             activeApplyButton()
-        }     
+        }
     })
 }
 
 function activeApplyButton() {
-    let tags          = getElement('.tchv94s').querySelectorAll('.trxac13')
-    const applyButton = getElement('.b18soqoe.primary.normal')
+    /* 태그 추가 버튼 활성화 */
+
+    const tags          = getElement('.tchv94s').querySelectorAll('.trxac13')
+    const applyButton   = getElement('.b18soqoe.primary.normal')
     
     tags.length > 0 ? applyButton.classList.remove('disabled') : applyButton.classList.add('disabled')
+}
+
+function duplicateCheck(inputVal) {
+    /* 태그 중복 체크  */
+
+    const tags = getElement('.tchv94s').querySelectorAll('.trxac13')
+    let flag   = true
+
+    tags.forEach((element) => {
+        if (inputVal === element.innerText)
+            flag = false
+    })
+
+    return flag
 }
 
 function makeTag(input) {
@@ -363,6 +399,9 @@ function makeTag(input) {
 
     let closeIconPathHtml   = `<path fill-rule="evenodd" clip-rule="evenodd" d="M4.293 4.293a1 1 0 0 1 1.414 0L12 10.586l6.293-6.293a1 1 0 1 1 1.414 1.414L13.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414L12 13.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L10.586 12 4.293 5.707a1 1 0 0 1 0-1.414Z"></path>`
     closeIconSvg[closeIconSvg.length-1].insertAdjacentHTML('beforeend', closeIconPathHtml)
+
+    // enter로 태그가 만들어 질때 저장할 때 이용할 전역변수 added_tags에 값 추가
+    added_tags.push(input.value.trim())
 }
 
 function removeTag() {
@@ -376,4 +415,5 @@ export {
     makeModal,
     openModal,
     openTagModal,
+    added_tags,
 }
