@@ -529,7 +529,8 @@
 
 .s14u4bdf, .tchv94s {
     display: block;
-    width:100%
+    width:100%;
+    cursor: text;
 }
 
 .s14u4bdf {
