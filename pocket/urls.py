@@ -9,7 +9,8 @@ from pocket.views import (
     SiteTagsAPIView, 
     SiteDetailAPIView,
     FavoriteAPIView, 
-    ArticleAPIView, 
+    ArticleAPIView,
+    TagsAPIView, 
     VideoAPIView,
 
     # template_view
@@ -32,6 +33,7 @@ api_patterns = [
     path('favorites', FavoriteAPIView.as_view()),
     path('articles', ArticleAPIView.as_view()),
     path('videos', VideoAPIView.as_view()),
+    path('tags', TagsAPIView.as_view()),
 ]
 
 urlpatterns = [
@@ -46,8 +48,9 @@ urlpatterns = [
     path('mylist/', mylist_view, name='mylist'), 
     path('mylist/favorites/', mylist_view, name='favorites'), 
     path('mylist/articles/', mylist_view, name='articles'), 
-    path('mylist/videos/', mylist_view, name='videos'), 
-
+    path('mylist/videos/', mylist_view, name='videos'),
+    path('mylist/tags/', mylist_view, name='tags'),
+     
     # payment
     path('premium/', PremiumView.as_view(), name='premium'),
     path('premium/payment/', PaymentView.as_view(), name='payment'),

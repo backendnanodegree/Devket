@@ -233,6 +233,25 @@ class VideoAPIView(APIView):
 
         return Response(serializer.data)
 
+class TagsAPIView(APIView):
+    """
+     Site model에 Tag model값이 존재하는 것만 조회
+    """
+
+    def get(self, request):
+        word: str  = request.GET['word']
+
+        tags = [tag.id for tag in Tag.objects.all()]
+
+        list_qs = Site.objects.filter(
+                            (Q(tag__in=tags))&(
+                            Q(title__contains=word)|
+                            Q(host_name__contains=word))).distinct()
+
+        serializer = SiteSerializer(list_qs, many=True)
+
+        return Response(serializer.data)
+
         
 class ParseAPIView(APIView):
     @scrap_decorator
