@@ -1,16 +1,17 @@
 {% load static %}
 <html lang="en">
-    
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-        <link rel="stylesheet" href="{% static '/css/mylist/detail/detail.css' %}">
-        <link rel="stylesheet" href="{% static '/css/mylist/detail/sidebar.css' %}">
-        <link rel="stylesheet" href="{% static '/css/mylist/detail/reset.css' %}">
-        
-        <script type="module" src="{% static '/js/detail-side-bar.js' %}"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static '/css/mylist/detail/detail.css' %}">
+    <link rel="stylesheet" href="{% static '/css/mylist/detail/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static '/css/mylist/detail/reset.css' %}">
+
+    <script type="module" src="{% static '/js/detail-side-bar.js' %}"></script>
+    <script type="module" src="{% static '/js/detail.js' %}"></script>
     <title>Detail</title>
 </head>
 
@@ -20,7 +21,8 @@
             <div class="left-wrapper">
 
                 <div class="backbutton-wrapper header-svg">
-                    <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" onclick="location.href='{% url 'mylist' %}'">
+                    <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                        onclick="location.href='{% url 'mylist' %}'">
                         <path
                             d="M12.707 5.707a1 1 0 0 0-1.414-1.414l-7 7a1 1 0 0 0 0 1.414l7 7a1 1 0 0 0 1.414-1.414L7.414 13H19.05c.525 0 .95-.448.95-1s-.425-1-.95-1H7.414l5.293-5.293Z">
                         </path>
@@ -79,6 +81,13 @@
                         d="M14.707 4.293a1 1 0 0 1 0 1.414L8.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0Z">
                     </path>
                 </svg>
+            </div>
+            <div class="artidsfscle">
+                <p id="">
+                <div class="articldfe" id="root">
+                    <input type="hidden" value="{{pk}}" id="siteid">
+                </div>
+                </p>
             </div>
         </div>
     </main>

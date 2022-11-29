@@ -3,6 +3,10 @@
     height: 64px;
     border-bottom: 1px solid #d9d9d9;
     box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 100;
 }
 
 .header-wrapper {
@@ -28,3 +32,7 @@
     cursor: pointer;
 }
 
+.article {
+    width: 600px;
+    margin: 0 auto;
+}

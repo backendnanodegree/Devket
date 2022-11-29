@@ -90,7 +90,17 @@ function makeDeleteInToolBar(parentNode, site) {
     deleteButton.addEventListener('click', () => {
         const article = document.getElementById(`${site.id}`)
         article.classList.add('selected')
-        openModal(deleteButton)
+
+        let modalParam = {
+            func        : deleteSite,
+            type        : 'bottom',
+            alarm_txt   : `이 항목을 삭제하겠습니까? 삭제한 항목은 복원할 수 없습니다.`,
+            title       : '항목 삭제',
+            buttonName  : '삭제', 
+            args        : '',
+        }
+        
+        openModal(modalParam)
     })
 
 }
@@ -122,6 +132,27 @@ function makeBottomToolbar(parentNode, site) {
  
      // bottom toolbar - delete
      makeDeleteInToolBar(itemActions, site)
+
+     // toolbar bulk 선택 시 활성화 icon
+     let itemBulkContainer = createNode('div')
+     itemBulkContainer.className = 'item-bulk-select off'
+     appendTag(itemActionsContainer, itemBulkContainer)
+
+     let itemBulkIcon = createNode('span')
+     itemBulkIcon.className = 'i1qqph0t icon'
+     appendTag(itemBulkContainer, itemBulkIcon)
+
+     let itemBulkIconSvgHtml = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='select-icon-svg'></svg>`
+     itemBulkIcon.insertAdjacentHTML('beforeend', itemBulkIconSvgHtml)   
+     
+     let itemBulkIconSvg = itemBulkIcon.querySelector('.select-icon-svg')
+
+     let itemBulkIconPathHtml = `<path fill-rule="evenodd" clip-rule="evenodd" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 2c6.075 0 11-4.925 11-11S18.075 1 12 1 1 5.925 1 12s4.925 11 11 11Z" class='select-dot-empty'></path>`
+     itemBulkIconSvg.insertAdjacentHTML('beforeend', itemBulkIconPathHtml)
+     
+     let itemBulkIconDotPathHtml = `<path fill-rule="evenodd" clip-rule="evenodd" d="M16.707 9.293a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-3-3a1 1 0 1 1 1.414-1.414L11 13.586l4.293-4.293a1 1 0 0 1 1.414 0Z"  class='select-dot-choice off'></path>`
+     itemBulkIconSvg.insertAdjacentHTML('beforeend', itemBulkIconDotPathHtml)
+
 }
 
 function changeFavoriteValue(favoriteButton, site) {
@@ -193,6 +224,32 @@ function changeFavoriteValue(favoriteButton, site) {
         
         }
     )
+}
+
+function deleteSite() {
+    /* DELETE http message를 보내는 함수 */
+
+    const site = getElement('.c18o9ext.grid.hiddenActions.noExcerpt.selected')
+    const csrftoken             = getCookie('csrftoken');
+    const data                  = {
+        method: 'DELETE',
+        headers: {
+            'content-type': 'application/json',
+            'X-CSRFToken' : csrftoken,  
+        },
+    }
+    
+    fetch(`/api/sites/${site.id}`, data)
+    .then(response => {
+        const status             = response.status
+        
+        if (status === 200) {
+            console.log('삭제 완료했습니다.')
+        } else if (status === 404) {
+            console.log('해당 항목이 존재하지 않습니다.')
+        } return response.json() 
+    })
+    .catch(error => console.log('Error:', error))
 }
 
 export {

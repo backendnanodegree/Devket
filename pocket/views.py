@@ -1,12 +1,11 @@
-from django.shortcuts import get_object_or_404, render
-from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
 from pocket.decorator import scrap_decorator
-from .serializers import SiteSerializer
+from .serializers import  SiteSerializer
 from urllib.parse import urlparse
 from django.db import transaction
 from django.db.models import Q
@@ -24,7 +23,7 @@ def site_detail_view(request, pk):
     """
     if request.method == 'GET': 
 
-        return render(request, 'mylist/detail/detail.html')
+        return render(request, 'mylist/detail/detail.html', {'pk' : pk})
 
 
 def mylist_view(request):
@@ -96,6 +95,24 @@ class SiteAPIView(APIView):
 
         return Response(serializer.data)
 
+class SiteDetailViewAPIView(APIView):
+    """
+    항목 상세화면 조회
+    """
+
+    def get_object(self, pk):
+        
+        return get_object_or_404(Site, pk=pk)
+
+
+    def get(self, request, pk): 
+
+        site = self.get_object(pk)
+
+        serializer  = SiteSerializer(site)
+
+        return Response(serializer.data)
+
 
 
 class SiteDetailAPIView(APIView):
@@ -108,7 +125,7 @@ class SiteDetailAPIView(APIView):
         return get_object_or_404(Site, pk=pk)
 
 
-    def get(self, request, pk, *args, **kwargs): 
+    def get(self, request, pk): 
 
         site = self.get_object(pk)
 
@@ -139,7 +156,58 @@ class SiteDetailAPIView(APIView):
         site.delete()
     
         return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)
-       
+
+
+class SiteBulkAPIView(APIView):
+    """
+    벌크 항목 즐겨찾기, 삭제 api
+    """
+
+    def get_list(self):
+
+        pk_ids: list = self.request.data.get('pk_ids')
+        
+        return get_list_or_404(Site, id__in=pk_ids)
+    
+    def validate_ids(self):
+
+        pk_ids: list = self.request.data.get('pk_ids')
+
+        for id in pk_ids:
+            get_object_or_404(Site,id=id)
+
+        return self.get_list()
+
+    def put(self, request):
+        """
+        Site 벌크 즐겨찾기 추가
+        """ 
+
+        sites = self.validate_ids()
+        
+        try:
+            with transaction.atomic():
+                '''트랜젝션 시작'''
+
+                for site in sites:
+                    site.favorite = self.request.data.get('favorite')
+                    site.save()
+        except:
+            raise Response({'msg':'Updated failed'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'msg':'Updated successfully'}, status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        """
+        Site 벌크 삭제
+        """        
+        sites = self.get_list()
+
+        for site in sites:
+            site.delete()
+    
+        return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)  
+
 
 class FavoriteAPIView(APIView):
     """
@@ -250,8 +318,8 @@ class ParseAPIView(APIView):
                             host_name       = urlparse(url).hostname,
                             thumbnail_url   = image,
                             favorite        = False,
-                            video           = False if video_type == 'article' else True,
-                            content         = content
+                            video           = True if 'video' in video_type else False,
+                            content         = content,
                         )
 
                     return Response({'msg':'Success save that web site'}, status=status.HTTP_200_OK)

@@ -49,6 +49,12 @@ function appendTag(parent, element) {
     return parent.appendChild(element);
 }
 
+function insertAfter(element, referenceElement) {
+    /* 요소 다음에 추가하는 함수 */
+
+    referenceElement.parentElement.insertBefore(element, referenceElement.nextSibling);
+}
+
 function removeAllNode(element) {
     /* 요소의 내부 요소 초기화 */
 
@@ -77,6 +83,23 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function setFechData(method, body){
+    /* bulk 삭제 이벤트 */
+
+    let csrftoken   = getCookie('csrftoken');
+
+    const data = {
+        method: method,
+        headers: {
+            'content-type': 'application/json',
+            'X-CSRFToken' : csrftoken,        
+        },
+        body: JSON.stringify(body)
+    }
+
+    return data
+}
+
 export {
     getElement,
     getElements,
@@ -85,6 +108,8 @@ export {
     removeElement,
     createNode, 
     appendTag,
+    insertAfter,
     removeAllNode,
     getCookie, 
+    setFechData,
 };

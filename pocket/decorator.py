@@ -9,7 +9,7 @@ def scrap_decorator(func):
 
     @wraps(func)
     def exec_func(self, request) -> func:
-        # path 파라미터 -> request body 파라미터로 절달 변경
+        # path 파라미터 -> request body 파라미터로 전달 변경
         url: str = self.request.data.get('url')
 
         if access(scheme(slash(url)), header): 
