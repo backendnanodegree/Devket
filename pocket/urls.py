@@ -6,6 +6,7 @@ from pocket.views import (
     ParseAPIView,
     SiteAPIView,
     SiteBulkAPIView,
+    SiteByTagAPIView,
     SiteTagsAPIView, 
     SiteDetailAPIView,
     FavoriteAPIView, 
@@ -30,10 +31,12 @@ api_patterns = [
     path('sites/<int:pk>', SiteDetailAPIView.as_view()),
     path('sites/bulk', SiteBulkAPIView.as_view()), 
     path('sites/tags', SiteTagsAPIView.as_view()), 
+    path('sites/tags/<int:pk>', SiteTagsAPIView.as_view()),
     path('favorites', FavoriteAPIView.as_view()),
     path('articles', ArticleAPIView.as_view()),
     path('videos', VideoAPIView.as_view()),
     path('tags', TagsAPIView.as_view()),
+    path('tags/sites', SiteByTagAPIView.as_view()),  
 ]
 
 urlpatterns = [

@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 
 from pocket.decorator import bulk_decorator, scrap_decorator
-from .serializers import  SiteSerializer
+from .serializers import  SiteSerializer, TagSerializer
 from urllib.parse import urlparse
 from django.db import transaction
 from django.db.models import Q
@@ -239,17 +239,30 @@ class TagsAPIView(APIView):
     """
 
     def get(self, request):
+        """
+        Site 태그 조회
+        """ 
+
+        tags       = Tag.objects.all()
+        serializer = TagSerializer(tags, many=True)
+
+        return Response(serializer.data)
+
+class SiteByTagAPIView(APIView):
+    """
+     Site model에 Tag model값이 존재하는 것만 조회
+    """
+
+    def get(self, request):
         word: str  = request.GET['word']
+        tags: list = [tag for tag in Tag.objects.all()]
 
-        tags = [tag.id for tag in Tag.objects.all()]
-
-        list_qs = Site.objects.filter(
-                            (Q(tag__in=tags))&(
-                            Q(title__contains=word)|
-                            Q(host_name__contains=word))).distinct()
+        list_qs    = Site.objects.filter(
+                        (Q(tag__in=tags))&(
+                        Q(title__contains=word)|
+                        Q(host_name__contains=word))).order_by('created_at').distinct()
 
         serializer = SiteSerializer(list_qs, many=True)
-
         return Response(serializer.data)
 
         
