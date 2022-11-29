@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from .models import Site
+from .models import Site, Highlight
 
 class SiteSerializer(ModelSerializer):
 
@@ -33,3 +33,7 @@ class SiteSerializer(ModelSerializer):
 
 
 
+class HighlightSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Highlight
+        fields = '__all__'

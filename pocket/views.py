@@ -5,11 +5,11 @@ from rest_framework.views import APIView
 from rest_framework import status
 
 from pocket.decorator import scrap_decorator
-from .serializers import  SiteSerializer
+from .serializers import  SiteSerializer, HighlightSerializer
 from urllib.parse import urlparse
 from django.db import transaction
 from django.db.models import Q
-from .models import Site, User
+from .models import Site, User, Highlight
 from bs4 import BeautifulSoup
 import requests
 
@@ -113,6 +113,18 @@ class SiteDetailViewAPIView(APIView):
 
         return Response(serializer.data)
 
+class HighlightListAPI(APIView):
+    def get(self, request):
+        queryset = Highlight.objects.all()
+        serializer = HighlightSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        print(request.data)
+        serializer = HighlightSerializer(data=request.data)
+        serializer.is_valid()
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class SiteDetailAPIView(APIView):

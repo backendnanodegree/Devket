@@ -11,6 +11,7 @@ from pocket.views import (
     ArticleAPIView, 
     VideoAPIView,
     SiteDetailViewAPIView,
+    HighlightListAPI,
 
     # template_view
     HomeView,
@@ -33,6 +34,7 @@ api_patterns = [
     path('favorites', FavoriteAPIView.as_view()),
     path('articles', ArticleAPIView.as_view()),
     path('videos', VideoAPIView.as_view()),
+    path('highlights', HighlightListAPI.as_view()),
 ]
 
 urlpatterns = [

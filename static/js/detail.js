@@ -1,4 +1,5 @@
 import {createNode, appendTag, getElement, getCookie} from './common.js';
+import {highlighClickEvent, highlightRetrieve} from './highlight.js';
 
 const root          = document.getElementById("root")
 
@@ -56,11 +57,22 @@ function renderDetail(site) {
 
     const siteArticle                   = createNode('article')
     siteArticle.className               = 'c3dczqn'
+    siteArticle.id                      = 'text'
     appendTag(article, siteArticle)
 
     const siteText                      = createNode('div')
     siteText.innerHTML                  = site.content
-    appendTag(siteArticle, siteText)   
+    appendTag(siteArticle, siteText)
+
+    // const highlightButton               = createNode('button')
+    // highlightButton.innerText           = '하이라이트'
+    // highlightButton.className           = 'btn'
+    // highlightButton.setAttribute('onclick', '')
+    // appendTag(siteText, highlightButton)
+
+    highlighClickEvent()
+
+
 }
 
 
@@ -79,8 +91,10 @@ function getSiteDetail() {
         .then(response => response.json())
         .then(data => {
             renderDetail(data)
-        })
+            highlightRetrieve()
+        }) 
 
 }
 getSiteDetail()
+// highlightRetrieve()
 
