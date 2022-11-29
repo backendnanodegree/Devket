@@ -1,4 +1,4 @@
-import { createNode, appendTag, insertAfter, getElement, getCookie, getElements, removeElement } from './common.js';
+import {createNode, appendTag, insertAfter, getElement, getCookie, getElements, removeElement} from './common.js';
 
 let added_tags =[] 
 

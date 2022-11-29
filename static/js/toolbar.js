@@ -1,6 +1,6 @@
-import { getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie, setFechData } from './common.js';
-import { getSiteList, selected_articles } from './get-site-list.js';
-import { openModal, openTagModal, added_tags } from "./modal.js"
+import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie, setFechData} from './common.js';
+import {getSiteList, selected_articles} from './get-site-list.js';
+import {openModal, openTagModal, added_tags} from "./modal.js"
 
 function makeSearchTopToolBar() {
     /* 검색 toolbar 생성 함수 */
@@ -561,10 +561,14 @@ function bulkTag() {
     fetch(`/api/sites/tags`, data)
         .then(response => {
             let status = response.status
+            
+            if(status == 200){
+                alert('성공적으로 저장되었습니다.')
+            }
         })
         .then(() => getSiteList())
         .then(() => changeSelected())
-        .catch(error   => console.log(error))
+        .catch(error => console.log(error))
 }
 
 function bulkFavorite(favorite) {
