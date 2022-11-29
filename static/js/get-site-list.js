@@ -38,7 +38,7 @@ function renderItem(site) {
     appendTag(item, imgContainer)
 
     const itemLink              = createNode('a')
-    itemLink.href               = site.thumbnail_url
+    itemLink.href               = `/mylist/detail/${site.id}/`           
     appendTag(imgContainer, itemLink)
 
     const img                   = createNode('img')
@@ -53,9 +53,10 @@ function renderItem(site) {
     const titleContainer        = createNode('h2')
     titleContainer.className    = 'title'
     appendTag(content, titleContainer)
-
+    
     const title                 = createNode('a')
     title.innerText             = site.title
+    title.href                  = `/mylist/detail/${site.id}/`  
     appendTag(titleContainer, title)
 
     const details               = createNode('cite')
