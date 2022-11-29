@@ -55,12 +55,10 @@ urlpatterns = [
     path('mylist/favorites/', mylist_view, name='favorites'), 
     path('mylist/articles/', mylist_view, name='articles'), 
     path('mylist/videos/', mylist_view, name='videos'),
+    path('mylist/tags/', mylist_view, name='tags'),
 
     # detail
     path('mylist/detail/<int:pk>/', site_detail_view, name='site_detail_view'), 
-
-    # tag
-    path('mylist/tags/', mylist_view, name='tags'),
      
     # payment
     path('premium/', PremiumView.as_view(), name='premium'),

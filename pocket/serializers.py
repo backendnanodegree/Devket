@@ -21,7 +21,6 @@ class SiteSerializer(ModelSerializer):
     user            = serializers.CharField(max_length=10, allow_blank=False, trim_whitespace=True)
     favorite        = serializers.BooleanField(default=False)
     video           = serializers.BooleanField(default=False)
-    video           = serializers.BooleanField(default=False)
     
     def create(self, validated_data):
         return Site.objects.create(**validated_data)
