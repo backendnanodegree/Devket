@@ -10,6 +10,7 @@ from pocket.views import (
     FavoriteAPIView, 
     ArticleAPIView, 
     VideoAPIView,
+    SiteDetailViewAPIView,
 
     # template_view
     HomeView,
@@ -19,6 +20,7 @@ from pocket.views import (
     PwdHelpView, 
     PremiumView,
     PaymentView,
+    site_detail_view
 
 )
 
@@ -27,6 +29,7 @@ api_patterns = [
     path('sites', SiteAPIView.as_view()),
     path('sites/<int:pk>', SiteDetailAPIView.as_view()),
     path('sites/bulk', SiteBulkAPIView.as_view()), 
+    path('sites/detail/<int:pk>',SiteDetailViewAPIView.as_view()),
     path('favorites', FavoriteAPIView.as_view()),
     path('articles', ArticleAPIView.as_view()),
     path('videos', VideoAPIView.as_view()),
@@ -44,7 +47,10 @@ urlpatterns = [
     path('mylist/', mylist_view, name='mylist'), 
     path('mylist/favorites/', mylist_view, name='favorites'), 
     path('mylist/articles/', mylist_view, name='articles'), 
-    path('mylist/videos/', mylist_view, name='videos'), 
+    path('mylist/videos/', mylist_view, name='videos'),
+
+    # detail
+    path('mylist/detail/<int:pk>/', site_detail_view, name='site_detail_view'), 
 
     # payment
     path('premium/', PremiumView.as_view(), name='premium'),

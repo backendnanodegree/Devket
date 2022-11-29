@@ -15,11 +15,22 @@ import requests
 
 # template view
 
-def mylist_view(request):
 
+def site_detail_view(request, pk):
     """
     mylist/base.html에 모든 항목들 리스트를 전달하는 함수
     """
+
+    if request.method == 'GET': 
+
+        return render(request, 'mylist/detail/detail.html', {'pk' : pk})
+
+
+def mylist_view(request):
+    """
+    mylist/base.html에 모든 항목들 리스트를 전달하는 함수
+    """
+    
     if request.method == 'GET': 
 
         return render(request, 'mylist/base.html')
@@ -81,6 +92,24 @@ class SiteAPIView(APIView):
                         Q(title__contains=word)|
                         Q(host_name__contains=word))  
         serializer = SiteSerializer(list_qs, many=True)
+
+        return Response(serializer.data)
+
+class SiteDetailViewAPIView(APIView):
+    """
+    항목 상세화면 조회
+    """
+
+    def get_object(self, pk):
+        
+        return get_object_or_404(Site, pk=pk)
+
+
+    def get(self, request, pk): 
+
+        site = self.get_object(pk)
+
+        serializer  = SiteSerializer(site)
 
         return Response(serializer.data)
 
