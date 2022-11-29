@@ -17,20 +17,20 @@ import requests
 
 
 def site_detail_view(request, pk):
-
     """
     mylist/base.html에 모든 항목들 리스트를 전달하는 함수
     """
+
     if request.method == 'GET': 
 
         return render(request, 'mylist/detail/detail.html', {'pk' : pk})
 
 
 def mylist_view(request):
-
     """
     mylist/base.html에 모든 항목들 리스트를 전달하는 함수
     """
+    
     if request.method == 'GET': 
 
         return render(request, 'mylist/base.html')
@@ -255,17 +255,6 @@ class VideoAPIView(APIView):
         serializer = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)
-
-# class DetailView(TemplateView):
-#     """
-#     detail 상세화면 템플릿 뷰
-#     """
-#     template_name = 'mylist/detail/detail.html'
-
-#     def get(self, request, *args, **kwargs):
-#         response = super(DetailView, self).get(self, request, *args, **kwargs)
-#         return response
-
 
         
 class ParseAPIView(APIView):

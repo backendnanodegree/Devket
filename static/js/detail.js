@@ -68,15 +68,11 @@ function getSiteDetail() {
 
     let siteId = getElement('#siteid').value;
 
-    // let csrftoken   = getCookie('csrftoken');
-
     const data = {
         method: 'GET',
         headers: {
-            'content-type': 'application/json',
-            // 'X-CSRFToken' : csrftoken,        
+            'content-type': 'application/json',      
         },
-        // body: JSON.stringify({user : 'user'})
     }
 
     fetch(`/api/sites/detail/${siteId}`, data)
