@@ -84,7 +84,7 @@ function getCookie(name) {
 }
 
 function setFechData(method, body){
-    /* bulk 삭제 이벤트 */
+    /* Fetch data 셋팅 */
 
     let csrftoken   = getCookie('csrftoken');
 

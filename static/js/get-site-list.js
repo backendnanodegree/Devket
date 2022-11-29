@@ -1,7 +1,7 @@
-import {createNode, appendTag, getElement, getElements, removeAllNode} from './common.js';
-import { makeBottomToolbar } from './bottom-toolbar.js';
-import { makeModal } from './modal.js';
-import { apiURL } from './api-url.js';
+import {createNode, appendTag, getElement, getElements, removeAllNode, setFechData} from './common.js';
+import {makeBottomToolbar} from './bottom-toolbar.js';
+import {makeModal} from './modal.js';
+import {apiURL} from './api-url.js';
 
 const root            = document.getElementById("root")
 const url             = window.location.pathname.split('/');
@@ -9,7 +9,9 @@ const apiUrlKey       = url.filter((element) => element != "").pop();
 let selected_articles = []
 
 function renderItem(site) {
-    /* 각 item의 tag를 rendering 하는 함수 */
+    /* 각 item의 tag를 rendering 하는 함수
+       - 특정 문자열로 className에 할당되는 값들은 클론코딩으로 가져오는 css를 반영하기 위한 것 입니다.
+    */
 
     const article               = createNode('article')
     article.className           = 'c18o9ext grid hiddenActions noExcerpt'
@@ -71,6 +73,89 @@ function renderItem(site) {
     // 각 항목(item)의 하단 툴바
     makeBottomToolbar(article, site)
    
+}
+
+function renderTag(tags) {
+    /* 항목에 포함된 tag를 rendering 하는 함수 
+       - 특정 문자열로 className에 할당되는 값들은 클론코딩으로 가져오는 css를 반영하기 위한 것 입니다. 
+    */
+
+    const mainContainer      = getElement('.cmg9k0j')
+
+    const allTagContiner     = createNode('div')
+    allTagContiner.className = 'a1ciqz4q'
+    appendTag(mainContainer, allTagContiner)
+    
+    const AllTagTitle        = createNode('h4')
+    AllTagTitle.className    = 's1nxmcyz'
+    AllTagTitle.innerText    = '모든 태그'
+    AllTagTitle.style        = 'margin-top: 1.5rem;'
+    appendTag(allTagContiner, AllTagTitle)
+
+    const searchBox          = createNode('div')
+    searchBox.className      = 'searchBlock'
+    appendTag(allTagContiner, searchBox)
+
+    const tagInput           = createNode('input')
+    tagInput.type            = 'text'
+    tagInput.placeholder     = '태그 검색'
+    tagInput.value           = ''
+    tagInput.setAttribute('data-cy', 'all-tags-input')
+    appendTag(searchBox, tagInput)
+
+    const tagWrap            = createNode('div')
+    tagWrap.className        = 'p1s67rcg'
+    appendTag(allTagContiner, tagWrap)
+
+    const tagUl              = createNode('ul')
+    tagUl.className          = 'list'
+    appendTag(tagWrap, tagUl)
+
+    let tagWideLi            = createNode('li')
+    appendTag(tagUl, tagWideLi)
+
+    let tagWideA             = createNode('a')
+    tagWideA.setAttribute('data-cy', `all-tags-모두`)
+    appendTag(tagWideLi, tagWideA)
+
+    let tagButton            = createNode('button')
+    tagButton.className      = 'p1mk9fki'
+    tagButton.innerText      = '모두'
+    tagButton.value          = ''
+    appendTag(tagWideA, tagButton)
+
+    // 태그 바인딩
+    let tagArray = new Array()
+
+    tags.map(tag => {
+        tagArray.push(tag.id)
+
+        const tagLi          = createNode('li')
+        appendTag(tagUl, tagLi)
+
+        const tagA           = createNode('a')
+        tagA.setAttribute('data-cy', `all-tags-${tag.name}`)
+        appendTag(tagLi, tagA)
+
+        const tagButton      = createNode('button')
+        tagButton.className  = 'p1mk9fki'
+        tagButton.innerText  = tag.name
+        tagButton.value      = tag.id
+        tagButton.onclick    = () => {
+
+            const data = {
+                method: "GET",
+                headers: {
+                    'content-type': 'application/json',    
+                },
+            }
+            fetch(`/api/sites/tags/${tag.id}`, data)
+                .then(response => console.log(response))
+                .then(data     => console.log(data))
+                .catch(error   => console.log(error))
+        }
+        appendTag(tagA, tagButton)
+    })
 }
 
 function selectBulkIcon(){
@@ -176,6 +261,12 @@ function mapPosts(data) {
     })
 }
 
+function mapTags(data) {
+    /* 태그 화면 구현 함수 */
+
+    renderTag(data);
+}
+
 function makeActive() {
     /* side bar의 각 탭을 클릭 시, 활성화하는 함수 */
     
@@ -186,12 +277,13 @@ function makeActive() {
     const tabName       = document.getElementById(idName);
     const pageTitle     = getElement('.pageTitle');
     const tabTitle      =   {
-                            'mylist' : '내 목록',
+                            'mylist'     : '내 목록',
                             'categories' : '카테고리',
-                            'favorites' : '즐겨찾기',
+                            'favorites'  : '즐겨찾기',
                             'highlights' : '하이라이트',
-                            'articles' : '아티클',
-                            'videos' : '동영상',
+                            'articles'   : '아티클',
+                            'videos'     : '동영상',
+                            'tags'       : '태그',
                             }
     
     // side bar의 각 탭 비활성화
@@ -225,7 +317,29 @@ async function getSiteList(word='') {
         })
 }
 
-getSiteList()
+
+function getSiteByTagList(word='') {
+    /* 모든 태그 화면을 조회하기 위한 함수 */
+
+    // 선택 메뉴 활성화
+    makeActive()
+
+    const siteFetch = fetch(`/api/tags/sites?word=${word}`).then(response => response.json())
+    const tagFetch  = fetch(`/api/tags`).then(response => response.json())
+                        
+    Promise.all([siteFetch, tagFetch])
+                        .then(result => {
+                            let siteData = result[0]
+                            let tagData  = result[1]
+                            
+                            mapPosts(siteData)
+                            mapTags(tagData)                           
+                        })
+                        .catch(error => console.log(error))
+}
+
+// '모든 태그'는 site, tag관련하여 api를 2번 호출하기 위해 분기
+apiUrlKey === 'tags' ? getSiteByTagList() : getSiteList()
 
 export {
     getSiteList,
