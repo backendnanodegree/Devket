@@ -1,4 +1,4 @@
-import {createNode, appendTag, getElement, getElements, removeAllNode, setFechData} from './common.js';
+import {createNode, appendTag, getElement, getElements, removeAllNode, setFetchData} from './common.js';
 import {makeBottomToolbar} from './bottom-toolbar.js';
 import {makeModal} from './modal.js';
 import {apiURL} from './api-url.js';
