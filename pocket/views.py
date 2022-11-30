@@ -1,4 +1,4 @@
-from django.shortcuts import get_list_or_404, get_object_or_404, render
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -6,10 +6,10 @@ from rest_framework import status
 
 from pocket.decorator import bulk_decorator, scrap_decorator
 from .serializers import  SiteSerializer, TagSerializer
+from .models import Site, Tag, User, Payment
 from urllib.parse import urlparse
 from django.db import transaction
 from django.db.models import Q
-from .models import Site, Tag, User
 from bs4 import BeautifulSoup
 import requests
 
@@ -18,7 +18,7 @@ import requests
 
 def site_detail_view(request, pk):
     """
-    mylist/base.html에 모든 항목들 리스트를 전달하는 함수
+    mylist/base.html에 각 항목들에 대한 조회 view_url 연결
     """
 
     if request.method == 'GET': 
@@ -28,7 +28,7 @@ def site_detail_view(request, pk):
 
 def mylist_view(request):
     """
-    mylist/base.html에 모든 항목들 리스트를 전달하는 함수
+    mylist/base.html과 모든 항목에 대한 조회 view_url을 연결
     """
     
     if request.method == 'GET': 
@@ -83,7 +83,7 @@ class PaymentView(TemplateView):
 # api view
 class SiteAPIView(APIView):
     """
-    저장한 모든 항목 데이터들을 api로 쏴주는 함수
+    저장한 모든 항목 데이터 api
     """
 
     def get(self, request): 
@@ -97,7 +97,7 @@ class SiteAPIView(APIView):
 
 class SiteDetailViewAPIView(APIView):
     """
-    항목 상세화면 조회
+    항목 상세화면 조회 api
     """
 
     def get_object(self, pk):
@@ -217,7 +217,7 @@ class SiteTagsAPIView(APIView):
 
 class FavoriteAPIView(APIView):
     """
-    Site model의 favorite 값이 true인 data를 api로 만드는 함수
+    각 항목의 즐겨찾기 값 수정 api
     """
 
     def get(self, request): 
@@ -231,7 +231,7 @@ class FavoriteAPIView(APIView):
 
 class ArticleAPIView(APIView):
     """
-     Site model의 video 값이 false인 data를 api로 만드는 함수
+    video가 아닌 항목 조회 api
     """
 
     def get(self, request):
@@ -248,7 +248,7 @@ class ArticleAPIView(APIView):
 
 class VideoAPIView(APIView):
     """
-     Site model의 video 값이 true인 data를 api로 만드는 함수
+     video가 포함된 항목 조회 api
     """
 
     def get(self, request):
@@ -378,3 +378,100 @@ class ParseAPIView(APIView):
             raise RuntimeError(f'Function parse Exception error that Class ParseAPIView : {e.args}')
         
         return html
+
+
+###### payment #####
+class PaymentPassView(APIView):
+    """
+    생성한 주문번호를 아임포트 결제 창에 전달하는 api
+    """
+
+    def post(self, request):
+
+        if not request.user.is_authenticated: 
+            return Response({"authenticated": False}, status=401)
+        
+        amount                  = 100 
+        user                    = request.user 
+        payment_type            = request.data['type']
+
+        try: 
+            merchant_id         = Payment.objects.create_new(
+                                    user=user, 
+                                    amount=amount,
+                                    type=payment_type,
+                                  )
+        
+        except ValueError:
+            merchant_id         = None
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if merchant_id is not None:
+            data                = {
+                                    "works": True, 
+                                    "merchant_id": merchant_id,
+                                    "amount": amount, 
+                                  }
+            return Response(data, status=status.HTTP_200_OK)
+
+class PaymentImpStoreView(APIView):
+    """
+    아임포트에서 보낸 결제번호를 DB에 저장하는 api
+    """
+    
+    def post(self, request):
+
+        if not request.user.is_authenticated: 
+            return Response({"authenticated": False}, status=401)
+
+        user                    = request.user
+        imp_id                  = request.data['imp_id']
+        amount                  = request.data['amount']
+        merchant_id             = request.data['merchant_id']
+        payment_status          = request.data['payment_status']
+        
+        payment                 = Payment.objects.get(
+                                    user=user,
+                                    merchant_id=merchant_id,
+                                    amount=amount
+                                  )
+        
+        if payment is not None:
+            payment.payment_id  = imp_id 
+            payment.status      = payment_status
+            payment.save()
+            data                = {'works': True}
+
+            return Response(data, status=status.HTTP_200_OK)
+        
+        else: 
+            payment.status      = 'failed'
+            payment.save()
+            data                = {'works': False}
+
+            return Response(data, {'msg':"Can't find a payment object with merchant_id passed"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MakeStatusFailed(APIView):
+    """
+    사용자 변심으로 결제 취소 시, payment의 status를 failed로 변경하는 api
+    """
+
+    def post(self, request):
+
+        imp_id                      = request.data['imp_id']
+        merchant_id                 = request.data['merchant_id']
+        payment                     = Payment.objects.get(merchant_id=merchant_id)
+        
+        if payment is not None: 
+            payment.payment_id      = imp_id
+            payment.status          = 'failed'
+            payment.save()
+            data                    = {'works': True}
+
+            return Response(data, status=status.HTTP_200_OK)
+        
+        else:
+            data                    = {'works': False}
+            
+            return Response(data, {'msg':"Can't find a payment object with merchant_id passed"}, status=status.HTTP_400_BAD_REQUEST)
