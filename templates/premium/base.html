@@ -1,14 +1,19 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<head>
-    <!-- OneTrust Cookies Consent Notice end for getpocket.com -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Pocket</title>
-    <link rel="stylesheet" href='{% static "css/main.css" %}'>
-    <link rel="stylesheet" href='{% static "css/premium.css" %}'>
-</head>
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+        <script type="module" src="{% static 'js/call-payment.js' %}"></script>  
+        
+        <link rel="stylesheet" href='{% static "css/main.css" %}'>
+        <link rel="stylesheet" href='{% static "css/premium.css" %}'>
+        <link rel="shortcut icon" href="{% static 'images/common/favicon.ico' %}">
+        
+        <title>Devket</title>
+    
+    </head>
 <body class=" premium-page-body ">
 
     <!-- HEADER -->   
