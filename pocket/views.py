@@ -1,26 +1,36 @@
-from django.shortcuts import get_object_or_404, render
-from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.views.generic import TemplateView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
-from pocket.decorator import scrap_decorator
-from .serializers import SiteSerializer
+from pocket.decorator import bulk_decorator, scrap_decorator
+from .serializers import  SiteSerializer, TagSerializer
 from urllib.parse import urlparse
 from django.db import transaction
 from django.db.models import Q
-from .models import Site, User
+from .models import Site, Tag, User
 from bs4 import BeautifulSoup
 import requests
 
 # template view
 
-def mylist_view(request):
 
+def site_detail_view(request, pk):
     """
     mylist/base.html에 모든 항목들 리스트를 전달하는 함수
     """
+
+    if request.method == 'GET': 
+
+        return render(request, 'mylist/detail/detail.html', {'pk' : pk})
+
+
+def mylist_view(request):
+    """
+    mylist/base.html에 모든 항목들 리스트를 전달하는 함수
+    """
+    
     if request.method == 'GET': 
 
         return render(request, 'mylist/base.html')
@@ -85,6 +95,24 @@ class SiteAPIView(APIView):
 
         return Response(serializer.data)
 
+class SiteDetailViewAPIView(APIView):
+    """
+    항목 상세화면 조회
+    """
+
+    def get_object(self, pk):
+        
+        return get_object_or_404(Site, pk=pk)
+
+
+    def get(self, request, pk): 
+
+        site = self.get_object(pk)
+
+        serializer  = SiteSerializer(site)
+
+        return Response(serializer.data)
+
 
 
 class SiteDetailAPIView(APIView):
@@ -135,16 +163,57 @@ class SiteBulkAPIView(APIView):
     벌크 항목 즐겨찾기, 삭제 api
     """
 
-    def delete(self, request):
-        pk_ids: list = self.request.data.get('pk_ids')
-        
-        sites = Site.objects.filter(id__in=pk_ids)
+    @bulk_decorator
+    def put(self, request, **kwards):
+        """
+        Site 벌크 즐겨찾기 추가
+        """ 
+        try:
+            with transaction.atomic():
+                '''트랜젝션 시작'''
 
-        for site in sites:
-            site.delete()
+                for site in kwards['sites']:
+                    site.favorite = self.request.data.get('favorite')
+                    site.save()
+        except:
+            raise Response({'msg':'Updated failed'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'msg':'Updated successfully'}, status=status.HTTP_200_OK)
+
+    @bulk_decorator
+    def delete(self, request, **kwards):
+        """
+        Site 벌크 삭제
+        """        
+        with transaction.atomic():
+            '''트랜젝션 시작'''
+
+            for site in kwards['sites']:
+                site.delete()
     
         return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)  
 
+class SiteTagsAPIView(APIView):
+    """
+    벌크 태그 api
+    """
+
+    @bulk_decorator
+    def post(self, request, **kwards):
+        """
+        Site 태그 추가
+        """ 
+        sites = kwards['sites']
+        tags  = self.request.data.get('tags')
+
+        with transaction.atomic():
+            '''트랜젝션 시작'''
+            
+            created_tags = [Tag.objects.get_or_create(name=tag)[0] for tag in tags]
+
+            [tag.site.add(site.id) for tag in created_tags for site in sites]
+        
+        return Response({'msg':'Add tag successfully'}, status=status.HTTP_200_OK)
 
 class FavoriteAPIView(APIView):
     """
@@ -191,6 +260,38 @@ class VideoAPIView(APIView):
 
         serializer = SiteSerializer(list_qs, many=True)
 
+        return Response(serializer.data)
+
+class TagsAPIView(APIView):
+    """
+     Site model에 Tag model값이 존재하는 것만 조회
+    """
+
+    def get(self, request):
+        """
+        Site 태그 조회
+        """ 
+
+        tags       = Tag.objects.all()
+        serializer = TagSerializer(tags, many=True)
+
+        return Response(serializer.data)
+
+class SiteByTagAPIView(APIView):
+    """
+     Site model에 Tag model값이 존재하는 것만 조회
+    """
+
+    def get(self, request):
+        word: str  = request.GET['word']
+        tags: list = [tag for tag in Tag.objects.all()]
+
+        list_qs    = Site.objects.filter(
+                        (Q(tag__in=tags))&(
+                        Q(title__contains=word)|
+                        Q(host_name__contains=word))).order_by('created_at').distinct()
+
+        serializer = SiteSerializer(list_qs, many=True)
         return Response(serializer.data)
 
         
@@ -244,8 +345,8 @@ class ParseAPIView(APIView):
                             host_name       = urlparse(url).hostname,
                             thumbnail_url   = image,
                             favorite        = False,
-                            video           = False if video_type == 'article' or 'website' else True,
-                            content         = content
+                            video           = True if 'video' in video_type else False,
+                            content         = content,
                         )
 
                     return Response({'msg':'Success save that web site'}, status=status.HTTP_200_OK)
