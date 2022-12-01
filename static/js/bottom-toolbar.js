@@ -7,8 +7,8 @@ function makeFavoriteInToolBar(parentNode, site) {
     const favoriteButtonContainer   = createNode('span')
     appendTag(parentNode, favoriteButtonContainer)
 
-    const favoriteButton        = createNode('button')
-    favoriteButton.className    = site.favorite == false ? 'm11fpiro t1221eea pmdugmx d1mp5exd favorite' : 'm11fpiro t1221eea pmdugmx d1mp5exd favorite active'
+    const favoriteButton            = createNode('button')
+    favoriteButton.className        = site.favorite == false ? 'm11fpiro t1221eea pmdugmx d1mp5exd favorite' : 'm11fpiro t1221eea pmdugmx d1mp5exd favorite active'
     favoriteButton.setAttribute('data-tooltip', site.favorite == false ? '즐겨찾기' : '즐겨찾기 해제')
     appendTag(favoriteButtonContainer, favoriteButton)
 
@@ -16,8 +16,8 @@ function makeFavoriteInToolBar(parentNode, site) {
     favoriteIconContainer.className = 'i1qqph0t icon'
     appendTag(favoriteButton, favoriteIconContainer)
 
-    const favoriteIcon      = createNode('i')
-    favoriteIcon.className  = 'fa-regular fa-star fa-lg'
+    const favoriteIcon              = createNode('i')
+    favoriteIcon.className          = 'fa-regular fa-star fa-lg'
     appendTag(favoriteIconContainer, favoriteIcon)
 
     changeFavoriteValue(favoriteButton, site)
@@ -30,8 +30,8 @@ function makeCategoryInToolBar(parentNode, site) {
     const categoryButtonContainer   = createNode('span')
     appendTag(parentNode, categoryButtonContainer)
 
-    const categoryButton        = createNode('button')
-    categoryButton.className    = 'm11fpiro t1221eea pmdugmx d1mp5exd category'
+    const categoryButton            = createNode('button')
+    categoryButton.className        = 'm11fpiro t1221eea pmdugmx d1mp5exd category'
     categoryButton.setAttribute('data-tooltip', '카테고리')
     appendTag(categoryButtonContainer, categoryButton)
 
@@ -39,8 +39,8 @@ function makeCategoryInToolBar(parentNode, site) {
     categoryIconContainer.className = 'i1qqph0t icon'
     appendTag(categoryButton, categoryIconContainer)
 
-    const categoryIcon      = createNode('i')
-    categoryIcon.className  = 'fa fa-regular fa-folder-open fa-lg'
+    const categoryIcon              = createNode('i')
+    categoryIcon.className          = 'fa fa-regular fa-folder-open fa-lg'
     appendTag(categoryIconContainer, categoryIcon)
 
 }
@@ -48,21 +48,21 @@ function makeCategoryInToolBar(parentNode, site) {
 function makeTagInToolBar(parentNode, site) {
     /* 하단 툴바의 tag button Dom을 만드는 함수 */
 
-    const tagButtonContainer    = createNode('span')
+    const tagButtonContainer        = createNode('span')
     appendTag(parentNode, tagButtonContainer)
 
-    const tagButton     = createNode('button')
-    tagButton.className = 'm11fpiro t1221eea pmdugmx d1mp5exd tag'
+    const tagButton                 = createNode('button')
+    tagButton.className             = 'm11fpiro t1221eea pmdugmx d1mp5exd tag'
     tagButton.setAttribute('data-tooltip', '태그')
     appendTag(tagButtonContainer, tagButton)
 
-    const tagIconContainer      = createNode('span')
-    tagIconContainer.className  = 'i1qqph0t icon'
+    const tagIconContainer          = createNode('span')
+    tagIconContainer.className      = 'i1qqph0t icon'
     appendTag(tagButton, tagIconContainer)
 
     
-    const tagIcon       = createNode('i')
-    tagIcon.className   = 'fa-regular fa-hashtag fa-lg'
+    const tagIcon                   = createNode('i')
+    tagIcon.className               = 'fa-regular fa-hashtag fa-lg'
     appendTag(tagIconContainer, tagIcon)
 
 }
@@ -70,11 +70,11 @@ function makeTagInToolBar(parentNode, site) {
 function makeDeleteInToolBar(parentNode, site) {
      /* 하단 툴바의 delete button Dom을 만드는 함수 */
 
-    const deleteButtonContainer = createNode('span')
+    const deleteButtonContainer     = createNode('span')
     appendTag(parentNode, deleteButtonContainer)
 
-    const deleteButton      = createNode('button')
-    deleteButton.className  = 'm11fpiro t1221eea pmdugmx d1mp5exd delete'
+    const deleteButton              = createNode('button')
+    deleteButton.className          = 'm11fpiro t1221eea pmdugmx d1mp5exd delete'
     deleteButton.setAttribute('data-tooltip', '삭제')
     appendTag(deleteButtonContainer, deleteButton)
 
@@ -82,23 +82,23 @@ function makeDeleteInToolBar(parentNode, site) {
     deleteIconContainer.className   = 'i1qqph0t icon'
     appendTag(deleteButton, deleteIconContainer)
 
-    const deleteIcon        = createNode('i')
-    deleteIcon.className    = 'fa fa-regular fa-trash fa-lg'
+    const deleteIcon                = createNode('i')
+    deleteIcon.className            = 'fa fa-regular fa-trash fa-lg'
     appendTag(deleteIconContainer, deleteIcon)
 
     // click 시, modal 창 열기
     deleteButton.addEventListener('click', () => {
-        const article = document.getElementById(`${site.id}`)
+        const article               = document.getElementById(`${site.id}`)
         article.classList.add('selected')
 
-        let modalParam = {
-            func        : deleteSite,
-            type        : 'bottom',
-            alarm_txt   : `이 항목을 삭제하겠습니까? 삭제한 항목은 복원할 수 없습니다.`,
-            title       : '항목 삭제',
-            buttonName  : '삭제', 
-            args        : '',
-        }
+        let modalParam              = {
+                                        func        : deleteSite,
+                                        type        : 'bottom',
+                                        alarm_txt   : `이 항목을 삭제하겠습니까? 삭제한 항목은 복원할 수 없습니다.`,
+                                        title       : '항목 삭제',
+                                        buttonName  : '삭제', 
+                                        args        : '',
+                                    }
         
         openModal(modalParam)
     })
@@ -109,16 +109,16 @@ function makeBottomToolbar(parentNode, site) {
     /*각 항목마다 하단 툴바를 만드는 함수*/
 
      // bottom toolbar container - footer
-     const footer       = createNode('footer')
-     footer.className   = 'footer'
+     const footer                   = createNode('footer')
+     footer.className               = 'footer'
      appendTag(parentNode, footer)
  
      const itemActionsContainer     = createNode('div')
      itemActionsContainer.className = 'i18uycg6 actions'
      appendTag(footer, itemActionsContainer)
  
-     const itemActions      = createNode('div')
-     itemActions.className  = 'item-actions'
+     const itemActions              = createNode('div')
+     itemActions.className          = 'item-actions'
      appendTag(itemActionsContainer, itemActions)
  
      // bottom toolbar - favorite
@@ -134,23 +134,23 @@ function makeBottomToolbar(parentNode, site) {
      makeDeleteInToolBar(itemActions, site)
 
      // toolbar bulk 선택 시 활성화 icon
-     let itemBulkContainer = createNode('div')
-     itemBulkContainer.className = 'item-bulk-select off'
+     let itemBulkContainer          = createNode('div')
+     itemBulkContainer.className    = 'item-bulk-select off'
      appendTag(itemActionsContainer, itemBulkContainer)
 
-     let itemBulkIcon = createNode('span')
-     itemBulkIcon.className = 'i1qqph0t icon'
+     let itemBulkIcon               = createNode('span')
+     itemBulkIcon.className         = 'i1qqph0t icon'
      appendTag(itemBulkContainer, itemBulkIcon)
 
-     let itemBulkIconSvgHtml = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='select-icon-svg'></svg>`
+     let itemBulkIconSvgHtml        = `<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class='select-icon-svg'></svg>`
      itemBulkIcon.insertAdjacentHTML('beforeend', itemBulkIconSvgHtml)   
      
-     let itemBulkIconSvg = itemBulkIcon.querySelector('.select-icon-svg')
+     let itemBulkIconSvg            = itemBulkIcon.querySelector('.select-icon-svg')
 
-     let itemBulkIconPathHtml = `<path fill-rule="evenodd" clip-rule="evenodd" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 2c6.075 0 11-4.925 11-11S18.075 1 12 1 1 5.925 1 12s4.925 11 11 11Z" class='select-dot-empty'></path>`
+     let itemBulkIconPathHtml       = `<path fill-rule="evenodd" clip-rule="evenodd" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 2c6.075 0 11-4.925 11-11S18.075 1 12 1 1 5.925 1 12s4.925 11 11 11Z" class='select-dot-empty'></path>`
      itemBulkIconSvg.insertAdjacentHTML('beforeend', itemBulkIconPathHtml)
      
-     let itemBulkIconDotPathHtml = `<path fill-rule="evenodd" clip-rule="evenodd" d="M16.707 9.293a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-3-3a1 1 0 1 1 1.414-1.414L11 13.586l4.293-4.293a1 1 0 0 1 1.414 0Z"  class='select-dot-choice off'></path>`
+     let itemBulkIconDotPathHtml    = `<path fill-rule="evenodd" clip-rule="evenodd" d="M16.707 9.293a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-3-3a1 1 0 1 1 1.414-1.414L11 13.586l4.293-4.293a1 1 0 0 1 1.414 0Z"  class='select-dot-choice off'></path>`
      itemBulkIconSvg.insertAdjacentHTML('beforeend', itemBulkIconDotPathHtml)
 
 }
@@ -161,25 +161,25 @@ function changeFavoriteValue(favoriteButton, site) {
     favoriteButton.addEventListener('click', () => {
 
         // 하단 툴바의 즐겨찾기 버튼 활성화 및 즐겨찾기 목록에 추가
-        const csrftoken         = getCookie('csrftoken');
+        const csrftoken             = getCookie('csrftoken');
 
         if (favoriteButton.classList.contains('active') == false) {
           
             // PUT: favorite 값 True로 수정
-            const data          = {
-                                    method: 'PUT',
-                                    headers: {
-                                        'content-type': 'application/json',
-                                        'X-CSRFToken' : csrftoken,  
-                                        },
-                                        body: JSON.stringify({
-                                            favorite: true,
-                                        })
-                                    }
+            const data              = {
+                                        method: 'PUT',
+                                        headers: {
+                                            'content-type': 'application/json',
+                                            'X-CSRFToken' : csrftoken,  
+                                            },
+                                            body: JSON.stringify({
+                                                favorite: true,
+                                            })
+                                      }
 
             fetch(`/api/sites/${site.id}`, data)
             .then(response => {
-                let status = response.status
+                let status          = response.status
 
                 // 하단 툴바의 즐겨찾기 버튼 활성화
                 if (status === 202) {
@@ -195,21 +195,21 @@ function changeFavoriteValue(favoriteButton, site) {
         // 하단 툴바의 즐겨찾기 버튼 비활성화 및 즐겨찾기 목록에서 제거
         else { 
             // PUT: favorite 값 false로 수정
-            const data          = {
-                                    method: 'PUT',
-                                    headers: {
-                                        'content-type': 'application/json',
-                                        'X-CSRFToken' : csrftoken,  
-                                    },
-                                    body: JSON.stringify({
-                                        'favorite': false,
-                                    })
-                                }
+            const data              = {
+                                        method: 'PUT',
+                                        headers: {
+                                            'content-type': 'application/json',
+                                            'X-CSRFToken' : csrftoken,  
+                                        },
+                                        body: JSON.stringify({
+                                            'favorite': false,
+                                        })
+                                     }
 
             fetch(`/api/sites/${site.id}`, data)
             .then(response => {
 
-                let status      = response.status
+                let status          = response.status
 
                 // 하단 툴바의 즐겨찾기 버튼 비활성화
                 if (status === 202) {
@@ -230,8 +230,8 @@ function deleteSite() {
     /* DELETE http message를 보내는 함수 */
 
     const site = getElement('.c18o9ext.grid.hiddenActions.noExcerpt.selected')
-    const csrftoken             = getCookie('csrftoken');
-    const data                  = {
+    const csrftoken                 = getCookie('csrftoken');
+    const data                      = {
         method: 'DELETE',
         headers: {
             'content-type': 'application/json',
@@ -241,7 +241,7 @@ function deleteSite() {
     
     fetch(`/api/sites/${site.id}`, data)
     .then(response => {
-        const status             = response.status
+        const status                = response.status
         
         if (status === 200) {
             console.log('삭제 완료했습니다.')

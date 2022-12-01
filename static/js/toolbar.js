@@ -1,4 +1,4 @@
-import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie, setFechData} from './common.js';
+import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie, setFetchData} from './common.js';
 import {getSiteList, selected_articles} from './get-site-list.js';
 import {openModal, openTagModal, added_tags} from "./modal.js"
 
@@ -424,7 +424,7 @@ function saveSitebyToolbar () {
 
         if(regex.test(url)){
 
-            const data = setFechData('POST', {
+            const data = setFetchData('POST', {
                 url: url,
                 user: 'User Id' ,
             })
@@ -552,7 +552,7 @@ function deleteBulkSelectedSite() {
 function bulkTag() {
     /* 벌크 태그 이벤트 */
 
-    const data = setFechData("POST",{
+    const data = setFetchData("POST",{
         pk_ids: selected_articles,
         tags: added_tags,
         user: "User Id" 
@@ -574,7 +574,7 @@ function bulkTag() {
 function bulkFavorite(favorite) {
     /* 벌크 즐겨찾기 이벤트 */
 
-    const data = setFechData("PUT",{
+    const data = setFetchData("PUT",{
         pk_ids: selected_articles,//[1, 2, 3, 4]
         favorite: favorite,
         user: "User Id"
@@ -604,7 +604,7 @@ function bulkFavorite(favorite) {
 
 function bulkDelete() {
     /* 벌크 삭제 이벤트 */
-    const data = setFechData("DELETE", {
+    const data = setFetchData("DELETE", {
         pk_ids: selected_articles, // [1, 2, 3, 4, 5]
         user: 'User Id'
     })
