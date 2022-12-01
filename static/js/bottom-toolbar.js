@@ -1,4 +1,4 @@
-import { createNode, appendTag, getCookie, getElement, setFetchData } from "./common.js"
+import { createNode, appendTag, getElement, setFetchData } from "./common.js"
 import { openModal } from "./modal.js"
 
 function makeFavoriteInToolBar(parentNode, site) {
@@ -66,26 +66,26 @@ function makeTagInToolBar(parentNode, site) {
         - 특정 문자열로 className에 할당되는 값들은 클론코딩으로 가져오는 css를 반영하기 위한 것입니다.
     */
 
-    const tagButtonContainer        = createNode('span')
+    const tagButtonContainer            = createNode('span')
     appendTag(parentNode, tagButtonContainer)
 
-    const tagButton                 = createNode('button')
-    tagButton.className             = 'm11fpiro t1221eea pmdugmx d1mp5exd tag'
+    const tagButton                     = createNode('button')
+    tagButton.className                 = 'm11fpiro t1221eea pmdugmx d1mp5exd tag'
     tagButton.setAttribute('data-tooltip', '태그')
     appendTag(tagButtonContainer, tagButton)
 
-    const tagIconContainer          = createNode('span')
-    tagIconContainer.className      = 'i1qqph0t icon'
+    const tagIconContainer              = createNode('span')
+    tagIconContainer.className          = 'i1qqph0t icon'
     appendTag(tagButton, tagIconContainer)
 
-    let tagIconSvgHTML              = `<svg class="tag-icon-svg" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>`
+    let tagIconSvgHTML                  = `<svg class="tag-icon-svg" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>`
     tagIconContainer.insertAdjacentHTML('beforeend', tagIconSvgHTML)
-    const tagIconSvg                = getElement('.tag-icon-svg')
+    const tagIconSvg                    = getElement('.tag-icon-svg')
     
-    let tagIconPathHTMLFirst             = `<path fill-rule="evenodd" clip-rule="evenodd" d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 1.414.586L20 11.172a4 4 0 0 1 0 5.656L16.828 20a4 4 0 0 1-5.656 0l-8.586-8.586A2 2 0 0 1 2 10V4Zm8 0 8.586 8.586a2 2 0 0 1 0 2.828l-3.172 3.172a2 2 0 0 1-2.828 0L4 10V4h6Z"></path>`
+    let tagIconPathHTMLFirst            = `<path fill-rule="evenodd" clip-rule="evenodd" d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 1.414.586L20 11.172a4 4 0 0 1 0 5.656L16.828 20a4 4 0 0 1-5.656 0l-8.586-8.586A2 2 0 0 1 2 10V4Zm8 0 8.586 8.586a2 2 0 0 1 0 2.828l-3.172 3.172a2 2 0 0 1-2.828 0L4 10V4h6Z"></path>`
     tagIconSvg.insertAdjacentHTML('beforeend', tagIconPathHTMLFirst)
    
-    let tagIconPathHTMLSecond             = `<path d="M9 7.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"></path>`
+    let tagIconPathHTMLSecond           = `<path d="M9 7.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"></path>`
     tagIconSvg.insertAdjacentHTML('beforeend', tagIconPathHTMLSecond)
 
 }
@@ -95,25 +95,31 @@ function makeDeleteInToolBar(parentNode, site) {
         - 특정 문자열로 className에 할당되는 값들은 클론코딩으로 가져오는 css를 반영하기 위한 것입니다.     
      */
 
-    const deleteButtonContainer     = createNode('span')
+    const deleteButtonContainer         = createNode('span')
     appendTag(parentNode, deleteButtonContainer)
 
-    const deleteButton              = createNode('button')
-    deleteButton.className          = 'm11fpiro t1221eea pmdugmx d1mp5exd delete'
+    const deleteButton                  = createNode('button')
+    deleteButton.className              = 'm11fpiro t1221eea pmdugmx d1mp5exd delete'
     deleteButton.setAttribute('data-tooltip', '삭제')
     appendTag(deleteButtonContainer, deleteButton)
 
-    const deleteIconContainer       = createNode('span')
-    deleteIconContainer.className   = 'i1qqph0t icon'
+    const deleteIconContainer           = createNode('span')
+    deleteIconContainer.className       = 'i1qqph0t icon'
     appendTag(deleteButton, deleteIconContainer)
 
-    const deleteIcon                = createNode('i')
-    deleteIcon.className            = 'fa fa-regular fa-trash fa-lg'
-    appendTag(deleteIconContainer, deleteIcon)
+    let deleteIconSvgHTML               = `<svg class="delete-icon-svg" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>`
+    deleteIconContainer.insertAdjacentHTML('beforeend', deleteIconSvgHTML)
+    const deleteIconSvg                 = getElement('.delete-icon-svg')
+    
+    let deleteIconPathHTMLFirst         = `<path fill-rule="evenodd" clip-rule="evenodd" d="M7 5a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4h5a1 1 0 1 1 0 2h-1v11a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7H2a1 1 0 0 1 0-2h5Zm2 0a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2H9ZM5 7h14v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7Z"></path>`
+    deleteIconSvg.insertAdjacentHTML('beforeend', deleteIconPathHTMLFirst)
+   
+    let deleteIconPathHTMLSecond        = `<path fill-rule="evenodd" clip-rule="evenodd" d="M9 10a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1ZM15 10a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1Z"></path>`
+    deleteIconSvg.insertAdjacentHTML('beforeend', deleteIconPathHTMLSecond)
 
     // click 시, modal 창 열기
     deleteButton.addEventListener('click', () => {
-        const article               = document.getElementById(`${site.id}`)
+        const article                   = document.getElementById(`${site.id}`)
         article.classList.toggle('selected')
 
         let modalParam              = {
