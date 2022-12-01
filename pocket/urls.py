@@ -14,6 +14,9 @@ from pocket.views import (
     TagsAPIView, 
     VideoAPIView,
     SiteDetailViewAPIView,
+    PaymentPassView, 
+    PaymentImpStoreView, 
+    MakeStatusFailed,
 
     # template_view
     HomeView,
@@ -23,8 +26,7 @@ from pocket.views import (
     PwdHelpView, 
     PremiumView,
     PaymentView,
-    site_detail_view
-
+    site_detail_view,
 )
 
 api_patterns = [
@@ -40,6 +42,11 @@ api_patterns = [
     path('videos', VideoAPIView.as_view()),
     path('tags', TagsAPIView.as_view()),
     path('tags/sites', SiteByTagAPIView.as_view()),  
+
+    # payment
+    path('payment/checkout', PaymentPassView.as_view()),
+    path('payment/validation', PaymentImpStoreView.as_view()),
+    path('payment/failure', MakeStatusFailed.as_view()),
 ]
 
 urlpatterns = [
@@ -62,7 +69,6 @@ urlpatterns = [
      
     # payment
     path('premium/', PremiumView.as_view(), name='premium'),
-    path('premium/payment/', PaymentView.as_view(), name='payment'),
 
     # api
     path('api/', include(api_patterns)),

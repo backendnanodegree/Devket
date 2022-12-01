@@ -2,7 +2,7 @@
     display: -webkit-box;
     display: flex;
     -webkit-box-pack: justify;
-    justify-content: space-between;
+    justify-content: space-evenly;
     flex-wrap: wrap;
     position: relative;
     margin: 150px auto;
@@ -2704,7 +2704,7 @@ body, html {
 
 .wrapped-checkout-form .exp {
     display: inline-block;
-    width: 90px;
+    width: 85px;
     margin:0 10px 0 0
 }
 
@@ -2779,5 +2779,3 @@ body, html {
     right: 30px;
     left: unset
 }
-
-/*# sourceMappingURL=premium.f97546b0507321064166.css.map*/

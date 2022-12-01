@@ -83,7 +83,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function setFechData(method, body){
+function setFetchData(method, body){
     /* Fetch data 셋팅 */
 
     let csrftoken   = getCookie('csrftoken');
@@ -111,5 +111,5 @@ export {
     insertAfter,
     removeAllNode,
     getCookie, 
-    setFechData,
+    setFetchData,
 };
