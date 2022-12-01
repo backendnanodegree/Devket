@@ -44,9 +44,9 @@ api_patterns = [
     path('tags/sites', SiteByTagAPIView.as_view()),  
 
     # payment
-    path('payment/checkout', PaymentPassView.as_view(), name='checkout'),
-    path('payment/validation', PaymentImpStoreView.as_view(), name='validation'),
-    path('payment/failure', MakeStatusFailed.as_view(), name='failure'),
+    path('payment/checkout', PaymentPassView.as_view()),
+    path('payment/validation', PaymentImpStoreView.as_view()),
+    path('payment/failure', MakeStatusFailed.as_view()),
 ]
 
 urlpatterns = [
