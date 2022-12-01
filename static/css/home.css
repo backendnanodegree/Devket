@@ -438,9 +438,7 @@ button:not(:disabled) {
     width: 96px
 }
 
-.mzp-c-logo.mzp-t-product-pocket.mzp-t-logo-2xl,.mzp-c-logo.mzp-t-product-pocket.mzp-t-logo-lg,.mzp-c-logo.mzp-t-product-pocket.mzp-t-logo-md,.mzp-c-logo.mzp-t-product-pocket.mzp-t-logo-sm,.mzp-c-logo.mzp-t-product-pocket.mzp-t-logo-xl,.mzp-c-logo.mzp-t-product-pocket.mzp-t-logo-xs {
-    background-image: url("/static/media/protocol/img/logos/pocket/logo.17446bc33a5d.svg");
-}
+
 
 .pocket-header.platform {
     background-color: #f9f9fa;
@@ -879,12 +877,10 @@ button:not(:disabled) {
 }
 
 .pocket-homepage .pocket-homepage-premium:before {
-    background-image: url("/static/media/img/pocket/pocket-border-1.0229e067ecc5.svg");
     top: 0
 }
 
 .pocket-homepage .pocket-homepage-premium:after {
-    background-image: url("/static/media/img/pocket/pocket-border-2.906037d0ffaa.svg");
     bottom: 0
 }
 
@@ -918,7 +914,6 @@ button:not(:disabled) {
 }
 
 .pocket-homepage .pocket-logo-inline {
-    background: url("/static/media/img/pocket/new-tab/pocket-logo-inline.7d574a080a0c.svg") no-repeat;
     direction: ltr;
     display: inline-block;
     height: 20px;

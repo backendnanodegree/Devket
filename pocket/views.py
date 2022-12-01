@@ -198,6 +198,17 @@ class SiteTagsAPIView(APIView):
     벌크 태그 api
     """
 
+    def get(self, request, pk):
+        """
+        Site 태그 선택으로 조회
+        """ 
+
+        sites =  Site.objects.filter(tag=pk)
+        
+        serializer = SiteSerializer(sites, many=True)
+
+        return Response(serializer.data)
+ 
     @bulk_decorator
     def post(self, request, **kwards):
         """
@@ -226,7 +237,6 @@ class FavoriteAPIView(APIView):
         serializer  = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)
-
 
 
 class ArticleAPIView(APIView):

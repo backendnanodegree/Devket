@@ -122,6 +122,15 @@ function renderTag(tags) {
     tagButton.className      = 'p1mk9fki'
     tagButton.innerText      = '모두'
     tagButton.value          = ''
+    tagButton.onclick        = () => {
+        
+        fetch('/api/tags/sites?word=')
+                .then(response => response.json())
+                .then(data     => {
+                    mapPosts(data)
+                })
+                .catch(error   => console.log(error))
+    }
     appendTag(tagWideA, tagButton)
 
     // 태그 바인딩
@@ -143,15 +152,11 @@ function renderTag(tags) {
         tagButton.value      = tag.id
         tagButton.onclick    = () => {
 
-            const data = {
-                method: "GET",
-                headers: {
-                    'content-type': 'application/json',    
-                },
-            }
-            fetch(`/api/sites/tags/${tag.id}`, data)
-                .then(response => console.log(response))
-                .then(data     => console.log(data))
+            fetch(`/api/sites/tags/${tag.id}`)
+                .then(response => response.json())
+                .then(data     => {
+                    mapPosts(data)
+                })
                 .catch(error   => console.log(error))
         }
         appendTag(tagA, tagButton)
