@@ -1,4 +1,4 @@
-import { createNode, appendTag, getCookie, getElement } from "./common.js"
+import { createNode, appendTag, getCookie, getElement, setFetchData } from "./common.js"
 import { openModal } from "./modal.js"
 
 function makeFavoriteInToolBar(parentNode, site) {
@@ -114,7 +114,7 @@ function makeDeleteInToolBar(parentNode, site) {
     // click 시, modal 창 열기
     deleteButton.addEventListener('click', () => {
         const article               = document.getElementById(`${site.id}`)
-        article.classList.add('selected')
+        article.classList.toggle('selected')
 
         let modalParam              = {
                                         func        : deleteSite,
@@ -190,33 +190,19 @@ function changeFavoriteValue(favoriteButton, site) {
     favoriteButton.addEventListener('click', () => {
 
         // 하단 툴바의 즐겨찾기 버튼 활성화 및 즐겨찾기 목록에 추가
-        const csrftoken             = getCookie('csrftoken');
-
         if (favoriteButton.classList.contains('active') == false) {
           
             // PUT: favorite 값 True로 수정
-            const data              = {
-                                        method: 'PUT',
-                                        headers: {
-                                            'content-type': 'application/json',
-                                            'X-CSRFToken' : csrftoken,  
-                                            },
-                                            body: JSON.stringify({
-                                                favorite: true,
-                                            })
-                                      }
-
+            const data              = setFetchData('PUT', {favorite: true})
             fetch(`/api/sites/${site.id}`, data)
             .then(response => {
                 let status          = response.status
 
                 // 하단 툴바의 즐겨찾기 버튼 활성화
                 if (status === 202) {
-                    
-                    favoriteButton.classList.add('active');
+                    favoriteButton.classList.toggle('active');
                     favoriteButton.setAttribute('data-tooltip', '즐겨찾기 해제');
                     console.log("즐겨찾기 목록에 추가했습니다.", data)
-                
                 } return response.json() })
                 .catch(error => console.error('Error:', error))
             }
@@ -224,29 +210,16 @@ function changeFavoriteValue(favoriteButton, site) {
         // 하단 툴바의 즐겨찾기 버튼 비활성화 및 즐겨찾기 목록에서 제거
         else { 
             // PUT: favorite 값 false로 수정
-            const data              = {
-                                        method: 'PUT',
-                                        headers: {
-                                            'content-type': 'application/json',
-                                            'X-CSRFToken' : csrftoken,  
-                                        },
-                                        body: JSON.stringify({
-                                            'favorite': false,
-                                        })
-                                     }
-
+            const data              = setFetchData('PUT', {favorite: false})
             fetch(`/api/sites/${site.id}`, data)
             .then(response => {
-
                 let status          = response.status
 
                 // 하단 툴바의 즐겨찾기 버튼 비활성화
                 if (status === 202) {
-                
-                    favoriteButton.classList.remove('active');
+                    favoriteButton.classList.toggle('active');
                     favoriteButton.setAttribute('data-tooltip', '즐겨찾기');
                     console.log("즐겨찾기 목록에서 제거했습니다.", data)
-                
                 } return response.json() })
                 .catch(error => console.error('Error:', error))
             }
@@ -260,16 +233,8 @@ function deleteSite() {
         - 특정 문자열로 className에 할당되는 값들은 클론코딩으로 가져오는 css를 반영하기 위한 것입니다.
     */
 
-    const site = getElement('.c18o9ext.grid.hiddenActions.noExcerpt.selected')
-    const csrftoken                 = getCookie('csrftoken');
-    const data                      = {
-        method: 'DELETE',
-        headers: {
-            'content-type': 'application/json',
-            'X-CSRFToken' : csrftoken,  
-        },
-    }
-    
+    const site                  = getElement('.c18o9ext.grid.hiddenActions.noExcerpt.selected')
+    const data                  = setFetchData('DELETE', '')
     fetch(`/api/sites/${site.id}`, data)
     .then(response => {
         const status                = response.status
