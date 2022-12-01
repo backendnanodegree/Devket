@@ -1,10 +1,11 @@
-import {createNode, appendTag, insertAfter, getElement, getCookie, getElements, removeElement} from './common.js';
+import {createNode, appendTag, insertAfter, getElement, getElements, removeElement} from './common.js';
 
 let added_tags =[] 
 
 function makeModal(param) {
-    
-    /* modal 창 만들기 */
+    /* modal 창 만들기 
+        - 특정 문자열로 className에 할당되는 값들은 클론코딩으로 가져오는 css를 반영하기 위한 것입니다.
+    */
 
     const next                      = getElement('#__next')
     next.setAttribute('aria-hidden','true')
@@ -94,7 +95,9 @@ function makeModal(param) {
 }
 
 function openModal(param) {
-    /* Modal 창 열기 */
+    /* Modal 창 열기 
+        - 특정 문자열로 className에 할당되는 값들은 클론코딩으로 가져오는 css를 반영하기 위한 것입니다.
+    */
 
     makeModal(param);
 
