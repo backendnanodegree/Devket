@@ -3,7 +3,9 @@ import {createNode, appendTag, getElement, getCookie} from './common.js';
 const root          = document.getElementById("root")
 
 function renderDetail(site) {
-/* 항목의 상새내용을 rendering 하는 함수 */
+/* 항목의 상새내용을 rendering 하는 함수 
+    - 특정 문자열로 className에 할당되는 값들은 클론코딩으로 가져오는 css를 반영하기 위한 것입니다.
+*/
 
     const article                       = createNode('article')
     article.className                   = 'article'

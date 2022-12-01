@@ -268,7 +268,9 @@ function mapTags(data) {
 }
 
 function makeActive() {
-    /* side bar의 각 탭을 클릭 시, 활성화하는 함수 */
+    /* side bar의 각 탭을 클릭 시, 활성화하는 함수 
+        - 특정 문자열로 className에 할당되는 값들은 클론코딩으로 가져오는 css를 반영하기 위한 것입니다.
+    */
     
     let i; 
     const sidebar       = document.querySelectorAll('.sv813dg')
