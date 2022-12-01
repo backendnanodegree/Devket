@@ -38,9 +38,7 @@ class Iamport():
         """
         인증방식의 결제 진행 과정에서 결제금액 위변 시, 결제 진행 자체를 막기 위해 결제 예정금액을 사전등록하는 과정
         """
-        print('merchant_id: ', merchant_id)
-        print('amount: ', amount)
-
+        
         access_token            = self.get_access_token()
         url                     = f'{Iamport.iamport_api_url}/payments/prepare'
 
