@@ -20,7 +20,7 @@ function makeFavoriteInToolBar(parentNode, site) {
 
     let favoriteIconSvgHTML             = `<svg class='favorite-icon-svg' fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"aria-hidden="true"></svg>`
     favoriteIconContainer.insertAdjacentHTML('beforeend', favoriteIconSvgHTML)
-    const favoriteIconSvg               = getElement('.favorite-icon-svg')
+    const favoriteIconSvg               = favoriteIconContainer.querySelector('.favorite-icon-svg')
 
     let favoriteIconPathHTML            = '<path fill-rule="evenodd" clip-rule="evenodd" d="M12 1a1 1 0 0 1 .897.557l2.706 5.484 6.051.88a1 1 0 0 1 .555 1.705l-4.38 4.268 1.034 6.027a1 1 0 0 1-1.45 1.054L12 18.13l-5.413 2.845a1 1 0 0 1-1.45-1.054l1.033-6.027-4.379-4.268a1 1 0 0 1 .555-1.706l6.051-.88 2.706-5.483A1 1 0 0 1 12 1Zm0 3.26L9.958 8.397a1 1 0 0 1-.753.548l-4.567.663 3.305 3.221a1 1 0 0 1 .287.885l-.78 4.548 4.085-2.147a1 1 0 0 1 .93 0l4.085 2.147-.78-4.548a1 1 0 0 1 .287-.885l3.305-3.22-4.567-.664a1 1 0 0 1-.753-.548L12 4.26Z"></path>'
     favoriteIconSvg.insertAdjacentHTML('beforeend', favoriteIconPathHTML)
@@ -48,7 +48,7 @@ function makeCategoryInToolBar(parentNode, site) {
 
     let categoryIconSvgHTML             = '<svg class="category-icon-svg" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>'
     categoryIconContainer.insertAdjacentHTML('beforeend', categoryIconSvgHTML)
-    const categoryIconSvg               = getElement('.category-icon-svg')
+    const categoryIconSvg               = categoryIconContainer.querySelector('.category-icon-svg')
 
     let categoryIconPathHTMLFirst       = '<path fill-rule="evenodd" clip-rule="evenodd" d="M1 4a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4Zm2 0v2h18V4H3Z"></path>'
     categoryIconSvg.insertAdjacentHTML('beforeend', categoryIconPathHTMLFirst)
@@ -80,7 +80,7 @@ function makeTagInToolBar(parentNode, site) {
 
     let tagIconSvgHTML                  = `<svg class="tag-icon-svg" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>`
     tagIconContainer.insertAdjacentHTML('beforeend', tagIconSvgHTML)
-    const tagIconSvg                    = getElement('.tag-icon-svg')
+    const tagIconSvg               = tagIconContainer.querySelector('.tag-icon-svg')
     
     let tagIconPathHTMLFirst            = `<path fill-rule="evenodd" clip-rule="evenodd" d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 1.414.586L20 11.172a4 4 0 0 1 0 5.656L16.828 20a4 4 0 0 1-5.656 0l-8.586-8.586A2 2 0 0 1 2 10V4Zm8 0 8.586 8.586a2 2 0 0 1 0 2.828l-3.172 3.172a2 2 0 0 1-2.828 0L4 10V4h6Z"></path>`
     tagIconSvg.insertAdjacentHTML('beforeend', tagIconPathHTMLFirst)
@@ -109,7 +109,7 @@ function makeDeleteInToolBar(parentNode, site) {
 
     let deleteIconSvgHTML               = `<svg class="delete-icon-svg" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>`
     deleteIconContainer.insertAdjacentHTML('beforeend', deleteIconSvgHTML)
-    const deleteIconSvg                 = getElement('.delete-icon-svg')
+    const deleteIconSvg               = deleteIconContainer.querySelector('.delete-icon-svg')
     
     let deleteIconPathHTMLFirst         = `<path fill-rule="evenodd" clip-rule="evenodd" d="M7 5a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4h5a1 1 0 1 1 0 2h-1v11a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7H2a1 1 0 0 1 0-2h5Zm2 0a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2H9ZM5 7h14v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7Z"></path>`
     deleteIconSvg.insertAdjacentHTML('beforeend', deleteIconPathHTMLFirst)
