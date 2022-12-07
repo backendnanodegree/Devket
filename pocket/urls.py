@@ -3,7 +3,7 @@ from django.urls import path, include
 
 from pocket.views import (
     # api_view
-    LoginView,
+    LoginAPIView,
     LogoutView,
     ParseAPIView,
     SignupAPIView,
