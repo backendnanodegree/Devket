@@ -1,6 +1,40 @@
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from .models import Site, Tag, Payment
+from .models import Site, Tag, Payment, User
+
+class LoginSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(
+        required = True,
+        write_only = True,
+    )
+    password = serializers.CharField(
+        required = True,
+        write_only = True,
+        style= {'input_type' : 'password'}
+    )
+
+    def validate(self, data):
+        email = data.get('email',None)
+        password = data.get('password',None)
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            if not user.check_password(password):
+                raise serializers.ValidationError('Check Your Email or Password')
+        else:
+            raise serializers.ValidationError("User does not exist")
+        
+        token = RefreshToken.for_user(user=user)
+        data = {
+            'refresh_token' : str(token),
+            'access_token' : str(token.access_token)
+        }
+        
+        return data
+    class Meta(object):
+        model = User
+        fields = ('email', 'password')
 
 class TagSerializer(ModelSerializer):
 

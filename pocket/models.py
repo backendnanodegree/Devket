@@ -1,38 +1,60 @@
+from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.db.models.signals import post_save
 from django.conf import settings
 from django.db import models
 from .iamport import Iamport
+import random
+import string
 import hashlib
 import time
 
-class User(models.Model):
-    """ 사용자 계정에 대한 정보 모델 """
+class UserManager(BaseUserManager):
+    # 일반 user 생성
+    def create_user(self, password=None):
+        user = self.model()
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
-    name                        = models.CharField(verbose_name='이름', max_length = 20)
-    password                    = models.CharField(verbose_name='비밀번호', max_length = 15)
-    introduce                   = models.TextField(verbose_name='자기소개', max_length = 200)
-    blog_url                    = models.CharField(verbose_name='블로그url', max_length = 250)
+class User(AbstractBaseUser):
+    """ 사용자 계정에 대한 정보 모델 """
+    name                        = models.CharField(verbose_name='이름', max_length = 20, null=True)
+    password                    = models.CharField(verbose_name='비밀번호', max_length = 15, unique=True)
+    introduce                   = models.TextField(verbose_name='자기소개', max_length = 200, null=True)
     profile_picture             = models.ImageField(verbose_name='프로필사진', null=True, upload_to=f"profile/", blank=True)
+    blog_url                    = models.CharField(verbose_name='블로그url', max_length = 250, null=True)
 
     # Payment_status choices
     PAYMENT_ON                  = 1
     PAYMENT_OFF                 = 0
 
-    PAYMENT_CHOICES             = [
-                                    {PAYMENT_ON, '결제'},
-                                    {PAYMENT_OFF, '미결제'}
-                                  ]
+    PAYMENT_CHOICES = [
+        {PAYMENT_ON, '결제'},
+        {PAYMENT_OFF, '미결제'}
+    ]
     
-    payment_status              = models.IntegerField(choices=PAYMENT_CHOICES, default=PAYMENT_OFF, verbose_name='결제상태')
+    payment_status              = models.IntegerField(choices=PAYMENT_CHOICES, default=PAYMENT_OFF, verbose_name='결제상태', null=True)
     created_at                  = models.DateTimeField(verbose_name='생성일', auto_now_add=True)
     updated_at                  = models.DateTimeField(verbose_name='갱신일', auto_now=True)
 
+    # User 모델의 필수 field
+    is_active                   = models.BooleanField(default=True)    
+    is_admin                    = models.BooleanField(default=False)
+    
+    # 사용자의 username field는 랜덤 설정
+    USERNAME_FIELD              = ''.join([random.choice(string.ascii_letters + string.digits) for _ in range(20)])
+
+    # 필수로 작성해야하는 field
+    REQUIRED_FIELDS             = []
+    
+    # 헬퍼 클래스 사용
+    objects = UserManager()
+    
     def __str__(self):
         return f"{self.name}"
-
     class Meta:
-        verbose_name            = '유저'
-        verbose_name_plural     = '유저 목록'
+        verbose_name = '유저'
+        verbose_name_plural = '유저 목록'
 
 
 class Email(models.Model):

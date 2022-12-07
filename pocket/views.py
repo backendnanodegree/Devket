@@ -1,17 +1,63 @@
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import TemplateView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
 from pocket.decorator import bulk_decorator, scrap_decorator
-from .serializers import  SiteSerializer, TagSerializer
-from .models import Site, Tag, User, Payment
+from .serializers import  LoginSerializer, SiteSerializer, TagSerializer
+from .models import Email, Site, Tag, User, Payment
 from urllib.parse import urlparse
 from django.db import transaction
 from django.db.models import Q
 from bs4 import BeautifulSoup
 import requests
+
+class SignupAPIView(APIView):
+    def post(self, request): 
+            try:
+                email: str     = request.GET['email']   
+                password: str  = request.GET['password']              
+
+                userModel = User.objects.create_user(password=password)
+
+                emailModel = Email.objects.create(user=userModel, email=email)
+                
+                return Response({'msg':'Success signup'})
+            except KeyError as k:
+                return Response({'msg':f'ERROR: Signup process KeyError that Class SignupAPIView : {k.args}'}, status=status.HTTP_400_BAD_REQUEST)
+
+class LoginView(GenericAPIView):
+    serializer_class = LoginSerializer
+    
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        
+        serializer.is_valid(raise_exception = True)
+        token = serializer.validated_data
+        
+        res = Response()
+        res.set_cookie("access", token["access_token"], httponly=True)
+        res.set_cookie("refresh", token["refresh_token"], httponly=True)
+        res.data = {
+            "jwt": token["access_token"]
+        }
+
+        return res
+
+
+class LogoutView(APIView):
+  def post(self,res):
+    res = Response()
+    res.delete_cookie('access')
+    res.delete_cookie('refresh')
+    res.data = {
+        "message" : 'success'
+      }
+
+    return res
+
 
 # template view
 
