@@ -33,9 +33,12 @@ class LoginSerializer(serializers.ModelSerializer):
         }
         
         return data
+        
+        
     class Meta(object):
         model = User
         fields = ('email', 'password')
+
 
 class TagSerializer(ModelSerializer):
 
