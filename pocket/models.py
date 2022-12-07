@@ -52,9 +52,10 @@ class User(AbstractBaseUser):
     
     def __str__(self):
         return f"{self.name}"
+
     class Meta:
-        verbose_name = '유저'
-        verbose_name_plural = '유저 목록'
+        verbose_name            = '유저'
+        verbose_name_plural     = '유저 목록'
 
 
 class Email(models.Model):
