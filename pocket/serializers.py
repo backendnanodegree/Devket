@@ -20,6 +20,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
         if User.objects.filter(email=email).exists():
             user = User.objects.get(email=email)
+
             if not user.check_password(password):
                 raise serializers.ValidationError('Check Your Email or Password')
         else:
