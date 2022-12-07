@@ -28,10 +28,10 @@ class User(AbstractBaseUser):
     PAYMENT_ON                  = 1
     PAYMENT_OFF                 = 0
 
-    PAYMENT_CHOICES = [
-        {PAYMENT_ON, '결제'},
-        {PAYMENT_OFF, '미결제'}
-    ]
+    PAYMENT_CHOICES             = [
+                                    {PAYMENT_ON, '결제'},
+                                    {PAYMENT_OFF, '미결제'}
+                                  ]
     
     payment_status              = models.IntegerField(choices=PAYMENT_CHOICES, default=PAYMENT_OFF, verbose_name='결제상태', null=True)
     created_at                  = models.DateTimeField(verbose_name='생성일', auto_now_add=True)
