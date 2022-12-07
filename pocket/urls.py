@@ -45,9 +45,9 @@ api_patterns = [
     path('videos', VideoAPIView.as_view()),
     path('tags', TagsAPIView.as_view()),
     path('tags/sites', SiteByTagAPIView.as_view()),  
-    path('signup/', SignupAPIView.as_view()),
-    path('login/', LoginAPIView.as_view()),
-    path('logout/', LogoutView.as_view()),
+    path('signup', SignupAPIView.as_view()),
+    path('login', LoginAPIView.as_view()),
+    path('logout', LogoutView.as_view()),
 
     # payment
     path('payment/checkout', PaymentPassView.as_view()),
