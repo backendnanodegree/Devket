@@ -16,32 +16,32 @@ import requests
 
 class SignupAPIView(APIView):
     def post(self, request): 
-            try:
-                email: str     = request.GET['email']   
-                password: str  = request.GET['password']              
+        try:
+            email: str     = request.GET['email']   
+            password: str  = request.GET['password']              
 
-                userModel = User.objects.create_user(password=password)
+            userModel      = User.objects.create_user(password=password)
 
-                emailModel = Email.objects.create(user=userModel, email=email)
-                
-                return Response({'msg':'Success signup'})
-            except KeyError as k:
-                return Response({'msg':f'ERROR: Signup process KeyError that Class SignupAPIView : {k.args}'}, status=status.HTTP_400_BAD_REQUEST)
+            emailModel     = Email.objects.create(user=userModel, email=email)
+
+            return Response({'msg':'Success signup'}, status=status.HTTP_200_OK)
+        except KeyError as k:
+            return Response({'msg':f'ERROR: Signup process KeyError that Class SignupAPIView : {k.args}'}, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginAPIView(GenericAPIView):
-    serializer_class = LoginSerializer
+    serializer_class       = LoginSerializer
     
     def post(self, request):
-        serializer = self.get_serializer(data=request.data)
+        serializer         = self.get_serializer(data=request.data)
         
         serializer.is_valid(raise_exception = True)
-        token = serializer.validated_data
+        token              = serializer.validated_data
         
-        res = Response()
+        res                = Response()
         res.set_cookie("access", token["access_token"], httponly=True)
         res.set_cookie("refresh", token["refresh_token"], httponly=True)
-        res.data = {
-            "jwt": token["access_token"]
+        res.data           = {
+                             "jwt": token["access_token"]
         }
 
         return res
@@ -49,12 +49,12 @@ class LoginAPIView(GenericAPIView):
 
 class LogoutView(APIView):
   def post(self,res):
-    res = Response()
+    res                    = Response()
     res.delete_cookie('access')
     res.delete_cookie('refresh')
-    res.data = {
-        "message" : 'success'
-      }
+    res.data               = {
+                              "message" : 'success'
+    }
 
     return res
 
