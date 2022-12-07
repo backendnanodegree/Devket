@@ -46,7 +46,7 @@ api_patterns = [
     path('tags', TagsAPIView.as_view()),
     path('tags/sites', SiteByTagAPIView.as_view()),  
     path('signup/', SignupAPIView.as_view()),
-    path('login/', LoginView.as_view()),
+    path('login/', LoginAPIView.as_view()),
     path('logout/', LogoutView.as_view()),
 
     # payment
