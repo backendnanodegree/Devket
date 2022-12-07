@@ -28,7 +28,7 @@ class SignupAPIView(APIView):
             except KeyError as k:
                 return Response({'msg':f'ERROR: Signup process KeyError that Class SignupAPIView : {k.args}'}, status=status.HTTP_400_BAD_REQUEST)
 
-class LoginView(GenericAPIView):
+class LoginAPIView(GenericAPIView):
     serializer_class = LoginSerializer
     
     def post(self, request):
