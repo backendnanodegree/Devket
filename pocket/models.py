@@ -48,7 +48,7 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS             = []
     
     # 헬퍼 클래스 사용
-    objects = UserManager()
+    objects                     = UserManager()
     
     def __str__(self):
         return f"{self.name}"
