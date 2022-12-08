@@ -53,7 +53,7 @@ class LogoutAPIView(APIView):
     res.delete_cookie('access')
     res.delete_cookie('refresh')
     res.data               = {
-                              "message" : 'success'
+                              "msg" : 'success logout', status=status.HTTP_200_OK
     }
 
     return res
