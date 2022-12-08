@@ -4,7 +4,7 @@ from django.urls import path, include
 from pocket.views import (
     # api_view
     LoginAPIView,
-    LogoutView,
+    LogoutAPIView,
     ParseAPIView,
     SignupAPIView,
     SiteAPIView,
@@ -47,7 +47,7 @@ api_patterns = [
     path('tags/sites', SiteByTagAPIView.as_view()),  
     path('signup', SignupAPIView.as_view()),
     path('login', LoginAPIView.as_view()),
-    path('logout', LogoutView.as_view()),
+    path('logout', LogoutAPIView.as_view()),
 
     # payment
     path('payment/checkout', PaymentPassView.as_view()),
