@@ -48,16 +48,18 @@ class LoginAPIView(GenericAPIView):
 
 
 class LogoutAPIView(APIView):
-  def post(self,res):
-    res                    = Response()
-    res.delete_cookie('access')
-    res.delete_cookie('refresh')
-    res.data               = {
-                              "msg" : 'success logout', status=status.HTTP_200_OK
-    }
-
-    return res
-
+  def post(self,req):
+    try:
+        res                = Response()
+        res.delete_cookie('access')
+        res.delete_cookie('refresh')
+        res.data           = ({'msg':'Success logout'})
+        res.status         = status.HTTP_200_OK 
+        return res
+    except:
+        res.data           = ({'msg':'Failure logout'})
+        res.status         = status.HTTP_400_BAD_REQUEST
+        return res
 
 # template view
 
