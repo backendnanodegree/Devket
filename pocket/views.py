@@ -47,7 +47,7 @@ class LoginAPIView(GenericAPIView):
         return res
 
 
-class LogoutView(APIView):
+class LogoutAPIView(APIView):
   def post(self,res):
     res                    = Response()
     res.delete_cookie('access')
