@@ -36,8 +36,14 @@ function renderItem(site) {
     appendTag(item, imgContainer)
 
     const itemLink              = createNode('a')
-    itemLink.href               = `/mylist/detail/${site.id}/`           
-    appendTag(imgContainer, itemLink)
+    if (site.video == false) {
+        itemLink.href           = `/mylist/detail/${site.id}/`           
+        appendTag(imgContainer, itemLink)
+    } else {
+        itemLink.href           = site.url
+        itemLink.target         ='_blank'
+        appendTag(imgContainer, itemLink)
+    }
 
     const img                   = createNode('img')
     img.src                     = site.thumbnail_url
@@ -54,8 +60,14 @@ function renderItem(site) {
     
     const title                 = createNode('a')
     title.innerText             = site.title
-    title.href                  = `/mylist/detail/${site.id}/`  
-    appendTag(titleContainer, title)
+    if (site.video == false) {
+        title.href              = `/mylist/detail/${site.id}/`  
+        appendTag(titleContainer, title)
+    } else {
+        title.href              = site.url
+        title.target            ='_blank'
+        appendTag(titleContainer, title)
+    }
 
     const details               = createNode('cite')
     details.className           = 'details'
