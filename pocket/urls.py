@@ -11,7 +11,9 @@ from pocket.views import (
     ArticleAPIView, 
     VideoAPIView,
     SiteDetailViewAPIView,
-    HighlightListAPI,
+    HighlightListAPIView,
+    HighlightAPIView,
+    HighlightPremiumAPIView,
 
     # template_view
     HomeView,
@@ -34,7 +36,11 @@ api_patterns = [
     path('favorites', FavoriteAPIView.as_view()),
     path('articles', ArticleAPIView.as_view()),
     path('videos', VideoAPIView.as_view()),
-    path('highlights', HighlightListAPI.as_view()),
+    path('highlights', HighlightAPIView.as_view()),
+    path('highlights/<int:pk>', HighlightAPIView.as_view()),
+    path('highlights/list', HighlightListAPIView.as_view()),
+    path('highlights/premium/<int:pk>', HighlightPremiumAPIView.as_view()),
+
 ]
 
 urlpatterns = [
@@ -50,6 +56,7 @@ urlpatterns = [
     path('mylist/favorites/', mylist_view, name='favorites'), 
     path('mylist/articles/', mylist_view, name='articles'), 
     path('mylist/videos/', mylist_view, name='videos'),
+    path('mylist/highlights/', mylist_view, name='highlights'),
 
     # detail
     path('mylist/detail/<int:pk>/', site_detail_view, name='site_detail_view'), 
