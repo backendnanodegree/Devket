@@ -177,27 +177,32 @@ detailButton.addEventListener('click', () => {
 
     let siteId = getElement('#siteid').value;
 
-    const csrftoken         = getCookie('csrftoken')
+    if (confirm("해당 항목을 삭제 하시겠습니까?")) {
 
-    const data              = {
-        method: 'DELETE',
-        headers: {
-            'content-type': 'application/json',
-            'X-CSRFToken' : csrftoken,
+        alert('항목이 삭제 되었습니다.')
+
+        const csrftoken         = getCookie('csrftoken')
+    
+        const data              = {
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json',
+                'X-CSRFToken' : csrftoken,
+            }
         }
+    
+        fetch(`/api/sites/${siteId}`, data)
+        .then(response => {
+            const status        = response.status
+            
+            if (status === 200) {
+                console.log('삭제 완료했습니다.')
+            } else if (status === 400) {
+                console.log('해당 항목이 존재하지 않습니다.')
+            } return response.json()
+        })
+        .catch(error => console.log('Error:', error))
     }
-
-    fetch(`/api/sites/${siteId}`, data)
-    .then(response => {
-        const status        = response.status
-        
-        if (status === 200) {
-            console.log('삭제 완료했습니다.')
-        } else if (status === 400) {
-            console.log('해당 항목이 존재하지 않습니다.')
-        } return response.json()
-    })
-    .catch(error => console.log('Error:', error))
 
 })
 
