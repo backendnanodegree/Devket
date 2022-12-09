@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
 from pathlib import Path
 import json
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # custom apps
+    'rest_framework_simplejwt',
     'rest_framework',
     'pocket',
 ]
@@ -154,3 +156,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # iamport
 IMP_KEY = get_secret('IMP_KEY')
 IMP_SECRET = get_secret('IMP_SECRET')
+
+REST_FRAMEWORK = {
+    'AUTH_TOKEN_CLASSES': (
+        'rest_framework_simplejwt.tokens.UntypedToken',),
+}
+REST_USE_JWT = True
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'TOKEN_USER_CLASS': 'pocket.User',
+}
