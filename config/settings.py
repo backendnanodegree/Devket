@@ -10,9 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import os, json
+from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
 from pathlib import Path
+import json
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -61,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # custom apps
+    'rest_framework_simplejwt',
     'rest_framework',
     'pocket',
 ]
@@ -131,14 +134,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
-
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -149,3 +151,22 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# iamport
+IMP_KEY = get_secret('IMP_KEY')
+IMP_SECRET = get_secret('IMP_SECRET')
+
+REST_FRAMEWORK = {
+    'AUTH_TOKEN_CLASSES': (
+        'rest_framework_simplejwt.tokens.UntypedToken',),
+}
+REST_USE_JWT = True
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'TOKEN_USER_CLASS': 'pocket.User',
+}

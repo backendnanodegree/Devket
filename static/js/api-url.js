@@ -5,6 +5,7 @@ const apiURL = {
     'highlights' : '/api/highlights/list',
     'articles' : '/api/articles',
     'videos' : '/api/videos',
+    'tags' : '/api/tags',
 }
 
 export {apiURL}

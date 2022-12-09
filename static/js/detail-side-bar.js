@@ -1,4 +1,4 @@
-import {appendTag, createNode, getElement, removeAllNode, setFechData} from './common.js';
+import {appendTag, createNode, getElement, removeAllNode, setFetchData} from './common.js';
 
 // 전역 변수
 const sideToggleButton                  = getElement('.side-toggle-button')
@@ -46,7 +46,7 @@ function renderSideEvent(highlight) {
     deleteButton.onclick                = function(){
                                             if (confirm("해당 하이라이트를 삭제 하시겠습니까?")) {
 
-                                                const data = setFechData('DELETE',{})
+                                                const data = setFetchData('DELETE',{})
 
                                                 fetch(`/api/highlights/${highlight.id}`, data)        
                                                 .then((response) => response.json())

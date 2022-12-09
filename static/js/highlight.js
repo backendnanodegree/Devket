@@ -1,4 +1,4 @@
-import {getElement, setFechData} from './common.js';
+import {getElement, setFetchData} from './common.js';
 import {getSideText} from './detail-side-bar.js'
 
 // 전역 변수
@@ -64,7 +64,7 @@ function highlighClickEvent() {
                     
                     // 전달 받은 값이 True 값이면 데이터를 저장한다.
                     if (data) {
-                        const data = setFechData('POST', {
+                        const data = setFetchData('POST', {
 
                             content_text : hightext,
                             content_location: {start: start, end: end},

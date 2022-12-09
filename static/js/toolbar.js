@@ -1,6 +1,6 @@
-import { getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie, setFechData } from './common.js';
-import { getSiteList, selected_articles } from './get-site-list.js';
-import { openModal, openTagModal } from "./modal.js"
+import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie, setFetchData} from './common.js';
+import {getSiteList, selected_articles} from './get-site-list.js';
+import {openModal, openTagModal, added_tags} from "./modal.js"
 
 function makeSearchTopToolBar() {
     /* 검색 toolbar 생성 함수 */
@@ -424,7 +424,7 @@ function saveSitebyToolbar () {
 
         if(regex.test(url)){
 
-            const data = setFechData('POST', {
+            const data = setFetchData('POST', {
                 url: url,
                 user: 'User Id' ,
             })
@@ -500,7 +500,12 @@ function tagBulkSelectedSite() {
     /* bulk 태그 클릭 이벤트 */
 
     if (selected_articles.length > 0) {
-        openTagModal()
+
+        let modalParam = {
+            func : bulkTag,
+        }
+
+        openTagModal(modalParam)
     }
 }
 
@@ -544,10 +549,32 @@ function deleteBulkSelectedSite() {
     }
 }
 
+function bulkTag() {
+    /* 벌크 태그 이벤트 */
+
+    const data = setFetchData("POST",{
+        pk_ids: selected_articles,
+        tags: added_tags,
+        user: "User Id" 
+    })
+
+    fetch(`/api/sites/tags`, data)
+        .then(response => {
+            let status = response.status
+            
+            if(status == 200){
+                alert('성공적으로 저장되었습니다.')
+            }
+        })
+        .then(() => getSiteList())
+        .then(() => changeSelected())
+        .catch(error => console.log(error))
+}
+
 function bulkFavorite(favorite) {
     /* 벌크 즐겨찾기 이벤트 */
 
-    const data = setFechData("PUT",{
+    const data = setFetchData("PUT",{
         pk_ids: selected_articles,//[1, 2, 3, 4]
         favorite: favorite,
         user: "User Id"
@@ -577,7 +604,7 @@ function bulkFavorite(favorite) {
 
 function bulkDelete() {
     /* 벌크 삭제 이벤트 */
-    const data = setFechData("DELETE", {
+    const data = setFetchData("DELETE", {
         pk_ids: selected_articles, // [1, 2, 3, 4, 5]
         user: 'User Id'
     })

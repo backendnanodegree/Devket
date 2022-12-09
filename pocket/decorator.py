@@ -1,8 +1,35 @@
+from django.shortcuts import get_list_or_404, get_object_or_404
 from rest_framework.response import Response
 from functools import wraps
 import urllib.robotparser
 import re
 
+from pocket.models import Site
+
+def bulk_decorator(func):
+
+    @wraps(func)
+    def exec_func(self, request) -> func:
+
+        pk_ids: list = self.request.data.get('pk_ids')
+
+        sites = validate_ids(pk_ids)
+
+        return func(self, request, sites=sites)
+    
+    def get_list(pk_ids: list) -> Site:
+        
+        return get_list_or_404(Site, id__in=pk_ids)
+    
+    def validate_ids(pk_ids: list) -> Site:
+
+        for id in pk_ids:
+            get_object_or_404(Site,id=id)
+
+        return get_list(pk_ids)
+
+    return exec_func
+    
 def scrap_decorator(func):
     header = {'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
     validation: object = re.compile('^(https|http)')

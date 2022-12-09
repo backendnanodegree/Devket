@@ -13,8 +13,11 @@ const favoritePath                      = '<path d="M12 1a1 1 0 0 1 .897.557l2.7
 
 const detailButton                      = getElement('.delete-button')
 
-// 항목의 상새내용을 rendering 하는 함수
+
 function renderDetail(site) {
+/* 항목의 상새내용을 rendering 하는 함수 
+    - 특정 문자열로 className에 할당되는 값들은 클론코딩으로 가져오는 css를 반영하기 위한 것입니다.
+*/
 
     const article                       = createNode('article')
     article.className                   = 'article'
@@ -175,7 +178,7 @@ detailButton.addEventListener('click', () => {
     let siteId = getElement('#siteid').value;
 
     const csrftoken         = getCookie('csrftoken')
-    
+
     const data              = {
         method: 'DELETE',
         headers: {
