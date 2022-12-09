@@ -181,9 +181,9 @@ detailButton.addEventListener('click', () => {
 
         alert('항목이 삭제 되었습니다.')
 
-        const csrftoken         = getCookie('csrftoken')
+        const csrftoken                 = getCookie('csrftoken')
     
-        const data              = {
+        const data                      = {
             method: 'DELETE',
             headers: {
                 'content-type': 'application/json',
@@ -193,7 +193,7 @@ detailButton.addEventListener('click', () => {
     
         fetch(`/api/sites/${siteId}`, data)
         .then(response => {
-            const status        = response.status
+            const status                = response.status
             
             if (status === 200) {
                 console.log('삭제 완료했습니다.')
