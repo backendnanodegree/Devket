@@ -168,15 +168,15 @@ class HighlightAPIView(APIView):
 
     def get(self, request, pk):
 
-        queryset = Highlight.objects.filter(site=pk)
+        queryset                    = Highlight.objects.filter(site=pk)
 
-        serializer = HighlightSerializer(queryset, many=True)
+        serializer                  = HighlightSerializer(queryset, many=True)
 
         return Response(serializer.data)
 
     def post(self, request):
 
-        serializer = HighlightSerializer(data=request.data)
+        serializer                  = HighlightSerializer(data=request.data)
 
         serializer.is_valid()
 
@@ -186,7 +186,7 @@ class HighlightAPIView(APIView):
 
     def delete(self, request, pk):
         
-        highlight = Highlight.objects.filter(id=pk)  
+        highlight                   = Highlight.objects.filter(id=pk)  
         
         highlight.delete()
 
@@ -200,11 +200,11 @@ class HighlightListAPIView(APIView):
     """
 
     def get(self, request):
-        highlight_qs = Highlight.objects.values('site')
+        highlight_qs                = Highlight.objects.values('site')
 
-        site_qs = Site.objects.filter(pk__in=highlight_qs)
+        site_qs                     = Site.objects.filter(pk__in=highlight_qs)
 
-        serializer  = SiteSerializer(site_qs, many=True)
+        serializer                  = SiteSerializer(site_qs, many=True)
 
         return Response(serializer.data)
 
@@ -219,14 +219,17 @@ class HighlightPremiumAPIView(APIView):
         """ 
         사용자 모델에서 결제 상태 값을 가져오는 변수 
         """
-        user_info = User.objects.filter(id=1).values('payment_status').last()
-        highlight = Highlight.objects.filter(site=pk)
-        highlight_object = highlight.count()
+        complete_payment            = 1
+        limit                       = 3
 
-        if user_info['payment_status'] == 1:
+        user_info                   = User.objects.filter(id=1).values('payment_status').last()
+        highlight                   = Highlight.objects.filter(site=pk)
+        highlight_object            = highlight.count()
+
+        if user_info['payment_status'] == complete_payment:
             return Response(True)
 
-        elif highlight_object < 3 :
+        elif highlight_object < limit :
             return Response(True)
 
         else :

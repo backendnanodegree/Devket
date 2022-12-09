@@ -7,6 +7,7 @@ let siteId                              = getElement('#siteid').value;
 // 하이라이트 클릭 적용 이벤트
 function highlighClickEvent() {
     const text                          = getElement('#root');
+    let half                            = 2
     let start;
     let end;
     let startX;
@@ -28,7 +29,7 @@ function highlighClickEvent() {
         let endX                        = e.clientX
         let endY                        = e.clientY
         
-        targetX                         = (startX + endX) / 2;
+        targetX                         = (startX + endX) / half;
 
         btn.style.cssText = `display:block; position:fixed; left: ${targetX}px; top: ${endY-50}px; z-index: 5;`
         })
