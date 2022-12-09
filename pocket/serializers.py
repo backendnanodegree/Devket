@@ -72,7 +72,7 @@ class SiteSerializer(ModelSerializer):
 
     class Meta:
         model               = Site
-        fields              = ['id','title', 'thumbnail_url', 'host_name', 'content', 'category', 'user', 'favorite', 'video']
+        fields              = ['id','title', 'thumbnail_url', 'host_name', 'content', 'category', 'user', 'favorite', 'video', 'url']
 
 
 
@@ -100,6 +100,9 @@ class PaymentSerializer(ModelSerializer):
         fields = ['user', 'amount', 'payment_id', 'merchant_id', 'works', 'payment_data', 'status', 'type']
 
 class HighlightSerializer(serializers.ModelSerializer):
+
+    content_location        = serializers.CharField(max_length=2000, allow_blank=False, trim_whitespace=True)
+    content_location        = serializers.JSONField(default=dict)
     class Meta:
         model = Highlight
         fields = '__all__'
