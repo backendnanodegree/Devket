@@ -5,7 +5,7 @@ import {getSideText} from './detail-side-bar.js'
 let siteId                              = getElement('#siteid').value;
 
 // 하이라이트 클릭 적용 이벤트
-function highlighClickEvent() {
+function highlightClickEvent() {
     const text                          = getElement('#root');
     let half                            = 2
     let start;
@@ -114,7 +114,7 @@ function highlightRetrieve() {
 }
 
 export {
-    highlighClickEvent,
+    highlightClickEvent,
     highlightRetrieve
 };
 

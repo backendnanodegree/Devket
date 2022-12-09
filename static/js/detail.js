@@ -1,5 +1,5 @@
 import {createNode, appendTag, getElement, getCookie, removeAllNode, setFetchData} from './common.js';
-import {highlighClickEvent, highlightRetrieve} from './highlight.js';
+import {highlightClickEvent, highlightRetrieve} from './highlight.js';
 
 // 전역 변수
 const root                              = document.getElementById("root")
@@ -78,7 +78,7 @@ function renderDetail(site) {
     appendTag(siteArticle, siteText)
 
     // Detail 뷰에서 목록을 렌더하고 하이라이트 기능 함수 선언
-    highlighClickEvent()
+    highlightClickEvent()
 
     // 저장된 하이라이트를 화면에 보여주는 함수
     highlightRetrieve()

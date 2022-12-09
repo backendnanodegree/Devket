@@ -215,10 +215,10 @@ class HighlightPremiumAPIView(APIView):
     """
 
     def get(self, request, pk):
-
         """ 
         사용자 모델에서 결제 상태 값을 가져오는 변수 
         """
+        
         complete_payment            = 1
         limit                       = 3
 
