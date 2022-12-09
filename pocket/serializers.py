@@ -101,7 +101,7 @@ class PaymentSerializer(ModelSerializer):
 
 class HighlightSerializer(serializers.ModelSerializer):
 
-    content_location        = serializers.CharField(max_length=2000, allow_blank=False, trim_whitespace=True)
+    content_text            = serializers.CharField(max_length=2000, allow_blank=False, trim_whitespace=True)
     content_location        = serializers.JSONField(default=dict)
     class Meta:
         model = Highlight
