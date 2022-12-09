@@ -1,4 +1,4 @@
-import {createNode, appendTag, getElement, getCookie, removeAllNode} from './common.js';
+import {createNode, appendTag, getElement, getCookie, removeAllNode, setFetchData} from './common.js';
 import {highlighClickEvent, highlightRetrieve} from './highlight.js';
 
 // 전역 변수
@@ -120,25 +120,14 @@ getSiteDetail()
 // Detail 헤더 툴바 즐겨찾기 추가/삭제 함수
 favoriteButtonA.addEventListener('click', (e) => {
 
-    let siteId = getElement('#siteid').value;
+    let siteId                          = getElement('#siteid').value;
 
     const csrftoken                     = getCookie('csrftoken')
 
-    console.log(favoriteButtonA.classList.contains('active'))
-
-    let favoriteData = favoriteButtonA.classList.contains('active') ? false : true
+    let favoriteData                    = favoriteButtonA.classList.contains('active') ? false : true
 
     // 즐겨찾기 업데이트
-    const data                          = {
-                                            method: 'PUT',
-                                            headers: {
-                                                'content-type': 'application/json',
-                                                'X-CSRFToken' : csrftoken,
-                                            },
-                                            body: JSON.stringify({
-                                                favorite: favoriteData
-                                            })
-                                        }
+    const data                          = setFetchData('PUT', {favorite: favoriteData})
     
     fetch(`/api/sites/${siteId}`, data)
     .then(response => {
@@ -175,7 +164,7 @@ function renderFavoriteSvg() {
 // 헤더 항목 삭제 버튼
 detailButton.addEventListener('click', () => {
 
-    let siteId = getElement('#siteid').value;
+    let siteId                          = getElement('#siteid').value;
 
     if (confirm("해당 항목을 삭제 하시겠습니까?")) {
 
@@ -183,13 +172,7 @@ detailButton.addEventListener('click', () => {
 
         const csrftoken                 = getCookie('csrftoken')
     
-        const data                      = {
-            method: 'DELETE',
-            headers: {
-                'content-type': 'application/json',
-                'X-CSRFToken' : csrftoken,
-            }
-        }
+        const data                      = setFetchData('DELETE',{})
     
         fetch(`/api/sites/${siteId}`, data)
         .then(response => {

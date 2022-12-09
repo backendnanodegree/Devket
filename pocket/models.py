@@ -116,9 +116,9 @@ class Site(models.Model):
 class Highlight(models.Model):
     """ 항목 하이라이트 기능 모델 """
 
-    site = models.ForeignKey(Site, on_delete=models.CASCADE, verbose_name='리스트')
-    content_text = models.TextField(verbose_name='컨텐츠문구', null=True)
-    content_location = models.JSONField(verbose_name='컨텐츠위치', default=dict, null=True)
+    site                        = models.ForeignKey(Site, on_delete=models.CASCADE, verbose_name='리스트')
+    content_text                = models.TextField(verbose_name='컨텐츠문구', null=True)
+    content_location            = models.JSONField(verbose_name='컨텐츠위치', default=dict, null=True)
 
     def __str__(self):
         return f"{self.content_text}"

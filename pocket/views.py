@@ -167,7 +167,6 @@ class HighlightAPIView(APIView):
     """
 
     def get(self, request, pk):
-        print(pk)
 
         queryset = Highlight.objects.filter(site=pk)
 
@@ -209,6 +208,7 @@ class HighlightListAPIView(APIView):
 
         return Response(serializer.data)
 
+
 class HighlightPremiumAPIView(APIView):
     """ 
     결제 상태를 확인받아 하이라이트 기능 제한을 두는 API
@@ -216,13 +216,14 @@ class HighlightPremiumAPIView(APIView):
 
     def get(self, request, pk):
 
-        """ 사용자 모델에서 결제 상태 값을 가져오는 변수 """
+        """ 
+        사용자 모델에서 결제 상태 값을 가져오는 변수 
+        """
         user_info = User.objects.filter(id=1).values('payment_status').last()
         highlight = Highlight.objects.filter(site=pk)
         highlight_object = highlight.count()
 
         if user_info['payment_status'] == 1:
-
             return Response(True)
 
         elif highlight_object < 3 :

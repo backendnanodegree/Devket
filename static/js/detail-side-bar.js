@@ -51,7 +51,7 @@ function renderSideEvent(highlight) {
                                                 fetch(`/api/highlights/${highlight.id}`, data)        
                                                 .then((response) => response.json())
                                                 .then((data) => {
-                                                    console.log(data)
+                                                    (data)
 
                                                     alert("삭제 되었습니다.");
 
@@ -81,10 +81,10 @@ function sidePosts(data) {
 
     // sideBarArea 모든 요소 초기화
     removeAllNode(sideBarArea)
-
-const h6                                = createNode('h6')
-    h6.className                        = 'hgdagzl'
-    h6.innerText                        = '내 하이라이트'
+    
+    const h6                                = createNode('h6')
+    h6.className                            = 'hgdagzl'
+    h6.innerText                            = '내 하이라이트'
     appendTag(sideBarArea, h6)
 
     return data.map(item => {
