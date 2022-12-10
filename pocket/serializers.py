@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from .models import Site, Tag, Payment, User
+from .models import Site, Tag, Payment, User, Highlight
 
 class LoginSerializer(serializers.ModelSerializer):
     email                   = serializers.CharField(
@@ -72,7 +72,7 @@ class SiteSerializer(ModelSerializer):
 
     class Meta:
         model               = Site
-        fields              = ['id','title', 'thumbnail_url', 'host_name', 'content', 'category', 'user', 'favorite', 'video']
+        fields              = ['id','title', 'thumbnail_url', 'host_name', 'content', 'category', 'user', 'favorite', 'video', 'url']
 
 
 
@@ -99,3 +99,10 @@ class PaymentSerializer(ModelSerializer):
         model = Payment
         fields = ['user', 'amount', 'payment_id', 'merchant_id', 'works', 'payment_data', 'status', 'type']
 
+class HighlightSerializer(serializers.ModelSerializer):
+
+    content_text            = serializers.CharField(max_length=2000, allow_blank=False, trim_whitespace=True)
+    content_location        = serializers.JSONField(default=dict)
+    class Meta:
+        model               = Highlight
+        fields              = '__all__'

@@ -6,8 +6,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 
 from pocket.decorator import bulk_decorator, scrap_decorator
-from .serializers import  LoginSerializer, SiteSerializer, TagSerializer
-from .models import Email, Site, Tag, User, Payment
+from .serializers import  LoginSerializer, SiteSerializer, TagSerializer, HighlightSerializer
+from .models import Email, Site, Tag, User, Payment, Highlight
 from urllib.parse import urlparse
 from django.db import transaction
 from django.db.models import Q
@@ -161,6 +161,79 @@ class SiteDetailViewAPIView(APIView):
 
         return Response(serializer.data)
 
+class HighlightAPIView(APIView):
+    """
+    하이라이트 조회, 저장, 삭제 API
+    """
+
+    def get(self, request, pk):
+
+        queryset                    = Highlight.objects.filter(site=pk)
+
+        serializer                  = HighlightSerializer(queryset, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request):
+
+        serializer                  = HighlightSerializer(data=request.data)
+
+        serializer.is_valid()
+
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def delete(self, request, pk):
+        
+        highlight                   = Highlight.objects.filter(id=pk)  
+        
+        highlight.delete()
+
+        return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)
+
+
+
+class HighlightListAPIView(APIView):
+    """
+    mylist 화면 하이라이트 탭에서 하이라이트가 적용된 항목들을 불러오는 API
+    """
+
+    def get(self, request):
+        highlight_qs                = Highlight.objects.values('site')
+
+        site_qs                     = Site.objects.filter(pk__in=highlight_qs)
+
+        serializer                  = SiteSerializer(site_qs, many=True)
+
+        return Response(serializer.data)
+
+
+class HighlightPremiumAPIView(APIView):
+    """ 
+    결제 상태를 확인받아 하이라이트 기능 제한을 두는 API
+    """
+
+    def get(self, request, pk):
+        """ 
+        사용자 모델에서 결제 상태 값을 가져오는 변수 
+        """
+        
+        complete_payment            = 1
+        limit                       = 3
+
+        user_info                   = User.objects.filter(id=1).values('payment_status').last()
+        highlight                   = Highlight.objects.filter(site=pk)
+        highlight_object            = highlight.count()
+
+        if user_info['payment_status'] == complete_payment:
+            return Response(True)
+
+        elif highlight_object < limit :
+            return Response(True)
+
+        else :
+            return Response(False)
 
 
 class SiteDetailAPIView(APIView):

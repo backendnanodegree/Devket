@@ -20,6 +20,9 @@ from pocket.views import (
     PaymentPassView, 
     PaymentImpStoreView, 
     MakeStatusFailed,
+    HighlightListAPIView,
+    HighlightAPIView,
+    HighlightPremiumAPIView,
 
     # template_view
     HomeView,
@@ -48,6 +51,10 @@ api_patterns = [
     path('signup', SignupAPIView.as_view()),
     path('login', LoginAPIView.as_view()),
     path('logout', LogoutAPIView.as_view()),
+    path('highlights', HighlightAPIView.as_view()),
+    path('highlights/<int:pk>', HighlightAPIView.as_view()),
+    path('highlights/list', HighlightListAPIView.as_view()),
+    path('highlights/premium/<int:pk>', HighlightPremiumAPIView.as_view()),
 
     # payment
     path('payment/checkout', PaymentPassView.as_view()),
@@ -69,6 +76,7 @@ urlpatterns = [
     path('mylist/articles/', mylist_view, name='articles'), 
     path('mylist/videos/', mylist_view, name='videos'),
     path('mylist/tags/', mylist_view, name='tags'),
+    path('mylist/highlights/', mylist_view, name='highlights'),
 
     # detail
     path('mylist/detail/<int:pk>/', site_detail_view, name='site_detail_view'), 
