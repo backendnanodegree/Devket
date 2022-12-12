@@ -2,8 +2,9 @@ from rest_framework_simplejwt.tokens      import RefreshToken
 from rest_framework.serializers           import ModelSerializer
 from rest_framework                       import serializers
 from .models                              import Site, Tag, Payment, User, Highlight
+from config.settings                      import SIMPLE_JWT 
 import jwt,datetime
-from config.settings import SIMPLE_JWT 
+
 class LoginSerializer(serializers.ModelSerializer):
     email                   = serializers.CharField(
         required            = True,

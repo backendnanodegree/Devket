@@ -1,11 +1,9 @@
-from django.shortcuts import get_list_or_404, get_object_or_404, render
-from django.conf import settings
-
-from pocket.models import Site
-
 from rest_framework.response import Response
 from rest_framework          import status
-from functools import wraps
+from django.shortcuts        import get_list_or_404, get_object_or_404
+from django.conf             import settings
+from pocket.models           import Site
+from functools               import wraps
 
 import urllib.robotparser
 import re
@@ -89,20 +87,23 @@ def login_decorator(func):
     """ login 이후 작업의 access토큰 확인하는 decorator"""
 
     @wraps(func)
-    def exec_func(self, request) -> func:
+    def exec_func(self, request, **kwards) -> func:
         token = request.COOKIES.get('access')
 
         if not token:
             return Response({'msg':'No Authentication'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            decodedPayload = jwt.decode(token, settings.SIMPLE_JWT['SIGNING_KEY'], algorithms='HS256')
-            
-            pass
+            # jwt decode함수를 이용하여 암호화된 access token 복호화
+            # RefreshToken.for_user(user=user)를 이용하여 token발행 시 SIGNING_KEY와 발행 ALGORITHM을 사용하기 때문에 
+            # decode시에도 해당 토큰을 SIGNING_KEY와 발생시 사용되었던 ALGORITHM으로 복화화 처리
+            # 여기서 SIGNING_KEY는 Django의 SECRET KEY를 사용
+            decodedPayload = jwt.decode(token, settings.SIMPLE_JWT['SIGNING_KEY'], algorithms=settings.SIMPLE_JWT['ALGORITHM'])
+            kwards['user_id'] = decodedPayload['user_id']
 
         except jwt.ExpiredSignatureError:
             return Response({'msg':'No Authentication'}, status=status.HTTP_400_BAD_REQUEST)
 
-        return func(self, request)
+        return func(self, request, **kwards)
 
     return exec_func
