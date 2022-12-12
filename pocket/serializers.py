@@ -1,8 +1,9 @@
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.serializers import ModelSerializer
-from rest_framework import serializers
-from .models import Site, Tag, Payment, User, Highlight
-
+from rest_framework_simplejwt.tokens      import RefreshToken
+from rest_framework.serializers           import ModelSerializer
+from rest_framework                       import serializers
+from .models                              import Site, Tag, Payment, User, Highlight
+import jwt,datetime
+from config.settings import SIMPLE_JWT 
 class LoginSerializer(serializers.ModelSerializer):
     email                   = serializers.CharField(
         required            = True,
@@ -15,8 +16,8 @@ class LoginSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, data):
-        email               = data.get('email',None)
-        password            = data.get('password',None)
+        email               = data.get('email', None)
+        password            = data.get('password', None)
 
         if User.objects.filter(email=email).exists():
             user            = User.objects.get(email=email)
@@ -30,14 +31,14 @@ class LoginSerializer(serializers.ModelSerializer):
         data                = {
                                 'refresh_token' : str(token),
                                 'access_token'  : str(token.access_token)
-        }
+                              }
         
         return data
         
         
     class Meta(object):
         model               = User
-        fields              = ('email', 'password')
+        fields              = ['email', 'password']
 
 
 class TagSerializer(ModelSerializer):
@@ -46,6 +47,7 @@ class TagSerializer(ModelSerializer):
     class Meta:
         model               = Tag
         fields              = ['id', 'name']
+
 
 class SiteSerializer(ModelSerializer):
 
@@ -75,7 +77,6 @@ class SiteSerializer(ModelSerializer):
         fields              = ['id','title', 'thumbnail_url', 'host_name', 'content', 'category', 'user', 'favorite', 'video', 'url']
 
 
-
 class PaymentSerializer(ModelSerializer):
 
     PAYMENT_TYPE_CHOICES    = [('card', '신용카드')]
@@ -98,6 +99,7 @@ class PaymentSerializer(ModelSerializer):
     class Meta: 
         model = Payment
         fields = ['user', 'amount', 'payment_id', 'merchant_id', 'works', 'payment_data', 'status', 'type']
+
 
 class HighlightSerializer(serializers.ModelSerializer):
 
