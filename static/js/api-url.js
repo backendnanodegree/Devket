@@ -2,7 +2,7 @@ const apiURL = {
     'mylist' : '/api/sites',
     'categories' : '/api/category',
     'favorites' : '/api/favorites',
-    'highlights' : '/api/highlights',
+    'highlights' : '/api/highlights/list',
     'articles' : '/api/articles',
     'videos' : '/api/videos',
     'tags' : '/api/tags',

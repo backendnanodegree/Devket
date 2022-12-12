@@ -6,12 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="{% static '/css/mylist/detail/detail.css' %}">
-    <link rel="stylesheet" href="{% static '/css/mylist/detail/sidebar.css' %}">
-    <link rel="stylesheet" href="{% static '/css/mylist/detail/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mylist/detail/detail.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mylist/detail/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mylist/detail/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mylist/detail/highlight.css' %}">
 
-    <script type="module" src="{% static '/js/detail-side-bar.js' %}"></script>
-    <script type="module" src="{% static '/js/detail.js' %}"></script>
+    <script type="module" src="{% static 'js/detail-side-bar.js' %}"></script>
+    <script type="module" src="{% static 'js/detail.js' %}"></script>
+    <script type="module" src="{% static 'js/highlight.js' %}"></script>
     <title>Detail</title>
 </head>
 
@@ -19,7 +21,6 @@
     <header class="header">
         <div class="header-wrapper">
             <div class="left-wrapper">
-
                 <div class="backbutton-wrapper header-svg">
                     <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
                         onclick="location.href='{% url 'mylist' %}'">
@@ -27,9 +28,7 @@
                             d="M12.707 5.707a1 1 0 0 0-1.414-1.414l-7 7a1 1 0 0 0 0 1.414l7 7a1 1 0 0 0 1.414-1.414L7.414 13H19.05c.525 0 .95-.448.95-1s-.425-1-.95-1H7.414l5.293-5.293Z">
                         </path>
                     </svg>
-
                 </div>
-
             </div>
             <div class="center-wrapper">
                 <div class="highlight-button header-svg">
@@ -48,13 +47,13 @@
                     </svg>
                 </div>
                 <div class="favorite-button header-svg">
-                    <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="favorite-button-svg">
                         <path fill-rule="evenodd" clip-rule="evenodd"
                             d="M12 1a1 1 0 0 1 .897.557l2.706 5.484 6.051.88a1 1 0 0 1 .555 1.705l-4.38 4.268 1.034 6.027a1 1 0 0 1-1.45 1.054L12 18.13l-5.413 2.845a1 1 0 0 1-1.45-1.054l1.033-6.027-4.379-4.268a1 1 0 0 1 .555-1.706l6.051-.88 2.706-5.483A1 1 0 0 1 12 1Zm0 3.26L9.958 8.397a1 1 0 0 1-.753.548l-4.567.663 3.305 3.221a1 1 0 0 1 .287.885l-.78 4.548 4.085-2.147a1 1 0 0 1 .93 0l4.085 2.147-.78-4.548a1 1 0 0 1 .287-.885l3.305-3.22-4.567-.664a1 1 0 0 1-.753-.548L12 4.26Z">
                         </path>
                     </svg>
                 </div>
-                <div class="delete-button header-svg">
+                <div class="delete-button header-svg" onclick="location.href='{% url 'mylist' %}'">
                     <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path fill-rule="evenodd" clip-rule="evenodd"
                             d="M7 5a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4h5a1 1 0 1 1 0 2h-1v11a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7H2a1 1 0 0 1 0-2h5Zm2 0a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2H9ZM5 7h14v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7Z">
@@ -71,9 +70,10 @@
         </div>
     </header>
     <main class="main">
-        <div class="side-area"></div>
+        <div class="side-area" id="sidearea">
+
+        </div>
         <div class="content">
-            <p></p>
             <div class="side-toggle-button">
                 <svg fill="currentColor" viewBox="0 0 24 24" style="width: 24px; height: 24px;"
                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -84,6 +84,7 @@
             </div>
             <div class="artidsfscle">
                 <p id="">
+                    <button class="btn" name="highbtn">하이라이트</button>
                 <div class="articldfe" id="root">
                     <input type="hidden" value="{{pk}}" id="siteid">
                 </div>

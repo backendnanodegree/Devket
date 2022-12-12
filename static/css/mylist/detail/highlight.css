@@ -1,0 +1,10 @@
+.highlight-selected  {
+    background-color: yellow;
+    color: black;
+}
+
+.btn {
+    position: relative;
+    z-index: 25;
+    display: none;
+}
