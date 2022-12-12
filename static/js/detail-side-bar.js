@@ -1,4 +1,4 @@
-import {appendTag, createNode, getElement, removeAllNode, setFetchData} from './common.js';
+import {appendTag, createNode, getElement, removeAllNode, setFetchData, redirctLogin} from './common.js';
 
 // 전역 변수
 const sideToggleButton                  = getElement('.side-toggle-button')
@@ -103,7 +103,7 @@ function getSideText() {
     }
 
     fetch(`/api/highlights/${siteId}`, data)
-        .then(response => response.json())
+        .then(response => redirctLogin(response))
         .then(data => {
             sidePosts(data)
         }) 
