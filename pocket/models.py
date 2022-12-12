@@ -1,25 +1,26 @@
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-from django.db.models.signals import post_save
-from django.conf import settings
-from django.db import models
-from .iamport import Iamport
-import random
-import string
+from django.db.models.signals      import post_save
+from django.db                     import models
+from .iamport                      import Iamport
+
 import hashlib
 import time
 
 class UserManager(BaseUserManager):
-    # 일반 user 생성
+    """ 일반 user 생성 """
+
     def create_user(self, password=None):
         user = self.model()
         user.set_password(password)
         user.save(using=self._db)
         return user
 
+
 class User(AbstractBaseUser):
     """ 사용자 계정에 대한 정보 모델 """
+
     name                        = models.CharField(verbose_name='이름', max_length = 20, null=True)
-    password                    = models.CharField(verbose_name='비밀번호', max_length = 15, unique=True)
+    password                    = models.CharField(verbose_name='비밀번호', max_length = 128, unique=True)
     introduce                   = models.TextField(verbose_name='자기소개', max_length = 200, null=True)
     profile_picture             = models.ImageField(verbose_name='프로필사진', null=True, upload_to=f"profile/", blank=True)
     blog_url                    = models.CharField(verbose_name='블로그url', max_length = 250, null=True)
@@ -41,8 +42,8 @@ class User(AbstractBaseUser):
     is_active                   = models.BooleanField(default=True)    
     is_admin                    = models.BooleanField(default=False)
     
-    # 사용자의 username field는 랜덤 설정
-    USERNAME_FIELD              = ''.join([random.choice(string.ascii_letters + string.digits) for _ in range(20)])
+    # 사용자의 username password 설정
+    USERNAME_FIELD              = 'password'
 
     # 필수로 작성해야하는 field
     REQUIRED_FIELDS             = []
@@ -141,7 +142,6 @@ class Tag(models.Model):
         verbose_name_plural     = '태그 목록'
 
 
-
 class PaymentManager(models.Manager):
 
     imp = Iamport()
@@ -197,6 +197,7 @@ class PaymentManager(models.Manager):
 
         return super(PaymentManager, self).filter(user=user)
 
+
 class Payment(models.Model):
     """ 결제 정보 모델 """
 
@@ -225,7 +226,6 @@ class Payment(models.Model):
     class Meta:
         verbose_name            = '결제'
         verbose_name_plural     = '결제 목록'
-
 
 
 def payment_validation(sender, instance, created, *args, **kwargs):

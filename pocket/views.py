@@ -1,32 +1,45 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts     import get_object_or_404, render
 from django.views.generic import TemplateView
+from django.db            import transaction
+from django.db.models     import Q
+
+from rest_framework.views    import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import status
+from rest_framework          import status
 
-from pocket.decorator import bulk_decorator, scrap_decorator
-from .serializers import  LoginSerializer, SiteSerializer, TagSerializer, HighlightSerializer
-from .models import Email, Site, Tag, User, Payment, Highlight
+from pocket.decorator   import bulk_decorator, login_decorator, scrap_decorator
+from pocket.serializers import  LoginSerializer, SiteSerializer, TagSerializer, HighlightSerializer
+from pocket.models      import Email, Site, Tag, User, Payment, Highlight
+
 from urllib.parse import urlparse
-from django.db import transaction
-from django.db.models import Q
-from bs4 import BeautifulSoup
+from bs4          import BeautifulSoup
+
 import requests
 
 class SignupAPIView(APIView):
+    """ 회원가입 등록을 위한 api """
+
     def post(self, request): 
+        """
+            User 데이터 저장 후 Email을 저장
+            - 하나의 User 데이터에 다중 Email 정보가 들어가기 때문에 Email 모델이 분리되어 있음
+        """
+
         try:
-            email: str     = request.GET['email']   
-            password: str  = request.GET['password']              
+            # 클라이언트단에서 request body 파라미터로 보내줘야 하기 때문에 변경
+            # request.GET['email']방식 => self.request.data.get('email') 방식
+            email    : str = self.request.data.get('email')
+            password : str = self.request.data.get('password')
 
-            userModel      = User.objects.create_user(password=password)
-
-            emailModel     = Email.objects.create(user=userModel, email=email)
+            userModel  = User.objects.create_user(password=password)
+            emailModel = Email.objects.create(user=userModel, email=email)
 
             return Response({'msg':'Success signup'}, status=status.HTTP_200_OK)
+
         except KeyError as k:
             return Response({'msg':f'ERROR: Signup process KeyError that Class SignupAPIView : {k.args}'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LoginAPIView(GenericAPIView):
     serializer_class       = LoginSerializer
@@ -38,7 +51,7 @@ class LoginAPIView(GenericAPIView):
         token              = serializer.validated_data
         
         res                = Response()
-        res.set_cookie("access", token["access_token"], httponly=True)
+        res.set_cookie("access",  token["access_token"],  httponly=True)
         res.set_cookie("refresh", token["refresh_token"], httponly=True)
         res.data           = {
                              "jwt": token["access_token"]
@@ -48,22 +61,24 @@ class LoginAPIView(GenericAPIView):
 
 
 class LogoutAPIView(APIView):
-  def post(self,req):
-    try:
+    """ 로그아웃 관련 api """
+
+    def get(self, request):
         res                = Response()
-        res.delete_cookie('access')
-        res.delete_cookie('refresh')
-        res.data           = ({'msg':'Success logout'})
-        res.status         = status.HTTP_200_OK 
-        return res
-    except:
-        res.data           = ({'msg':'Failure logout'})
-        res.status         = status.HTTP_400_BAD_REQUEST
+        try:
+            res.delete_cookie('access')
+            res.delete_cookie('refresh')
+
+            res.data    = ({'msg':'Success logout'})
+            res.status  = status.HTTP_200_OK 
+
+        except:
+            res.data    = ({'msg':'Failure logout'})
+            res.status  = status.HTTP_400_BAD_REQUEST
+
         return res
 
 # template view
-
-
 def site_detail_view(request, pk):
     """
     mylist/base.html에 각 항목들에 대한 조회 view_url 연결
@@ -86,46 +101,25 @@ def mylist_view(request):
 class HomeView(TemplateView):
     template_name = "common/home.html"
 
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
 class SignUpView(TemplateView):
     template_name = "user/signup.html"
 
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
 class LogInView(TemplateView):
     template_name = "user/login.html"
 
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
 class PwdHelpView(TemplateView):
     template_name = 'user/password.html'
-
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
 
 class PremiumView(TemplateView):
     template_name = 'premium/base.html'
 
-    def get_context_data(self, **kwargs):
-
-        context          = super().get_context_data(**kwargs)
-        context['login'] = True
-
-        return context
-
 
 class PaymentView(TemplateView):
     template_name = 'premium/payment.html'
-
-    def get(self, request, *args, **kwargs):
-
-        return super().get(request, *args, **kwargs)
-
 
 
 # api view
@@ -134,7 +128,8 @@ class SiteAPIView(APIView):
     저장한 모든 항목 데이터 api
     """
 
-    def get(self, request): 
+    @login_decorator
+    def get(self, request, **kward): 
         word: str  = request.GET['word']              
         list_qs    = Site.objects.filter(
                         Q(title__contains=word)|
@@ -166,13 +161,14 @@ class HighlightAPIView(APIView):
     하이라이트 조회, 저장, 삭제 API
     """
 
+    @login_decorator
     def get(self, request, pk):
 
         queryset                    = Highlight.objects.filter(site=pk)
 
         serializer                  = HighlightSerializer(queryset, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
 
@@ -182,7 +178,7 @@ class HighlightAPIView(APIView):
 
         serializer.save()
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk):
         
@@ -314,11 +310,13 @@ class SiteBulkAPIView(APIView):
     
         return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)  
 
+
 class SiteTagsAPIView(APIView):
     """
     벌크 태그 api
     """
 
+    @login_decorator
     def get(self, request, pk):
         """
         Site 태그 선택으로 조회
@@ -328,7 +326,7 @@ class SiteTagsAPIView(APIView):
         
         serializer = SiteSerializer(sites, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
  
     @bulk_decorator
     def post(self, request, **kwards):
@@ -352,12 +350,13 @@ class FavoriteAPIView(APIView):
     각 항목의 즐겨찾기 값 수정 api
     """
 
+    @login_decorator
     def get(self, request): 
         list_qs     = Site.objects.filter(favorite=True)  
         
         serializer  = SiteSerializer(list_qs, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ArticleAPIView(APIView):
@@ -365,6 +364,7 @@ class ArticleAPIView(APIView):
     video가 아닌 항목 조회 api
     """
 
+    @login_decorator
     def get(self, request):
         word: str  = request.GET['word']   
         list_qs    = Site.objects.filter(
@@ -374,14 +374,15 @@ class ArticleAPIView(APIView):
 
         serializer = SiteSerializer(list_qs, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class VideoAPIView(APIView):
     """
      video가 포함된 항목 조회 api
     """
-
+    
+    @login_decorator
     def get(self, request):
         word: str  = request.GET['word'] 
         list_qs    = Site.objects.filter(
@@ -391,13 +392,14 @@ class VideoAPIView(APIView):
 
         serializer = SiteSerializer(list_qs, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class TagsAPIView(APIView):
     """
      Site model에 Tag model값이 존재하는 것만 조회
     """
 
+    @login_decorator
     def get(self, request):
         """
         Site 태그 조회
@@ -406,13 +408,14 @@ class TagsAPIView(APIView):
         tags       = Tag.objects.all()
         serializer = TagSerializer(tags, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class SiteByTagAPIView(APIView):
     """
      Site model에 Tag model값이 존재하는 것만 조회
     """
 
+    @login_decorator
     def get(self, request):
         word: str  = request.GET['word']
         tags: list = [tag for tag in Tag.objects.all()]
@@ -423,7 +426,7 @@ class SiteByTagAPIView(APIView):
                         Q(host_name__contains=word))).order_by('created_at').distinct()
 
         serializer = SiteSerializer(list_qs, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
         
 class ParseAPIView(APIView):

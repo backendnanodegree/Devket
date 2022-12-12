@@ -1,10 +1,15 @@
-from django.shortcuts import get_list_or_404, get_object_or_404
-from rest_framework.response import Response
-from functools import wraps
-import urllib.robotparser
-import re
+from django.shortcuts import get_list_or_404, get_object_or_404, render
+from django.conf import settings
 
 from pocket.models import Site
+
+from rest_framework.response import Response
+from rest_framework          import status
+from functools import wraps
+
+import urllib.robotparser
+import re
+import jwt
 
 def bulk_decorator(func):
 
@@ -77,5 +82,27 @@ def scrap_decorator(func):
             raise ValueError(e.args)
         
         return check
+
+    return exec_func
+
+def login_decorator(func):
+    """ login 이후 작업의 access토큰 확인하는 decorator"""
+
+    @wraps(func)
+    def exec_func(self, request) -> func:
+        token = request.COOKIES.get('access')
+
+        if not token:
+            return Response({'msg':'No Authentication'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            decodedPayload = jwt.decode(token, settings.SIMPLE_JWT['SIGNING_KEY'], algorithms='HS256')
+            
+            pass
+
+        except jwt.ExpiredSignatureError:
+            return Response({'msg':'No Authentication'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return func(self, request)
 
     return exec_func

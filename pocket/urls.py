@@ -26,17 +26,17 @@ from pocket.views import (
 
     # template_view
     HomeView,
-    mylist_view, 
-    SignUpView, 
     LogInView, 
+    SignUpView, 
     PwdHelpView, 
     PremiumView,
-    PaymentView,
+    mylist_view, 
     site_detail_view,
 )
 
 api_patterns = [
     path('scrap/parse', ParseAPIView.as_view()), 
+
     path('sites', SiteAPIView.as_view()),
     path('sites/<int:pk>', SiteDetailAPIView.as_view()),
     path('sites/bulk', SiteBulkAPIView.as_view()),
@@ -64,6 +64,7 @@ api_patterns = [
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
+    path('home/', HomeView.as_view(), name='home'),
 
     # user
     path('signup/', SignUpView.as_view(), name='signup'),

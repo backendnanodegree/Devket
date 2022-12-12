@@ -1,6 +1,5 @@
-import {createNode, appendTag, getElement, getElements, removeAllNode, setFetchData} from './common.js';
+import {createNode, appendTag, getElement, getElements, removeAllNode, setFetchData, redirctLogin} from './common.js';
 import {makeBottomToolbar} from './bottom-toolbar.js';
-import {makeModal} from './modal.js';
 import {apiURL} from './api-url.js';
 
 const root            = document.getElementById("root")
@@ -165,7 +164,7 @@ function renderTag(tags) {
         tagButton.onclick    = () => {
 
             fetch(`/api/sites/tags/${tag.id}`)
-                .then(response => response.json())
+                .then(response => redirctLogin(response))
                 .then(data     => {
                     mapPosts(data)
                 })
@@ -327,7 +326,7 @@ async function getSiteList(word='') {
 
     // 해당되는 항목들 조회하기  
     await fetch(`${apiURL[apiUrlKey]}?word=${word}`)
-        .then(response => response.json())
+        .then(response => redirctLogin(response))
         .then(data => {
             mapPosts(data)
         })
@@ -343,8 +342,8 @@ function getSiteByTagList(word='') {
     // 선택 메뉴 활성화
     makeActive()
 
-    const siteFetch = fetch(`/api/tags/sites?word=${word}`).then(response => response.json())
-    const tagFetch  = fetch(`/api/tags`).then(response => response.json())
+    const siteFetch = fetch(`/api/tags/sites?word=${word}`).then(response => redirctLogin(response))
+    const tagFetch  = fetch(`/api/tags`).then(response => redirctLogin(response))
                         
     Promise.all([siteFetch, tagFetch])
                         .then(result => {

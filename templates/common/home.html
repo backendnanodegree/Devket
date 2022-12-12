@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="mzp-c-split-media mzp-l-split-media-overflow">
-                <img src="static/images/home/pocket-home-articles.c31e77095a9a.png" alt="" class="mzp-c-split-media-asset" loading="eager" />
+                <img src="{% static 'images/home/pocket-home-articles.c31e77095a9a.png' %}" alt="" class="mzp-c-split-media-asset" loading="eager" />
             </div>
         </div>
     </section>
@@ -34,7 +34,7 @@
                 Pocket 라이브러리에 저장해 보세요.</p>
             </div>
             <div class="mzp-c-split-media mzp-l-split-h-center">
-                <img src="static/images/home/pocket-colorful-books.026516da6bc5.svg" alt="" class="mzp-c-split-media-asset" />
+                <img src="{% static 'images/home/pocket-colorful-books.026516da6bc5.svg' %}" alt="" class="mzp-c-split-media-asset" />
             </div>
         </div>
     </section>
@@ -46,7 +46,7 @@
                 </p>
             </div>
             <div class="mzp-c-split-media mzp-l-split-h-center">
-                <img src="static/images/home/pocket-list-mobile.8316f5977cf6.png" alt="" class="mzp-c-split-media-asset" />
+                <img src="{% static 'images/home/pocket-list-mobile.8316f5977cf6.png' %}" alt="" class="mzp-c-split-media-asset" />
             </div>
         </div>
     </section>
@@ -54,15 +54,15 @@
         <h2 class="sub-section-heading">다양한 커스텀 옵션으로 즐기는 Pocket</h2>
         <ul class="mzp-l-columns mzp-t-columns-three">
             <div class="mzp-c-picto">
-                <img src="static/images/home/pocket-text-icon.b3b602691e01.svg" alt="" class="mzp-c-picto-image" width="40" />
+                <img src="{% static 'images/home/pocket-text-icon.b3b602691e01.svg' %}" alt="" class="mzp-c-picto-image" width="40" />
                 <h3 class="mzp-c-picto-heading">텍스트 크기, 폰트 스타일, 읽기 모드 등을 맞춤 설정하여 쾌적한 읽기 환경을 만들어 보세요.</h3>
             </div>
             <div class="mzp-c-picto">
-                <img src="static/images/home/pocket-tag-icon.384b16fcb98f.svg" alt="" class="mzp-c-picto-image" width="40" />
+                <img src="{% static 'images/home/pocket-tag-icon.384b16fcb98f.svg' %}" alt="" class="mzp-c-picto-image" width="40" />
                 <h3 class="mzp-c-picto-heading">저장된 콘텐츠를 태그로 분류하고, 중요한 내용은 하이라이트로 표시해 보세요.</h3>
             </div>
             <div class="mzp-c-picto">
-                <img src="static/images/home/pocket-audio-icon.a1b5c8915d82.svg" alt="" class="mzp-c-picto-image" width="40" />
+                <img src="{% static 'images/home/pocket-audio-icon.a1b5c8915d82.svg' %}" alt="" class="mzp-c-picto-image" width="40" />
                 <h3 class="mzp-c-picto-heading">오디오 재생 옵션을 이용해 Pocket 앱에서 아티클을 오디오로 즐겨 보세요.</h3>
             </div>
         </ul>
@@ -90,7 +90,7 @@
     <section class="pocket-homepage-bottom mzp-l-content">
         <h2 class="sub-section-heading">웹에서 발견한 흥미진진한 콘텐츠를 쉽고 간편하게 저장하세요</h2>
         <div class="pocket-homepage-button-center">
-            <a href="#" class="mzp-c-button">Pocket 가입하기</a>
+            <a href="{% url 'signup' %}" class="mzp-c-button">Pocket 가입하기</a>
         </div>
     </section>
 </div>
