@@ -42,7 +42,7 @@ class User(AbstractBaseUser):
     is_active                   = models.BooleanField(default=True)    
     is_admin                    = models.BooleanField(default=False)
     
-    # 사용자의 username field는 랜덤 설정
+    # 사용자의 username password 설정
     USERNAME_FIELD              = 'password'
 
     # 필수로 작성해야하는 field
