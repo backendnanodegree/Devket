@@ -100,10 +100,10 @@ function setFetchData(method, body){
     return data
 }
 
-function redirctLogin(response) {
+function redirectLogin(response) {
     /* Server에서 200외의 상태값을 받았을 경우 login페이지로 이동하는 함수 
         - fetch 함수 사용시 response에 아래와 같이 사용
-        - ex : .then(response => redirctLogin(response))
+        - ex : .then(response => redirectLogin(response))
     */
     return response.status == 200 ? response.json() : location.href = '/login'
 }
@@ -120,5 +120,5 @@ export {
     removeAllNode,
     getCookie, 
     setFetchData,
-    redirctLogin,
+    redirectLogin,
 };
