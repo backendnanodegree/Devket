@@ -1,4 +1,4 @@
-import {createNode, appendTag, getElement, getCookie, removeAllNode, setFetchData} from './common.js';
+import {createNode, appendTag, getElement, getCookie, removeAllNode, setFetchData, redirectLogin} from './common.js';
 import {highlightClickEvent, highlightRetrieve} from './highlight.js';
 
 // 전역 변수
@@ -74,7 +74,7 @@ function renderDetail(site) {
     appendTag(article, siteArticle)
 
     const siteText                      = createNode('div')
-    siteText.innerHTML                  = site.content
+    siteText.innerHTML                  = site.content == 'None' ? '사이트의 컨텐츠가 존재하지 않습니다.' : site.content
     appendTag(siteArticle, siteText)
 
     // Detail 뷰에서 목록을 렌더하고 하이라이트 기능 함수 선언
@@ -99,20 +99,13 @@ function renderDetail(site) {
 // site API에서 항목을 가져오는 함수
 function getSiteDetail() {
 
-    let siteId                          = getElement('#siteid').value;
+    let siteId = getElement('#siteid').value;
 
-    const data  = {
-        method: 'GET',
-        headers: {
-            'content-type': 'application/json',      
-        },
-    }
-
-    fetch(`/api/sites/detail/${siteId}`, data)
-    .then(response => response.json())
-    .then(data => {
-        renderDetail(data)
-    }) 
+    fetch(`/api/sites/detail/${siteId}`)
+        .then(response => redirectLogin(response))
+        .then(data => {
+            renderDetail(data)
+        }) 
 }
 
 getSiteDetail()
@@ -121,14 +114,10 @@ getSiteDetail()
 favoriteButtonA.addEventListener('click', (e) => {
 
     let siteId                          = getElement('#siteid').value;
-
-    const csrftoken                     = getCookie('csrftoken')
-
     let favoriteData                    = favoriteButtonA.classList.contains('active') ? false : true
-
-    // 즐겨찾기 업데이트
     const data                          = setFetchData('PUT', {favorite: favoriteData})
     
+    // 즐겨찾기 업데이트
     fetch(`/api/sites/${siteId}`, data)
     .then(response => {
         let status = response.status
@@ -169,8 +158,6 @@ detailButton.addEventListener('click', () => {
     if (confirm("해당 항목을 삭제 하시겠습니까?")) {
 
         alert('항목이 삭제 되었습니다.')
-
-        const csrftoken                 = getCookie('csrftoken')
     
         const data                      = setFetchData('DELETE',{})
     
@@ -188,7 +175,6 @@ detailButton.addEventListener('click', () => {
     }
 
 })
-
 
 export {
     getSiteDetail,

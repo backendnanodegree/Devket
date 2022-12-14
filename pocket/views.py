@@ -1,7 +1,7 @@
-from django.shortcuts     import get_object_or_404, render
+from django.shortcuts     import get_object_or_404, redirect, render
 from django.views.generic import TemplateView
 from django.db            import transaction
-from django.db.models     import Q
+from django.db.models     import Q, Count
 
 from rest_framework.views    import APIView
 from rest_framework.generics import GenericAPIView
@@ -32,8 +32,9 @@ class SignupAPIView(APIView):
             email    : str = self.request.data.get('email')
             password : str = self.request.data.get('password')
 
-            userModel  = User.objects.create_user(password=password)
-            emailModel = Email.objects.create(user=userModel, email=email)
+            with transaction.atomic():
+                userModel  = User.objects.create_user(password=password)
+                emailModel = Email.objects.create(user=userModel, email=email)
 
             return Response({'msg':'Success signup'}, status=status.HTTP_200_OK)
 
@@ -101,6 +102,12 @@ def mylist_view(request):
 class HomeView(TemplateView):
     template_name = "common/home.html"
 
+    def get(self, request, *args, **kwargs):
+
+        # 로그인 전 후 header를 분기하기 위한 키워드인자 전달  
+        kwargs['login'] = request.COOKIES.get('access')
+        return super().get(request, *args, **kwargs)
+
 
 class SignUpView(TemplateView):
     template_name = "user/signup.html"
@@ -108,6 +115,18 @@ class SignUpView(TemplateView):
 
 class LogInView(TemplateView):
     template_name = "user/login.html"
+
+    def get(self, request, **kwargs):
+
+        access_token = request.COOKIES.get('access')
+
+        # 토큰 존재 시 로그인 화면 접근 불가(홈화면 이동)
+        if access_token:
+            return redirect('home')
+        else:
+            # 토큰 존재하지 않은경우 로그인 화면 접근
+            context = self.get_context_data(**kwargs)
+            return self.render_to_response(context)
 
 
 class PwdHelpView(TemplateView):
@@ -129,11 +148,13 @@ class SiteAPIView(APIView):
     """
 
     @login_decorator
-    def get(self, request, **kward): 
-        word: str  = request.GET['word']              
-        list_qs    = Site.objects.filter(
+    def get(self, request, **kwards): 
+        word: str = request.GET['word']              
+        list_qs   = Site.objects.filter(
+                        Q(user=kwards['user_id'])&(
                         Q(title__contains=word)|
-                        Q(host_name__contains=word))  
+                        Q(host_name__contains=word)))
+        
         serializer = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)
@@ -147,11 +168,10 @@ class SiteDetailViewAPIView(APIView):
         
         return get_object_or_404(Site, pk=pk)
 
+    @login_decorator
+    def get(self, request, **kwards): 
 
-    def get(self, request, pk): 
-
-        site = self.get_object(pk)
-
+        site = self.get_object(pk=kwards['pk'])
         serializer  = SiteSerializer(site)
 
         return Response(serializer.data)
@@ -162,11 +182,10 @@ class HighlightAPIView(APIView):
     """
 
     @login_decorator
-    def get(self, request, pk):
+    def get(self, request, **kwards):
 
-        queryset                    = Highlight.objects.filter(site=pk)
-
-        serializer                  = HighlightSerializer(queryset, many=True)
+        queryset   = Highlight.objects.filter(site=kwards['pk'])
+        serializer = HighlightSerializer(queryset, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -195,12 +214,17 @@ class HighlightListAPIView(APIView):
     mylist 화면 하이라이트 탭에서 하이라이트가 적용된 항목들을 불러오는 API
     """
 
-    def get(self, request):
-        highlight_qs                = Highlight.objects.values('site')
+    @login_decorator
+    def get(self, request, **kwards):
+        word: str        = request.GET['word'] 
+        custom_highlight = Site.objects.annotate(count=Count('highlight'))
+        highlight_qs     = custom_highlight.filter(
+                                        (Q(user=kwards['user_id'])&
+                                         Q(count__gt=0))&(
+                                         Q(title__contains=word)|
+                                         Q(host_name__contains=word))).order_by('created_at').distinct()
 
-        site_qs                     = Site.objects.filter(pk__in=highlight_qs)
-
-        serializer                  = SiteSerializer(site_qs, many=True)
+        serializer = SiteSerializer(highlight_qs, many=True)
 
         return Response(serializer.data)
 
@@ -209,23 +233,23 @@ class HighlightPremiumAPIView(APIView):
     """ 
     결제 상태를 확인받아 하이라이트 기능 제한을 두는 API
     """
+    complete_payment = 1
+    limit = 3
 
-    def get(self, request, pk):
+    @login_decorator
+    def get(self, request, **kwards):
         """ 
         사용자 모델에서 결제 상태 값을 가져오는 변수 
         """
         
-        complete_payment            = 1
-        limit                       = 3
+        user_info = User.objects.filter(id=kwards['user_id']).values('payment_status').last()
+        highlight = Highlight.objects.filter(site=kwards['pk'])
+        highlight_object = highlight.count()
 
-        user_info                   = User.objects.filter(id=1).values('payment_status').last()
-        highlight                   = Highlight.objects.filter(site=pk)
-        highlight_object            = highlight.count()
-
-        if user_info['payment_status'] == complete_payment:
+        if user_info['payment_status'] == self.complete_payment:
             return Response(True)
 
-        elif highlight_object < limit :
+        elif highlight_object < self.limit :
             return Response(True)
 
         else :
@@ -317,12 +341,14 @@ class SiteTagsAPIView(APIView):
     """
 
     @login_decorator
-    def get(self, request, pk):
+    def get(self, request, **kwards):
         """
         Site 태그 선택으로 조회
         """ 
 
-        sites =  Site.objects.filter(tag=pk)
+        sites =  Site.objects.filter(
+                            user=kwards['user_id'],
+                            tag=kwards['pk'])
         
         serializer = SiteSerializer(sites, many=True)
 
@@ -351,10 +377,15 @@ class FavoriteAPIView(APIView):
     """
 
     @login_decorator
-    def get(self, request): 
-        list_qs     = Site.objects.filter(favorite=True)  
-        
-        serializer  = SiteSerializer(list_qs, many=True)
+    def get(self, request, **kwards): 
+        word: str  = request.GET['word']
+        list_qs    = Site.objects.filter(
+                                    (Q(user=kwards['user_id'])&
+                                     Q(favorite=True))&(
+                                     Q(title__contains=word)|
+                                     Q(host_name__contains=word)))  
+
+        serializer = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -365,10 +396,11 @@ class ArticleAPIView(APIView):
     """
 
     @login_decorator
-    def get(self, request):
+    def get(self, request, **kwards): 
         word: str  = request.GET['word']   
-        list_qs    = Site.objects.filter(
-                            Q(video=False)&(
+        list_qs    = Site.objects.filter((
+                            Q(user=kwards['user_id'])& 
+                            Q(video=False))&(
                             Q(title__contains=word)|
                             Q(host_name__contains=word)))
 
@@ -383,10 +415,11 @@ class VideoAPIView(APIView):
     """
     
     @login_decorator
-    def get(self, request):
+    def get(self, request, **kwards):
         word: str  = request.GET['word'] 
-        list_qs    = Site.objects.filter(
-                        Q(video=True)&(
+        list_qs    = Site.objects.filter((
+                        Q(user=kwards['user_id'])&
+                        Q(video=True))&(
                         Q(title__contains=word)|
                         Q(host_name__contains=word)))
 
@@ -400,12 +433,17 @@ class TagsAPIView(APIView):
     """
 
     @login_decorator
-    def get(self, request):
+    def get(self, request, **kwards):
         """
         Site 태그 조회
         """ 
 
-        tags       = Tag.objects.all()
+        # 사용자에 등록된 모든 site 조회
+        sites = Site.objects.filter(user=kwards['user_id'])
+        
+        # 해당 사이트에 걸려있는 모든 tag 조회 단, 중복제거를 위해 set 변경
+        tags = set([tag for site in sites for tag in site.tag_set.all()])
+
         serializer = TagSerializer(tags, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -416,23 +454,24 @@ class SiteByTagAPIView(APIView):
     """
 
     @login_decorator
-    def get(self, request):
+    def get(self, request, **kwards):
         word: str  = request.GET['word']
-        tags: list = [tag for tag in Tag.objects.all()]
 
-        list_qs    = Site.objects.filter(
-                        (Q(tag__in=tags))&(
-                        Q(title__contains=word)|
-                        Q(host_name__contains=word))).order_by('created_at').distinct()
+        custom_list = Site.objects.annotate(cnt=Count('tag'))
+        list_qs     = custom_list.filter(
+                                    (Q(user=kwards['user_id'])&
+                                    Q(cnt__gt=0))&(
+                                    Q(title__contains=word)|
+                                    Q(host_name__contains=word))).order_by('created_at').distinct()
 
         serializer = SiteSerializer(list_qs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
         
 class ParseAPIView(APIView):
+    @login_decorator
     @scrap_decorator
     def post(self, request, **kwards):
-        result: dict = {}
         video_type, title, image, url = '', '', '', ''
         try:
             # 접근 여부(데코레이터를 통해 반환)
@@ -466,7 +505,7 @@ class ParseAPIView(APIView):
                     with transaction.atomic():
                         '''트랜젝션 시작'''
 
-                        user: User = User.objects.filter(name='조정용')
+                        user: User = User.objects.filter(id=kwards['user_id'])
                         
                         if user.exists():
                             user = user.last()

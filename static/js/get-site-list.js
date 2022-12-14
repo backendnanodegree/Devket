@@ -1,4 +1,4 @@
-import {createNode, appendTag, getElement, getElements, removeAllNode, setFetchData, redirectLogin} from './common.js';
+import {createNode, appendTag, getElement, getElements, removeElement, removeAllNode, redirectLogin} from './common.js';
 import {makeBottomToolbar} from './bottom-toolbar.js';
 import {apiURL} from './api-url.js';
 
@@ -92,6 +92,11 @@ function renderTag(tags) {
     */
 
     const mainContainer      = getElement('.cmg9k0j')
+
+    // 사전에 등록된 모든 태그 영역 초기화
+    let before_allTagContiner = getElement('.a1ciqz4q')
+    if (before_allTagContiner != undefined)
+        removeElement(before_allTagContiner)
 
     const allTagContiner     = createNode('div')
     allTagContiner.className = 'a1ciqz4q'
@@ -361,5 +366,7 @@ apiUrlKey === 'tags' ? getSiteByTagList() : getSiteList()
 
 export {
     getSiteList,
+    getSiteByTagList,
     selected_articles,
+    apiUrlKey
 };
