@@ -38,16 +38,23 @@ def scrap_decorator(func):
     validation: object = re.compile('^(https|http)')
 
     @wraps(func)
-    def exec_func(self, request) -> func:
+    def exec_func(self, request, **kwards) -> func:
         # path 파라미터 -> request body 파라미터로 전달 변경
         url: str = self.request.data.get('url')
 
-        if access(scheme(slash(url)), header): 
+        if access(scheme(slash(url)), header):
             # Issue : scheme가 붙어있지 않으면 파싱 불가
-            return func(self, request, url=scheme(url), access=True)
+            kwards['url'] = scheme(url)
+            kwards['access'] = True  
+
+            return func(self, request, **kwards)
+
         else:
             # Issue : 데코레이터에서 return 값을 http가 들어있지 않은 함수를 return 할 경우 에러 발생
-            return func(self, request, url=scheme(url), access=False)
+            kwards['url'] = scheme(url)
+            kwards['access'] = False  
+
+            return func(self, request, **kwards)
     
     def scheme(url: str) -> str:
         ''' 
