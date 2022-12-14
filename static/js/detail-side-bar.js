@@ -95,14 +95,7 @@ function sidePosts(data) {
 // 하이라이트 API에서 데이터를 가져오는 함수
 function getSideText() {
 
-    const data = {
-        method: 'GET',
-        headers: {
-            'content-type': 'application/json',      
-        },
-    }
-
-    fetch(`/api/highlights/${siteId}`, data)
+    fetch(`/api/highlights/${siteId}`)
         .then(response => redirectLogin(response))
         .then(data => {
             sidePosts(data)
