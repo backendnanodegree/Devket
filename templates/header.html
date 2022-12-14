@@ -1,25 +1,74 @@
 {% load static %}
+<script type="module" src="{% static 'js/profile.js' %}"></script>
 <!-- HEADER  -->
-<header class="pocket-header platform header">
-    <nav class="platform-header">
-    <a class="pocket-logo" href="{% url 'home' %}">
-        <div class="pocket-logo-svg">
-        <span aria-label="Pocket">Pocket</span>
+{% if login == undefined %}
+    <header class="pocket-header platform header">
+        <nav class="platform-header">
+        <a class="pocket-logo" href="{% url 'home' %}">
+            <div class="pocket-logo-svg">
+            <span aria-label="Pocket">Pocket</span>
+            </div>
+        </a>
+        <div class="header-navigation" aria-label="Page navigation">
+            <ul class="header-navigation-list links">
+            <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
+                href="{% url 'signup' %}">등록</a></li>
+            <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
+                href="#">저장 방법</a></li>
+            <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
+                href="{% url 'premium' %}">Premium 으로 이동</a></li>
+            <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
+                href="#">지원</a></li>
+            <li class="header-navigation-list-item"><a class="header-navigation-list-item-link log-in-cta"
+                href="{% url 'login' %}">로그인</a></li>
+            </ul>
         </div>
-    </a>
-    <div class="header-navigation" aria-label="Page navigation">
-        <ul class="header-navigation-list links">
-        <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
-            href="{% url 'signup' %}">등록</a></li>
-        <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
-            href="#">저장 방법</a></li>
-        <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
-            href="{% url 'premium' %}">Premium 으로 이동</a></li>
-        <li class="header-navigation-list-item"><a class="header-navigation-list-item-link"
-            href="#">지원</a></li>
-        <li class="header-navigation-list-item"><a class="header-navigation-list-item-link log-in-cta"
-            href="{% url 'login' %}">로그인</a></li>
-        </ul>
-    </div>
-    </nav>
-</header>
+        </nav>
+    </header>
+{% else %}
+    <header class="h1bh2prp logged-in">
+        <div class="p16bck5y global-nav-container">
+            <nav class="n27eiag" data-cy="global-nav">
+                <div class="site-nav"><button class="b18soqoe i1oaez37 hamburger-icon t1221eea pzhe358 inline normal" data-cy="nav-hamburger" aria-label="Open the Pocket mobile menu" data-tooltip="Open">
+                    <span class="i1qqph0t icon"><svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 5a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1ZM2 12a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1ZM2 19a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1Z">
+                                </path>
+                            </svg>
+                        </span>
+                    </button>
+                    <a id="pocket-logo-nav" class="pocket-logo" data-cy="logo-link" href="{% url 'mylist' %}">
+                        <div class="lduquv9 logo">
+                            <span class="l1m2lm9u">Pocket</span>
+                        </div>
+                        <div class="l1n9llcl logo-mark">
+                            <span class="l1m2lm9u">Pocket</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="lvjqdba" aria-label="Page navigation">
+                    <ul class="l1fcr43o links" data-cy="primary-links">
+                        <li><a id="global-nav-home-link" data-cy="global-nav-home-link" 
+                            class="selected" href="{% url 'home' %}">홈</a>
+                        </li>
+                        <li><a id="global-nav-saves-link" data-cy="global-nav-saves-link" 
+                            class="" href="{% url 'mylist' %}">내 목록</a>
+                        </li>
+                        <li><a id="global-nav-discover-link" data-cy="global-nav-discover-link" 
+                            class="" href="#">검색</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tva5lsb is-premium"></div>
+                <div class="profile">
+                    <div class="a170u95e t1221eea pzhe358" data-tooltip="Account">
+                        <button type="button" class="b502wo9 a1hh3oww" aria-label="Open Account Menu" data-cy="account-menu-avatar">
+                            <span class="ajoca6s with-image" style="width: 40px; height: 40px;">
+                                <img src="https://lh3.googleusercontent.com/a-/ACNPEu8uyjmfTvl9sHWJKBxE2DJPqsJmbSDxUFhM2DZ5sA=s96-c" class="i6op735" data-cy="avatar-image-">
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+{% endif%}
