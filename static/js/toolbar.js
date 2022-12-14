@@ -1,5 +1,5 @@
 import {getElement, getElements, makeElementOff, makeElementOn, removeElement, createNode, appendTag, getCookie, setFetchData} from './common.js';
-import {getSiteList, selected_articles} from './get-site-list.js';
+import {getSiteList, getSiteByTagList, selected_articles, apiUrlKey} from './get-site-list.js';
 import {openModal, openTagModal, added_tags} from "./modal.js"
 
 function makeSearchTopToolBar() {
@@ -441,8 +441,8 @@ function saveSitebyToolbar () {
                     }
                     return response.json()
                 })
-                // 조회함수 호출
-                .then(() => getSiteList()) 
+                // '내 목록', '모든태그' 화면에 따라 다른 조회 함수 조회
+                .then(() => apiUrlKey == 'tags' ? getSiteByTagList() :getSiteList()) 
                 .then(() => toolbarCancel())
                 .catch(error => console.log(error))
         }else{
