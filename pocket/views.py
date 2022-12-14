@@ -118,10 +118,10 @@ class LogInView(TemplateView):
 
     def get(self, request, **kwargs):
 
-        access_tokene = request.COOKIES.get('access')
+        access_token = request.COOKIES.get('access')
 
         # 토큰 존재 시 로그인 화면 접근 불가(홈화면 이동)
-        if access_tokene:
+        if access_token:
             return redirect('home')
         else:
             # 토큰 존재하지 않은경우 로그인 화면 접근
