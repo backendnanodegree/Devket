@@ -2,8 +2,6 @@ from rest_framework_simplejwt.tokens      import RefreshToken
 from rest_framework.serializers           import ModelSerializer
 from rest_framework                       import serializers
 from .models                              import Site, Tag, Payment, User, Highlight
-from config.settings                      import SIMPLE_JWT 
-import jwt,datetime
 
 class LoginSerializer(serializers.ModelSerializer):
     email                   = serializers.CharField(
@@ -63,6 +61,7 @@ class SiteSerializer(ModelSerializer):
     favorite                = serializers.BooleanField(default=False)
     video                   = serializers.BooleanField(default=False)
     
+
     def create(self, validated_data):
         return Site.objects.create(**validated_data)
 
@@ -99,7 +98,7 @@ class PaymentSerializer(ModelSerializer):
 
     class Meta: 
         model = Payment
-        fields = ['user', 'amount', 'payment_id', 'merchant_id', 'works', 'payment_data', 'status', 'type']
+        fields = ['user', 'amount', 'payment_id', 'merchant_id', 'payment_data', 'status', 'type']
 
 
 class HighlightSerializer(serializers.ModelSerializer):
@@ -108,4 +107,4 @@ class HighlightSerializer(serializers.ModelSerializer):
     content_location        = serializers.JSONField(default=dict)
     class Meta:
         model               = Highlight
-        fields              = '__all__'
+        fields              = ['content_text', 'content_location']
