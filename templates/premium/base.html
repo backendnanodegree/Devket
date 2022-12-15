@@ -16,8 +16,8 @@
     </head>
 <body class=" premium-page-body ">
 
-    <!-- HEADER -->   
-    {% if login %}
+    <!-- HEADER -->
+    {% if token %}
         {% include "premium/header_after_login.html" %}
     {% else %}
         {% include "premium/header_before_login.html" %}
@@ -71,7 +71,7 @@
                         <ul>
                             <li key="0">저장, 읽기, 시청, 청취</li>
                         </ul>
-                        <button class="gray" data-url="#">
+                        <button class="gray" onclick ="location.href='{% url 'mylist' %}'">
                             목록 보기
                         </button>
                     </div>
@@ -209,7 +209,6 @@
             </div>
         </div>
     </main>
-
 
     <!-- FOOTER -->
     {% include "footer.html" %}
