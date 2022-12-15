@@ -30,8 +30,8 @@ class User(AbstractBaseUser):
     PAYMENT_OFF                 = 0
 
     PAYMENT_CHOICES             = [
-                                    {PAYMENT_ON, '결제'},
-                                    {PAYMENT_OFF, '미결제'}
+                                    (PAYMENT_ON, '결제'),
+                                    (PAYMENT_OFF, '미결제')
                                   ]
     
     payment_status              = models.IntegerField(choices=PAYMENT_CHOICES, default=PAYMENT_OFF, verbose_name='결제상태', null=True)
@@ -70,8 +70,8 @@ class Email(models.Model):
     NOT_CHECK                   = 0
 
     AUTHENTICATION_CHOICES      = [
-                                    {CHECK, '인증'},
-                                    {NOT_CHECK, '미인증'}
+                                    (CHECK, '인증'),
+                                    (NOT_CHECK, '미인증')
                                  ]
 
     authentication_check        = models.IntegerField(choices=AUTHENTICATION_CHOICES, default=NOT_CHECK, verbose_name='이메일 인증 여부')
@@ -150,8 +150,6 @@ class PaymentManager(models.Manager):
         """
         새로운 결제 모델 인스턴스 생성하기
         """
-        if not user: 
-            raise ValueError("Can't find user")
         
         # merchant_id 암호화하기
         user_hash               = hashlib.sha1(str(user.id).encode('utf-8')).hexdigest()[:5]
@@ -160,7 +158,6 @@ class PaymentManager(models.Manager):
 
         # 아임 포트에 통보
         PaymentManager.imp.prepare_payments(merchant_id, amount)
-
         new_payment             = self.model(
                                     user        =user, 
                                     merchant_id =merchant_id,
@@ -170,10 +167,9 @@ class PaymentManager(models.Manager):
         
         try:
             new_payment.save() 
-        
-        except Exception as e:
-            print(f'save error: {e}')
-        
+        except:
+            new_payment.status = 'failed'
+            raise ValueError('Payment 객체가 생성되지 못 했습니다.')
         return new_payment.merchant_id
 
     
@@ -207,15 +203,16 @@ class Payment(models.Model):
     amount                      = models.PositiveIntegerField(verbose_name='결제 금액', default=100)
     payment_date                = models.DateTimeField(verbose_name='결제갱신일', auto_now_add=True)
     
-    PAYMENT_TYPE_CHOICES        = [{'card', '신용카드'}]
+    PAYMENT_TYPE_CHOICES        = [('card', '신용카드')]
     type                        = models.CharField(verbose_name='결제 수단', max_length=10, choices=PAYMENT_TYPE_CHOICES, default='card')
     
     STATUS_CHOICES              =[
-                                  {'await', '결제대기'},
-                                  {'paid', '결제성공'},
-                                  {'failed', '결제실패'},
-                                  {'cancelled', '결제취소'}
+                                  ('await', '결제대기'),
+                                  ('paid', '결제성공'),
+                                  ('failed', '결제실패'),
+                                  ('cancelled', '결제취소')
                                  ]
+
     status                      = models.CharField(verbose_name='결제상태', default='await', choices=STATUS_CHOICES, max_length=10)
 
     objects                     = PaymentManager()
@@ -238,7 +235,6 @@ def payment_validation(sender, instance, created, *args, **kwargs):
         merchant_id             = iamport_transaction['merchant_id']
         imp_id                  = iamport_transaction['imp_id']
         amount                  = iamport_transaction['amount']
-
         local_transaction       = Payment.objects.filter(merchant_id=merchant_id,
                                                          payment_id=imp_id,
                                                          amount=amount
@@ -246,8 +242,7 @@ def payment_validation(sender, instance, created, *args, **kwargs):
         
         # DB와 iamport 둘 중 한 곳에라도 없으면 비정상 거래
         if not iamport_transaction or not local_transaction:
-            raise ValueError("비정상 거래입니다.")
-
+            raise ValueError("비정상 거래입니다")
 
 # 결제 정보가 생성된 후, payment_validation 호출  
 post_save.connect(payment_validation, sender=Payment)

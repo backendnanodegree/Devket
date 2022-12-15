@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path, include
 
 from pocket.views import (
@@ -19,7 +18,7 @@ from pocket.views import (
     SiteDetailViewAPIView,
     PaymentPassView, 
     PaymentImpStoreView, 
-    MakeStatusFailed,
+    PaymentFailedView,
     HighlightListAPIView,
     HighlightAPIView,
     HighlightPremiumAPIView,
@@ -30,7 +29,7 @@ from pocket.views import (
     SignUpView, 
     PwdHelpView, 
     PremiumView,
-    mylist_view, 
+    SiteView, 
     site_detail_view,
 )
 
@@ -59,7 +58,7 @@ api_patterns = [
     # payment
     path('payment/checkout', PaymentPassView.as_view()),
     path('payment/validation', PaymentImpStoreView.as_view()),
-    path('payment/failure', MakeStatusFailed.as_view()),
+    path('payment/failure', PaymentFailedView.as_view()),
 ]
 
 urlpatterns = [
@@ -72,12 +71,12 @@ urlpatterns = [
     path('login/password/', PwdHelpView.as_view(), name='password'),
 
     # mylist
-    path('mylist/', mylist_view, name='mylist'), 
-    path('mylist/favorites/', mylist_view, name='favorites'), 
-    path('mylist/articles/', mylist_view, name='articles'), 
-    path('mylist/videos/', mylist_view, name='videos'),
-    path('mylist/tags/', mylist_view, name='tags'),
-    path('mylist/highlights/', mylist_view, name='highlights'),
+    path('mylist/', SiteView.as_view(), name='mylist'), 
+    path('mylist/favorites/', SiteView.as_view(), name='favorites'), 
+    path('mylist/articles/', SiteView.as_view(), name='articles'), 
+    path('mylist/videos/', SiteView.as_view(), name='videos'),
+    path('mylist/tags/', SiteView.as_view(), name='tags'),
+    path('mylist/highlights/', SiteView.as_view(), name='highlights'),
 
     # detail
     path('mylist/detail/<int:pk>/', site_detail_view, name='site_detail_view'), 

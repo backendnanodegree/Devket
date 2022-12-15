@@ -8,8 +8,8 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework          import status
 
+from pocket.serializers import LoginSerializer, SiteSerializer, TagSerializer, HighlightSerializer, PaymentSerializer
 from pocket.decorator   import bulk_decorator, login_decorator, scrap_decorator
-from pocket.serializers import  LoginSerializer, SiteSerializer, TagSerializer, HighlightSerializer
 from pocket.models      import Email, Site, Tag, User, Payment, Highlight
 
 from urllib.parse import urlparse
@@ -90,14 +90,8 @@ def site_detail_view(request, pk):
         return render(request, 'mylist/detail/detail.html', {'pk' : pk})
 
 
-def mylist_view(request):
-    """
-    mylist/base.html과 모든 항목에 대한 조회 view_url을 연결
-    """
-    
-    if request.method == 'GET': 
-
-        return render(request, 'mylist/base.html')
+class SiteView(TemplateView):
+    template_name = 'mylist/base.html'
 
 class HomeView(TemplateView):
     template_name = "common/home.html"
@@ -559,50 +553,57 @@ class PaymentPassView(APIView):
     생성한 주문번호를 아임포트 결제 창에 전달하는 api
     """
 
-    def post(self, request):
-
-        if not request.user.is_authenticated: 
-            return Response({"authenticated": False}, status=401)
-        
+    @login_decorator
+    def post(self, request, **kwards):
         amount                  = 100 
-        user                    = request.user 
         payment_type            = request.data['type']
-
+        user                    = User.objects.get(id=kwards['user_id'])
+        buyer_email             = Email.objects.get(user=user).email
+        
         try: 
             merchant_id         = Payment.objects.create_new(
                                     user=user, 
                                     amount=amount,
                                     type=payment_type,
                                   )
-        
         except ValueError:
             merchant_id         = None
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         if merchant_id is not None:
             data                = {
-                                    "works": True, 
+                                    "works": True,
+                                    "buyer_name": user.name, 
+                                    "buyer_email": buyer_email,
                                     "merchant_id": merchant_id,
                                     "amount": amount, 
                                   }
             return Response(data, status=status.HTTP_200_OK)
 
-class PaymentImpStoreView(APIView):
+
+class PaymentValidationView(APIView):
+    """
+    입력된 데이터로 결제 정보를 업데이트하고, 유효성 검증을 실행
+    """
+
+    def check_validation(self, payment, data):
+        serializer = PaymentSerializer(payment, data=data, partial=True)
+        if serializer.is_valid(raise_exception=True):    
+            serializer.save()
+
+
+class PaymentImpStoreView(PaymentValidationView):
     """
     아임포트에서 보낸 결제번호를 DB에 저장하는 api
     """
-    
-    def post(self, request):
 
-        if not request.user.is_authenticated: 
-            return Response({"authenticated": False}, status=401)
-
-        user                    = request.user
+    @login_decorator
+    def post(self, request, **kwards):
+        user                    = User.objects.get(id=kwards['user_id'])
         imp_id                  = request.data['imp_id']
         amount                  = request.data['amount']
         merchant_id             = request.data['merchant_id']
         payment_status          = request.data['payment_status']
-        
         payment                 = Payment.objects.get(
                                     user=user,
                                     merchant_id=merchant_id,
@@ -610,41 +611,34 @@ class PaymentImpStoreView(APIView):
                                   )
         
         if payment is not None:
-            payment.payment_id  = imp_id 
-            payment.status      = payment_status
-            payment.save()
-            data                = {'works': True}
-
+            data = {'works': True}
+            user.payment_status = User.PAYMENT_ON
+            user.save()
+            payment_data = {'payment_id' : imp_id, 'status' : payment_status}
+            self.check_validation(payment, data=payment_data)
             return Response(data, status=status.HTTP_200_OK)
-        
         else: 
-            payment.status      = 'failed'
-            payment.save()
-            data                = {'works': False}
-
+            data = {'works': False}
+            self.check_validation(payment, data={'status': 'failed'})
             return Response(data, {'msg':"Can't find a payment object with merchant_id passed"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class MakeStatusFailed(APIView):
+class PaymentFailedView(PaymentValidationView):
     """
     사용자 변심으로 결제 취소 시, payment의 status를 failed로 변경하는 api
     """
 
-    def post(self, request):
-
+    @login_decorator
+    def post(self, request, **kwards):
         imp_id                      = request.data['imp_id']
         merchant_id                 = request.data['merchant_id']
         payment                     = Payment.objects.get(merchant_id=merchant_id)
         
         if payment is not None: 
-            payment.payment_id      = imp_id
-            payment.status          = 'failed'
-            payment.save()
-            data                    = {'works': True}
-
+            data = {'works': True}
+            payment_data = {'payment_id' : imp_id, 'status' : 'failed'}
+            self.check_validation(payment, data=payment_data)
             return Response(data, status=status.HTTP_200_OK)
-        
         else:
-            data                    = {'works': False}
-            
+            data = {'works': False}
             return Response(data, {'msg':"Can't find a payment object with merchant_id passed"}, status=status.HTTP_400_BAD_REQUEST)
