@@ -90,14 +90,8 @@ def site_detail_view(request, pk):
         return render(request, 'mylist/detail/detail.html', {'pk' : pk})
 
 
-def mylist_view(request):
-    """
-    mylist/base.html과 모든 항목에 대한 조회 view_url을 연결
-    """
-    
-    if request.method == 'GET': 
-
-        return render(request, 'mylist/base.html')
+class SiteView(TemplateView):
+    template_name = 'mylist/base.html'
 
 class HomeView(TemplateView):
     template_name = "common/home.html"
