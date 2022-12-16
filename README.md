@@ -1,6 +1,5 @@
 ## 🛠️ 기술 및 환경
 
----
 
 - Backend: Python 3.10.8, Django 3.2.13, DRF 3.14.0
 - Frontend: Javascript, HTML, CSS
@@ -9,9 +8,10 @@
 
 <br>
 
+---
+
 ## 🖋️ Devket 프로젝트 목표와 방향성
 
----
 
 **1. `클론 코딩`하는 웹 서비스의 서버 구조 및 핵심 기능들을 구현**
 
@@ -37,6 +37,8 @@
 
 <br>
 
+---
+
 ## 🎯 클론 코딩 [Target](https://getpocket.com/) 설명
 ---
 1. 사용자가 간편하게 읽고 싶은 타 웹 사이트 컨텐츠를 `크롤링`으로 저장하는 기능
@@ -48,15 +50,18 @@
 
 <br>
 
-## 🔖 Infra structure
 ---
+
+## 🔖 Infra structure
+
 ![image](https://user-images.githubusercontent.com/78094972/208154658-f918a1dd-bf44-4531-b5df-4b2a286d98a3.png)
 
 
 <br>
 
-## 🔖 DB 설계
 ---
+
+## 🔖 DB 설계
 
 ![image](https://user-images.githubusercontent.com/78094972/208154171-1a6ac0f6-f55a-4e59-87c1-0a1f8d7c7c26.png)
 
@@ -64,27 +69,28 @@
 
 <br>
 
-## 🔖 WorkFlow
 ---
+
+## 🔖 WorkFlow
 
 ![image](https://user-images.githubusercontent.com/78094972/208156226-d8ee9112-1c64-4fb8-a309-d2b5189dc0a6.png)
 
 
 <br>
 
-
+---
 
 ## 🔳 Prototype
----
 
 - tool : [figma](https://www.figma.com/proto/6gqC7eF7A3CYNdEsnEEJmz/%EC%93%B0%EC%82%90%EC%9A%A9's-team-library?node-id=416%3A50&scaling=scale-down&page-id=0%3A1&starting-point-node-id=416%3A50&show-proto-sidebar=1)
 
 
 <br>
 
+---
+
 ## 📈 git branch 전략
 
----
 
 - 개발은 로컬 환경에서 작업 단위로 `feature` branch를 생성해서 개발 및 테스트 후, remote `feature` branch로 푸시하고 remote `develop` branch에 PR을 생성하여 코드 리뷰 후에 병합합니다. 그 후, `develop` 와 `main` branch 간 commit 수 차이가 10개 이상 벌어지면 `main` 브랜치에 PR을 생성하여 병합합니다.
 
@@ -96,8 +102,9 @@
 
 <br>
 
-## 🔆 프로젝트 중점사항
 ---
+
+## 🔆 프로젝트 중점사항
 
 ### Common
 
@@ -132,9 +139,10 @@
 
 <br>
 
+---
+
 ## 💁‍♂️ UseCase
 
----
 
 ### User
 
@@ -158,8 +166,9 @@
 
 <br>
 
-## 🥊 개발 이슈 및 해결방안
 ---
+
+## 🥊 개발 이슈 및 해결방안
 
 ### API
 
@@ -206,9 +215,10 @@
 
 <br>
 
+---
+
 ## 🗂 [Wiki](https://github.com/backendnanodegree/Devket/wiki)
 
----
 - 요구사항 정의서
 - 테이블 정의서
 - 프로세스 정의서 
