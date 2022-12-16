@@ -1,25 +1,26 @@
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
-from django.db.models.signals import post_save
-from django.conf import settings
-from django.db import models
-from .iamport import Iamport
-import random
-import string
+from django.db.models.signals      import post_save
+from django.db                     import models
+from .iamport                      import Iamport
+
 import hashlib
 import time
 
 class UserManager(BaseUserManager):
-    # 일반 user 생성
+    """ 일반 user 생성 """
+
     def create_user(self, password=None):
         user = self.model()
         user.set_password(password)
         user.save(using=self._db)
         return user
 
+
 class User(AbstractBaseUser):
     """ 사용자 계정에 대한 정보 모델 """
+
     name                        = models.CharField(verbose_name='이름', max_length = 20, null=True)
-    password                    = models.CharField(verbose_name='비밀번호', max_length = 15, unique=True)
+    password                    = models.CharField(verbose_name='비밀번호', max_length = 128, unique=True)
     introduce                   = models.TextField(verbose_name='자기소개', max_length = 200, null=True)
     profile_picture             = models.ImageField(verbose_name='프로필사진', null=True, upload_to=f"profile/", blank=True)
     blog_url                    = models.CharField(verbose_name='블로그url', max_length = 250, null=True)
@@ -29,8 +30,8 @@ class User(AbstractBaseUser):
     PAYMENT_OFF                 = 0
 
     PAYMENT_CHOICES             = [
-                                    {PAYMENT_ON, '결제'},
-                                    {PAYMENT_OFF, '미결제'}
+                                    (PAYMENT_ON, '결제'),
+                                    (PAYMENT_OFF, '미결제')
                                   ]
     
     payment_status              = models.IntegerField(choices=PAYMENT_CHOICES, default=PAYMENT_OFF, verbose_name='결제상태', null=True)
@@ -41,8 +42,8 @@ class User(AbstractBaseUser):
     is_active                   = models.BooleanField(default=True)    
     is_admin                    = models.BooleanField(default=False)
     
-    # 사용자의 username field는 랜덤 설정
-    USERNAME_FIELD              = ''.join([random.choice(string.ascii_letters + string.digits) for _ in range(20)])
+    # 사용자의 username password 설정
+    USERNAME_FIELD              = 'password'
 
     # 필수로 작성해야하는 field
     REQUIRED_FIELDS             = []
@@ -69,8 +70,8 @@ class Email(models.Model):
     NOT_CHECK                   = 0
 
     AUTHENTICATION_CHOICES      = [
-                                    {CHECK, '인증'},
-                                    {NOT_CHECK, '미인증'}
+                                    (CHECK, '인증'),
+                                    (NOT_CHECK, '미인증')
                                  ]
 
     authentication_check        = models.IntegerField(choices=AUTHENTICATION_CHOICES, default=NOT_CHECK, verbose_name='이메일 인증 여부')
@@ -141,7 +142,6 @@ class Tag(models.Model):
         verbose_name_plural     = '태그 목록'
 
 
-
 class PaymentManager(models.Manager):
 
     imp = Iamport()
@@ -150,8 +150,6 @@ class PaymentManager(models.Manager):
         """
         새로운 결제 모델 인스턴스 생성하기
         """
-        if not user: 
-            raise ValueError("Can't find user")
         
         # merchant_id 암호화하기
         user_hash               = hashlib.sha1(str(user.id).encode('utf-8')).hexdigest()[:5]
@@ -160,7 +158,6 @@ class PaymentManager(models.Manager):
 
         # 아임 포트에 통보
         PaymentManager.imp.prepare_payments(merchant_id, amount)
-
         new_payment             = self.model(
                                     user        =user, 
                                     merchant_id =merchant_id,
@@ -170,10 +167,9 @@ class PaymentManager(models.Manager):
         
         try:
             new_payment.save() 
-        
-        except Exception as e:
-            print(f'save error: {e}')
-        
+        except:
+            new_payment.status = 'failed'
+            raise ValueError('Payment 객체가 생성되지 못 했습니다.')
         return new_payment.merchant_id
 
     
@@ -197,6 +193,7 @@ class PaymentManager(models.Manager):
 
         return super(PaymentManager, self).filter(user=user)
 
+
 class Payment(models.Model):
     """ 결제 정보 모델 """
 
@@ -206,15 +203,16 @@ class Payment(models.Model):
     amount                      = models.PositiveIntegerField(verbose_name='결제 금액', default=100)
     payment_date                = models.DateTimeField(verbose_name='결제갱신일', auto_now_add=True)
     
-    PAYMENT_TYPE_CHOICES        = [{'card', '신용카드'}]
+    PAYMENT_TYPE_CHOICES        = [('card', '신용카드')]
     type                        = models.CharField(verbose_name='결제 수단', max_length=10, choices=PAYMENT_TYPE_CHOICES, default='card')
     
     STATUS_CHOICES              =[
-                                  {'await', '결제대기'},
-                                  {'paid', '결제성공'},
-                                  {'failed', '결제실패'},
-                                  {'cancelled', '결제취소'}
+                                  ('await', '결제대기'),
+                                  ('paid', '결제성공'),
+                                  ('failed', '결제실패'),
+                                  ('cancelled', '결제취소')
                                  ]
+
     status                      = models.CharField(verbose_name='결제상태', default='await', choices=STATUS_CHOICES, max_length=10)
 
     objects                     = PaymentManager()
@@ -227,7 +225,6 @@ class Payment(models.Model):
         verbose_name_plural     = '결제 목록'
 
 
-
 def payment_validation(sender, instance, created, *args, **kwargs):
     """
     Payment 객체 추가 후, 결제 검증하기
@@ -238,7 +235,6 @@ def payment_validation(sender, instance, created, *args, **kwargs):
         merchant_id             = iamport_transaction['merchant_id']
         imp_id                  = iamport_transaction['imp_id']
         amount                  = iamport_transaction['amount']
-
         local_transaction       = Payment.objects.filter(merchant_id=merchant_id,
                                                          payment_id=imp_id,
                                                          amount=amount
@@ -246,8 +242,7 @@ def payment_validation(sender, instance, created, *args, **kwargs):
         
         # DB와 iamport 둘 중 한 곳에라도 없으면 비정상 거래
         if not iamport_transaction or not local_transaction:
-            raise ValueError("비정상 거래입니다.")
-
+            raise ValueError("비정상 거래입니다")
 
 # 결제 정보가 생성된 후, payment_validation 호출  
 post_save.connect(payment_validation, sender=Payment)

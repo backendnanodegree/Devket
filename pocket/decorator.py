@@ -1,10 +1,13 @@
-from django.shortcuts import get_list_or_404, get_object_or_404
 from rest_framework.response import Response
-from functools import wraps
+from rest_framework          import status
+from django.shortcuts        import get_list_or_404, get_object_or_404
+from django.conf             import settings
+from pocket.models           import Site
+from functools               import wraps
+
 import urllib.robotparser
 import re
-
-from pocket.models import Site
+import jwt
 
 def bulk_decorator(func):
 
@@ -35,16 +38,23 @@ def scrap_decorator(func):
     validation: object = re.compile('^(https|http)')
 
     @wraps(func)
-    def exec_func(self, request) -> func:
+    def exec_func(self, request, **kwards) -> func:
         # path 파라미터 -> request body 파라미터로 전달 변경
         url: str = self.request.data.get('url')
 
-        if access(scheme(slash(url)), header): 
+        if access(scheme(slash(url)), header):
             # Issue : scheme가 붙어있지 않으면 파싱 불가
-            return func(self, request, url=scheme(url), access=True)
+            kwards['url'] = scheme(url)
+            kwards['access'] = True  
+
+            return func(self, request, **kwards)
+
         else:
             # Issue : 데코레이터에서 return 값을 http가 들어있지 않은 함수를 return 할 경우 에러 발생
-            return func(self, request, url=scheme(url), access=False)
+            kwards['url'] = scheme(url)
+            kwards['access'] = False  
+
+            return func(self, request, **kwards)
     
     def scheme(url: str) -> str:
         ''' 
@@ -77,5 +87,30 @@ def scrap_decorator(func):
             raise ValueError(e.args)
         
         return check
+
+    return exec_func
+
+def login_decorator(func):
+    """ login 이후 작업의 access토큰 확인하는 decorator"""
+
+    @wraps(func)
+    def exec_func(self, request, **kwards) -> func:
+        token = request.COOKIES.get('access')
+
+        if not token:
+            return Response({'msg':'No Authentication'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # jwt decode함수를 이용하여 암호화된 access token 복호화
+            # RefreshToken.for_user(user=user)를 이용하여 token발행 시 SIGNING_KEY와 발행 ALGORITHM을 사용하기 때문에 
+            # decode시에도 해당 토큰을 SIGNING_KEY와 발생시 사용되었던 ALGORITHM으로 복화화 처리
+            # 여기서 SIGNING_KEY는 Django의 SECRET KEY를 사용
+            decodedPayload = jwt.decode(token, settings.SIMPLE_JWT['SIGNING_KEY'], algorithms=settings.SIMPLE_JWT['ALGORITHM'])
+            kwards['user_id'] = decodedPayload['user_id']
+
+        except jwt.ExpiredSignatureError:
+            return Response({'msg':'No Authentication'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return func(self, request, **kwards)
 
     return exec_func

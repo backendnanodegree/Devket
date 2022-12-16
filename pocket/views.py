@@ -1,32 +1,46 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts     import get_object_or_404, redirect, render
 from django.views.generic import TemplateView
+from django.db            import transaction
+from django.db.models     import Q, Count
+
+from rest_framework.views    import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import status
+from rest_framework          import status
 
-from pocket.decorator import bulk_decorator, scrap_decorator
-from .serializers import  LoginSerializer, SiteSerializer, TagSerializer, HighlightSerializer
-from .models import Email, Site, Tag, User, Payment, Highlight
+from pocket.serializers import LoginSerializer, SiteSerializer, TagSerializer, HighlightSerializer, PaymentSerializer
+from pocket.decorator   import bulk_decorator, login_decorator, scrap_decorator
+from pocket.models      import Email, Site, Tag, User, Payment, Highlight
+
 from urllib.parse import urlparse
-from django.db import transaction
-from django.db.models import Q
-from bs4 import BeautifulSoup
+from bs4          import BeautifulSoup
+
 import requests
 
 class SignupAPIView(APIView):
+    """ 회원가입 등록을 위한 api """
+
     def post(self, request): 
+        """
+            User 데이터 저장 후 Email을 저장
+            - 하나의 User 데이터에 다중 Email 정보가 들어가기 때문에 Email 모델이 분리되어 있음
+        """
+
         try:
-            email: str     = request.GET['email']   
-            password: str  = request.GET['password']              
+            # 클라이언트단에서 request body 파라미터로 보내줘야 하기 때문에 변경
+            # request.GET['email']방식 => self.request.data.get('email') 방식
+            email    : str = self.request.data.get('email')
+            password : str = self.request.data.get('password')
 
-            userModel      = User.objects.create_user(password=password)
-
-            emailModel     = Email.objects.create(user=userModel, email=email)
+            with transaction.atomic():
+                userModel  = User.objects.create_user(password=password)
+                emailModel = Email.objects.create(user=userModel, email=email)
 
             return Response({'msg':'Success signup'}, status=status.HTTP_200_OK)
+
         except KeyError as k:
             return Response({'msg':f'ERROR: Signup process KeyError that Class SignupAPIView : {k.args}'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LoginAPIView(GenericAPIView):
     serializer_class       = LoginSerializer
@@ -38,7 +52,7 @@ class LoginAPIView(GenericAPIView):
         token              = serializer.validated_data
         
         res                = Response()
-        res.set_cookie("access", token["access_token"], httponly=True)
+        res.set_cookie("access",  token["access_token"],  httponly=True)
         res.set_cookie("refresh", token["refresh_token"], httponly=True)
         res.data           = {
                              "jwt": token["access_token"]
@@ -48,22 +62,24 @@ class LoginAPIView(GenericAPIView):
 
 
 class LogoutAPIView(APIView):
-  def post(self,req):
-    try:
+    """ 로그아웃 관련 api """
+
+    def get(self, request):
         res                = Response()
-        res.delete_cookie('access')
-        res.delete_cookie('refresh')
-        res.data           = ({'msg':'Success logout'})
-        res.status         = status.HTTP_200_OK 
-        return res
-    except:
-        res.data           = ({'msg':'Failure logout'})
-        res.status         = status.HTTP_400_BAD_REQUEST
+        try:
+            res.delete_cookie('access')
+            res.delete_cookie('refresh')
+
+            res.data    = ({'msg':'Success logout'})
+            res.status  = status.HTTP_200_OK 
+
+        except:
+            res.data    = ({'msg':'Failure logout'})
+            res.status  = status.HTTP_400_BAD_REQUEST
+
         return res
 
 # template view
-
-
 def site_detail_view(request, pk):
     """
     mylist/base.html에 각 항목들에 대한 조회 view_url 연결
@@ -74,58 +90,49 @@ def site_detail_view(request, pk):
         return render(request, 'mylist/detail/detail.html', {'pk' : pk})
 
 
-def mylist_view(request):
-    """
-    mylist/base.html과 모든 항목에 대한 조회 view_url을 연결
-    """
-    
-    if request.method == 'GET': 
-
-        return render(request, 'mylist/base.html')
+class SiteView(TemplateView):
+    template_name = 'mylist/base.html'
 
 class HomeView(TemplateView):
     template_name = "common/home.html"
 
     def get(self, request, *args, **kwargs):
+
+        # 로그인 전 후 header를 분기하기 위한 키워드인자 전달  
+        kwargs['login'] = request.COOKIES.get('access')
         return super().get(request, *args, **kwargs)
+
 
 class SignUpView(TemplateView):
     template_name = "user/signup.html"
 
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
 class LogInView(TemplateView):
     template_name = "user/login.html"
 
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+    def get(self, request, **kwargs):
+
+        access_token = request.COOKIES.get('access')
+
+        # 토큰 존재 시 로그인 화면 접근 불가(홈화면 이동)
+        if access_token:
+            return redirect('home')
+        else:
+            # 토큰 존재하지 않은경우 로그인 화면 접근
+            context = self.get_context_data(**kwargs)
+            return self.render_to_response(context)
+
 
 class PwdHelpView(TemplateView):
     template_name = 'user/password.html'
-
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
 
 class PremiumView(TemplateView):
     template_name = 'premium/base.html'
 
-    def get_context_data(self, **kwargs):
-
-        context          = super().get_context_data(**kwargs)
-        context['login'] = True
-
-        return context
-
 
 class PaymentView(TemplateView):
     template_name = 'premium/payment.html'
-
-    def get(self, request, *args, **kwargs):
-
-        return super().get(request, *args, **kwargs)
-
 
 
 # api view
@@ -134,11 +141,14 @@ class SiteAPIView(APIView):
     저장한 모든 항목 데이터 api
     """
 
-    def get(self, request): 
-        word: str  = request.GET['word']              
-        list_qs    = Site.objects.filter(
+    @login_decorator
+    def get(self, request, **kwards): 
+        word: str = request.GET['word']              
+        list_qs   = Site.objects.filter(
+                        Q(user=kwards['user_id'])&(
                         Q(title__contains=word)|
-                        Q(host_name__contains=word))  
+                        Q(host_name__contains=word)))
+        
         serializer = SiteSerializer(list_qs, many=True)
 
         return Response(serializer.data)
@@ -152,11 +162,10 @@ class SiteDetailViewAPIView(APIView):
         
         return get_object_or_404(Site, pk=pk)
 
+    @login_decorator
+    def get(self, request, **kwards): 
 
-    def get(self, request, pk): 
-
-        site = self.get_object(pk)
-
+        site = self.get_object(pk=kwards['pk'])
         serializer  = SiteSerializer(site)
 
         return Response(serializer.data)
@@ -166,13 +175,13 @@ class HighlightAPIView(APIView):
     하이라이트 조회, 저장, 삭제 API
     """
 
-    def get(self, request, pk):
+    @login_decorator
+    def get(self, request, **kwards):
 
-        queryset                    = Highlight.objects.filter(site=pk)
+        queryset   = Highlight.objects.filter(site=kwards['pk'])
+        serializer = HighlightSerializer(queryset, many=True)
 
-        serializer                  = HighlightSerializer(queryset, many=True)
-
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
 
@@ -182,7 +191,7 @@ class HighlightAPIView(APIView):
 
         serializer.save()
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk):
         
@@ -199,12 +208,17 @@ class HighlightListAPIView(APIView):
     mylist 화면 하이라이트 탭에서 하이라이트가 적용된 항목들을 불러오는 API
     """
 
-    def get(self, request):
-        highlight_qs                = Highlight.objects.values('site')
+    @login_decorator
+    def get(self, request, **kwards):
+        word: str        = request.GET['word'] 
+        custom_highlight = Site.objects.annotate(count=Count('highlight'))
+        highlight_qs     = custom_highlight.filter(
+                                        (Q(user=kwards['user_id'])&
+                                         Q(count__gt=0))&(
+                                         Q(title__contains=word)|
+                                         Q(host_name__contains=word))).order_by('created_at').distinct()
 
-        site_qs                     = Site.objects.filter(pk__in=highlight_qs)
-
-        serializer                  = SiteSerializer(site_qs, many=True)
+        serializer = SiteSerializer(highlight_qs, many=True)
 
         return Response(serializer.data)
 
@@ -213,23 +227,23 @@ class HighlightPremiumAPIView(APIView):
     """ 
     결제 상태를 확인받아 하이라이트 기능 제한을 두는 API
     """
+    complete_payment = 1
+    limit = 3
 
-    def get(self, request, pk):
+    @login_decorator
+    def get(self, request, **kwards):
         """ 
         사용자 모델에서 결제 상태 값을 가져오는 변수 
         """
         
-        complete_payment            = 1
-        limit                       = 3
+        user_info = User.objects.filter(id=kwards['user_id']).values('payment_status').last()
+        highlight = Highlight.objects.filter(site=kwards['pk'])
+        highlight_object = highlight.count()
 
-        user_info                   = User.objects.filter(id=1).values('payment_status').last()
-        highlight                   = Highlight.objects.filter(site=pk)
-        highlight_object            = highlight.count()
-
-        if user_info['payment_status'] == complete_payment:
+        if user_info['payment_status'] == self.complete_payment:
             return Response(True)
 
-        elif highlight_object < limit :
+        elif highlight_object < self.limit :
             return Response(True)
 
         else :
@@ -314,21 +328,25 @@ class SiteBulkAPIView(APIView):
     
         return Response({'msg': 'Deleted successfully'}, status=status.HTTP_200_OK)  
 
+
 class SiteTagsAPIView(APIView):
     """
     벌크 태그 api
     """
 
-    def get(self, request, pk):
+    @login_decorator
+    def get(self, request, **kwards):
         """
         Site 태그 선택으로 조회
         """ 
 
-        sites =  Site.objects.filter(tag=pk)
+        sites =  Site.objects.filter(
+                            user=kwards['user_id'],
+                            tag=kwards['pk'])
         
         serializer = SiteSerializer(sites, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
  
     @bulk_decorator
     def post(self, request, **kwards):
@@ -352,12 +370,18 @@ class FavoriteAPIView(APIView):
     각 항목의 즐겨찾기 값 수정 api
     """
 
-    def get(self, request): 
-        list_qs     = Site.objects.filter(favorite=True)  
-        
-        serializer  = SiteSerializer(list_qs, many=True)
+    @login_decorator
+    def get(self, request, **kwards): 
+        word: str  = request.GET['word']
+        list_qs    = Site.objects.filter(
+                                    (Q(user=kwards['user_id'])&
+                                     Q(favorite=True))&(
+                                     Q(title__contains=word)|
+                                     Q(host_name__contains=word)))  
 
-        return Response(serializer.data)
+        serializer = SiteSerializer(list_qs, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ArticleAPIView(APIView):
@@ -365,71 +389,83 @@ class ArticleAPIView(APIView):
     video가 아닌 항목 조회 api
     """
 
-    def get(self, request):
+    @login_decorator
+    def get(self, request, **kwards): 
         word: str  = request.GET['word']   
-        list_qs    = Site.objects.filter(
-                            Q(video=False)&(
+        list_qs    = Site.objects.filter((
+                            Q(user=kwards['user_id'])& 
+                            Q(video=False))&(
                             Q(title__contains=word)|
                             Q(host_name__contains=word)))
 
         serializer = SiteSerializer(list_qs, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class VideoAPIView(APIView):
     """
      video가 포함된 항목 조회 api
     """
-
-    def get(self, request):
+    
+    @login_decorator
+    def get(self, request, **kwards):
         word: str  = request.GET['word'] 
-        list_qs    = Site.objects.filter(
-                        Q(video=True)&(
+        list_qs    = Site.objects.filter((
+                        Q(user=kwards['user_id'])&
+                        Q(video=True))&(
                         Q(title__contains=word)|
                         Q(host_name__contains=word)))
 
         serializer = SiteSerializer(list_qs, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class TagsAPIView(APIView):
     """
      Site model에 Tag model값이 존재하는 것만 조회
     """
 
-    def get(self, request):
+    @login_decorator
+    def get(self, request, **kwards):
         """
         Site 태그 조회
         """ 
 
-        tags       = Tag.objects.all()
+        # 사용자에 등록된 모든 site 조회
+        sites = Site.objects.filter(user=kwards['user_id'])
+        
+        # 해당 사이트에 걸려있는 모든 tag 조회 단, 중복제거를 위해 set 변경
+        tags = set([tag for site in sites for tag in site.tag_set.all()])
+
         serializer = TagSerializer(tags, many=True)
 
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class SiteByTagAPIView(APIView):
     """
      Site model에 Tag model값이 존재하는 것만 조회
     """
 
-    def get(self, request):
+    @login_decorator
+    def get(self, request, **kwards):
         word: str  = request.GET['word']
-        tags: list = [tag for tag in Tag.objects.all()]
 
-        list_qs    = Site.objects.filter(
-                        (Q(tag__in=tags))&(
-                        Q(title__contains=word)|
-                        Q(host_name__contains=word))).order_by('created_at').distinct()
+        custom_list = Site.objects.annotate(cnt=Count('tag'))
+        list_qs     = custom_list.filter(
+                                    (Q(user=kwards['user_id'])&
+                                    Q(cnt__gt=0))&(
+                                    Q(title__contains=word)|
+                                    Q(host_name__contains=word))).order_by('created_at').distinct()
 
         serializer = SiteSerializer(list_qs, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
         
 class ParseAPIView(APIView):
+    @login_decorator
     @scrap_decorator
     def post(self, request, **kwards):
-        result: dict = {}
         video_type, title, image, url = '', '', '', ''
         try:
             # 접근 여부(데코레이터를 통해 반환)
@@ -463,7 +499,7 @@ class ParseAPIView(APIView):
                     with transaction.atomic():
                         '''트랜젝션 시작'''
 
-                        user: User = User.objects.filter(name='조정용')
+                        user: User = User.objects.filter(id=kwards['user_id'])
                         
                         if user.exists():
                             user = user.last()
@@ -517,50 +553,57 @@ class PaymentPassView(APIView):
     생성한 주문번호를 아임포트 결제 창에 전달하는 api
     """
 
-    def post(self, request):
-
-        if not request.user.is_authenticated: 
-            return Response({"authenticated": False}, status=401)
-        
+    @login_decorator
+    def post(self, request, **kwards):
         amount                  = 100 
-        user                    = request.user 
         payment_type            = request.data['type']
-
+        user                    = User.objects.get(id=kwards['user_id'])
+        buyer_email             = Email.objects.get(user=user).email
+        
         try: 
             merchant_id         = Payment.objects.create_new(
                                     user=user, 
                                     amount=amount,
                                     type=payment_type,
                                   )
-        
         except ValueError:
             merchant_id         = None
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         if merchant_id is not None:
             data                = {
-                                    "works": True, 
+                                    "works": True,
+                                    "buyer_name": user.name, 
+                                    "buyer_email": buyer_email,
                                     "merchant_id": merchant_id,
                                     "amount": amount, 
                                   }
             return Response(data, status=status.HTTP_200_OK)
 
-class PaymentImpStoreView(APIView):
+
+class PaymentValidationView(APIView):
+    """
+    입력된 데이터로 결제 정보를 업데이트하고, 유효성 검증을 실행
+    """
+
+    def check_validation(self, payment, data):
+        serializer = PaymentSerializer(payment, data=data, partial=True)
+        if serializer.is_valid(raise_exception=True):    
+            serializer.save()
+
+
+class PaymentImpStoreView(PaymentValidationView):
     """
     아임포트에서 보낸 결제번호를 DB에 저장하는 api
     """
-    
-    def post(self, request):
 
-        if not request.user.is_authenticated: 
-            return Response({"authenticated": False}, status=401)
-
-        user                    = request.user
+    @login_decorator
+    def post(self, request, **kwards):
+        user                    = User.objects.get(id=kwards['user_id'])
         imp_id                  = request.data['imp_id']
         amount                  = request.data['amount']
         merchant_id             = request.data['merchant_id']
         payment_status          = request.data['payment_status']
-        
         payment                 = Payment.objects.get(
                                     user=user,
                                     merchant_id=merchant_id,
@@ -568,41 +611,34 @@ class PaymentImpStoreView(APIView):
                                   )
         
         if payment is not None:
-            payment.payment_id  = imp_id 
-            payment.status      = payment_status
-            payment.save()
-            data                = {'works': True}
-
+            data = {'works': True}
+            user.payment_status = User.PAYMENT_ON
+            user.save()
+            payment_data = {'payment_id' : imp_id, 'status' : payment_status}
+            self.check_validation(payment, data=payment_data)
             return Response(data, status=status.HTTP_200_OK)
-        
         else: 
-            payment.status      = 'failed'
-            payment.save()
-            data                = {'works': False}
-
+            data = {'works': False}
+            self.check_validation(payment, data={'status': 'failed'})
             return Response(data, {'msg':"Can't find a payment object with merchant_id passed"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class MakeStatusFailed(APIView):
+class PaymentFailedView(PaymentValidationView):
     """
     사용자 변심으로 결제 취소 시, payment의 status를 failed로 변경하는 api
     """
 
-    def post(self, request):
-
+    @login_decorator
+    def post(self, request, **kwards):
         imp_id                      = request.data['imp_id']
         merchant_id                 = request.data['merchant_id']
         payment                     = Payment.objects.get(merchant_id=merchant_id)
         
         if payment is not None: 
-            payment.payment_id      = imp_id
-            payment.status          = 'failed'
-            payment.save()
-            data                    = {'works': True}
-
+            data = {'works': True}
+            payment_data = {'payment_id' : imp_id, 'status' : 'failed'}
+            self.check_validation(payment, data=payment_data)
             return Response(data, status=status.HTTP_200_OK)
-        
         else:
-            data                    = {'works': False}
-            
+            data = {'works': False}
             return Response(data, {'msg':"Can't find a payment object with merchant_id passed"}, status=status.HTTP_400_BAD_REQUEST)

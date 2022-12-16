@@ -1,6 +1,5 @@
-import {createNode, appendTag, getElement, getElements, removeAllNode, setFetchData} from './common.js';
+import {createNode, appendTag, getElement, getElements, removeElement, removeAllNode, redirectLogin} from './common.js';
 import {makeBottomToolbar} from './bottom-toolbar.js';
-import {makeModal} from './modal.js';
 import {apiURL} from './api-url.js';
 
 const root            = document.getElementById("root")
@@ -94,6 +93,11 @@ function renderTag(tags) {
 
     const mainContainer      = getElement('.cmg9k0j')
 
+    // 사전에 등록된 모든 태그 영역 초기화
+    let before_allTagContiner = getElement('.a1ciqz4q')
+    if (before_allTagContiner != undefined)
+        removeElement(before_allTagContiner)
+
     const allTagContiner     = createNode('div')
     allTagContiner.className = 'a1ciqz4q'
     appendTag(mainContainer, allTagContiner)
@@ -165,7 +169,7 @@ function renderTag(tags) {
         tagButton.onclick    = () => {
 
             fetch(`/api/sites/tags/${tag.id}`)
-                .then(response => response.json())
+                .then(response => redirectLogin(response))
                 .then(data     => {
                     mapPosts(data)
                 })
@@ -327,7 +331,7 @@ async function getSiteList(word='') {
 
     // 해당되는 항목들 조회하기  
     await fetch(`${apiURL[apiUrlKey]}?word=${word}`)
-        .then(response => response.json())
+        .then(response => redirectLogin(response))
         .then(data => {
             mapPosts(data)
         })
@@ -343,8 +347,8 @@ function getSiteByTagList(word='') {
     // 선택 메뉴 활성화
     makeActive()
 
-    const siteFetch = fetch(`/api/tags/sites?word=${word}`).then(response => response.json())
-    const tagFetch  = fetch(`/api/tags`).then(response => response.json())
+    const siteFetch = fetch(`/api/tags/sites?word=${word}`).then(response => redirectLogin(response))
+    const tagFetch  = fetch(`/api/tags`).then(response => redirectLogin(response))
                         
     Promise.all([siteFetch, tagFetch])
                         .then(result => {
@@ -362,5 +366,7 @@ apiUrlKey === 'tags' ? getSiteByTagList() : getSiteList()
 
 export {
     getSiteList,
+    getSiteByTagList,
     selected_articles,
+    apiUrlKey
 };

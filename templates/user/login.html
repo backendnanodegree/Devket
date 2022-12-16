@@ -1,29 +1,28 @@
 {% extends "user/base.html" %}
 {% load static %}
 {% block content %}
+
+<script type="module" src="{% static 'js/login.js' %}"></script>
 <!-- MAIN -->
 <div class="signup-content ">
     <div class="row">
       <div class="small-12 large-6 columns wide-show">
         <picture class="signup-graphic picture">
-          <source
-            srcset="/static/images/signup/product_mockup2x.9ede6a7b02ceb90f0748e7f8f4b0e5ca.png"
-            media="(min-width: 48em)">
-          <source srcset="/i/v4/signup_blank.png, /i/v4/signup_blank.png 2x">
-          <img srcset="/i/v4/signup_blank.png, /i/v4/signup_blank.png 2x" alt="">
+          <source srcset="{% static 'images/signup/product_mockup2x.9ede6a7b02ceb90f0748e7f8f4b0e5ca.png' %}" media="(min-width: 48em)">
+          <source srcset="/i/v4/signup_blank.png 2x">
+          <img srcset="/i/v4/signup_blank.png 2x" alt="">
         </picture>
       </div>
       <div class="small-12 large-6 columns">
         <div id="login-page-login-container" class=" ">
           <div class="coreform-container loginform-container">
             <h2>로그인</h2>
-            <form action="#" method="post" name="loginform" class="loginform">
               <div class="loginform-formemail">
                 <!-- If the FxA login flag is not enabled, render the default login form -->
                 <div class="form-field">
                   <span class="error-bubble"><span class="error-msg"></span><span class="error-arrow"></span></span>
                   <label for="feed_id">이메일 또는 사용자 이름</label>
-                  <input type="text" id="feed_id" name="feed_id" autocomplete="off" autofocus tabindex="1"
+                  <input type="text" id="login_email" name="feed_id" autocomplete="off" autofocus tabindex="1"
                     placeholder="이메일 또는 사용자 이름">
                 </div>
                 <br>
@@ -40,7 +39,7 @@
               <input type="hidden" class="field-form-src" name="src" value="">
               <div class="login-processing"></div>
               <div id="captcha-placeholder"></div>
-              <input type="submit" tabindex="4" value="로그인" class="login-btn-email btn-disabled" disabled>
+              <input type="button" tabindex="4" value="로그인" class="login-btn-email">
               <p class="forgot-p">
                 <a class="forgot" href="{% url 'password' %}" target="">
                   사용자 이름 또는 암호를 잊으셨습니까
@@ -57,7 +56,6 @@
                 <span class="logo"></span>
                 <span class="text">Firefox로 계속</span>
               </a>
-            </form>
             <p class="login-footer">
               <a class="signup" href="{% url 'signup' %}" target="">
                 지금 등록

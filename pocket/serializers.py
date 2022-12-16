@@ -1,7 +1,7 @@
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.serializers import ModelSerializer
-from rest_framework import serializers
-from .models import Site, Tag, Payment, User, Highlight
+from rest_framework_simplejwt.tokens      import RefreshToken
+from rest_framework.serializers           import ModelSerializer
+from rest_framework                       import serializers
+from .models                              import Site, Tag, Payment, User, Highlight
 
 class LoginSerializer(serializers.ModelSerializer):
     email                   = serializers.CharField(
@@ -15,8 +15,8 @@ class LoginSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, data):
-        email               = data.get('email',None)
-        password            = data.get('password',None)
+        email               = data.get('email', None)
+        password            = data.get('password', None)
 
         if User.objects.filter(email=email).exists():
             user            = User.objects.get(email=email)
@@ -30,14 +30,14 @@ class LoginSerializer(serializers.ModelSerializer):
         data                = {
                                 'refresh_token' : str(token),
                                 'access_token'  : str(token.access_token)
-        }
+                              }
         
         return data
         
         
     class Meta(object):
         model               = User
-        fields              = ('email', 'password')
+        fields              = ['email', 'password']
 
 
 class TagSerializer(ModelSerializer):
@@ -46,6 +46,7 @@ class TagSerializer(ModelSerializer):
     class Meta:
         model               = Tag
         fields              = ['id', 'name']
+
 
 class SiteSerializer(ModelSerializer):
 
@@ -60,6 +61,7 @@ class SiteSerializer(ModelSerializer):
     favorite                = serializers.BooleanField(default=False)
     video                   = serializers.BooleanField(default=False)
     
+
     def create(self, validated_data):
         return Site.objects.create(**validated_data)
 
@@ -73,7 +75,6 @@ class SiteSerializer(ModelSerializer):
     class Meta:
         model               = Site
         fields              = ['id','title', 'thumbnail_url', 'host_name', 'content', 'category', 'user', 'favorite', 'video', 'url']
-
 
 
 class PaymentSerializer(ModelSerializer):
@@ -97,7 +98,8 @@ class PaymentSerializer(ModelSerializer):
 
     class Meta: 
         model = Payment
-        fields = ['user', 'amount', 'payment_id', 'merchant_id', 'works', 'payment_data', 'status', 'type']
+        fields = ['user', 'amount', 'payment_id', 'merchant_id', 'payment_data', 'status', 'type']
+
 
 class HighlightSerializer(serializers.ModelSerializer):
 
@@ -105,4 +107,4 @@ class HighlightSerializer(serializers.ModelSerializer):
     content_location        = serializers.JSONField(default=dict)
     class Meta:
         model               = Highlight
-        fields              = '__all__'
+        fields              = ['content_text', 'content_location']
